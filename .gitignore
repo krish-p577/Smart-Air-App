@@ -2,6 +2,11 @@
 .gradle/
 build/
 !gradle-wrapper.jar
+.externalNativeBuild/
+.cxx/
+cmake-build-debug/
+.gradle/8.13/
+.kotlinc/
 local.properties
 
 # IntelliJ / Android Studio
@@ -14,6 +19,10 @@ captures/
 .idea/caches/
 .idea/libraries/
 .idea/runConfigurations/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
 
 # OS-specific files
 .DS_Store
@@ -22,7 +31,7 @@ Thumbs.db
 # Log files
 *.log
 
-# Android/Java/Kotlin
+# Android/Java/Kotlin binaries
 *.apk
 *.ap_
 *.dex
@@ -34,22 +43,14 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.rar
+*.so
 
 # Generated files
 gen/
 bin/
-.externalNativeBuild/
-.cxx/
-
-# NDK / CMake
-cmake-build-debug/
-*.so
 
 # Firebase / Google services keys
 google-services.json
-
-# Kotlin build cache
-.kotlinc/
 
 # Android profiling / test results
 *.hprof
