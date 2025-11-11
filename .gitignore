@@ -1,8 +1,64 @@
-# Compiled class file
-*.class
+# Gradle files
+.gradle/
+build/
+!gradle-wrapper.jar
+local.properties
 
-# Log file
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+captures/
+.idea/caches/
+.idea/libraries/
+.idea/runConfigurations/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Log files
 *.log
+
+# Android/Java/Kotlin
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Generated files
+gen/
+bin/
+.externalNativeBuild/
+.cxx/
+
+# NDK / CMake
+cmake-build-debug/
+*.so
+
+# Firebase / Google services keys
+google-services.json
+
+# Kotlin build cache
+.kotlinc/
+
+# Android profiling / test results
+*.hprof
+test-results/
+
+# Misc / backups
+*.orig
+*.rej
+*.swp
 
 # BlueJ files
 *.ctxt
@@ -10,15 +66,6 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
