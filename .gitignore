@@ -1,72 +1,15 @@
-# Gradle files
-.gradle/
-build/
-!gradle-wrapper.jar
-.externalNativeBuild/
-.cxx/
-cmake-build-debug/
-.gradle/8.13/
-.kotlinc/
-local.properties
-
-# IntelliJ / Android Studio
-.idea/
 *.iml
-*.ipr
-*.iws
-out/
-captures/
-.idea/caches/
-.idea/libraries/
-.idea/runConfigurations/
-.idea/modules.xml
-.idea/workspace.xml
-.idea/navEditor.xml
-.idea/assetWizardSettings.xml
-
-# OS-specific files
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
 .DS_Store
-Thumbs.db
-
-# Log files
-*.log
-
-# Android/Java/Kotlin binaries
-*.apk
-*.ap_
-*.dex
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-*.zip
-*.tar.gz
-*.rar
-*.so
-
-# Generated files
-gen/
-bin/
-
-# Firebase / Google services keys
-google-services.json
-
-# Android profiling / test results
-*.hprof
-test-results/
-
-# Misc / backups
-*.orig
-*.rej
-*.swp
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Virtual machine crash logs
-hs_err_pid*
-replay_pid*
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
