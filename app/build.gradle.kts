@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.b07demosummer2024"
+    namespace = "com.SmartAir"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.b07demosummer2024"
+        applicationId = "com.SmartAir"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -30,12 +30,19 @@ android {
 }
 
 dependencies {
+    // Import the Firebase BoM, this manages the versions of the other Firebase libraries
+    //this is needed to maintain the compatibility of the firebase libraries
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+
+    // Add the dependencies for the Firebase products you want to use
+    //In this case we can use the built in auth and db libraries
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
 
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
