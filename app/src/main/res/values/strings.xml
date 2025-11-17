@@ -1,19 +1,10 @@
 <resources>
-    <string name="app_name">B07 Demo Summer 2024</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="delete_item">Delete Item</string>
-    <string name="add_item">Add Item</string>
+    <string name="app_name">SmartAir</string>
     <string name="back">Back</string>
-    <string name="recyclerview">RecyclerView</string>
-    <string name="scroller">Scroller</string>
-    <string name="spinner">Spinner</string>
-    <string name="manage_items">Manage Items</string>
-
-    <string-array name="categories_array">
-        <item>Books</item>
-        <item>Movies</item>
-    </string-array>
-
-
+    <string name="welcome_message">Welcome to Smart Air!</string>
+    <string name="continue_button_text">Continue</string>
+    <string name="role_selection_prompt">I am a…</string>
+    <string name="parent">Parent</string>
+    <string name="provider">Provider</string>
+    <string name="child">Child</string>
 </resources>
