@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-android {namespace = "com.SmartAir"
+android {
+    namespace = "com.SmartAir"
     compileSdk = 34
 
     defaultConfig {
@@ -30,12 +31,12 @@ android {namespace = "com.SmartAir"
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-} // <-- This closing brace was missing
+}
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-database")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
     implementation(libs.appcompat)
     implementation(libs.material)
