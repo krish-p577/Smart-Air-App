@@ -25,6 +25,8 @@
         <activity
             android:name=".view.RoleSelectionActivity"
             android:exported="false" />
+        <activity android:name=".ParentDashboard.view.ParentDashboardActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
