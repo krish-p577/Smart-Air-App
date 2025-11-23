@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.ParentDashboard.model.ChildModel;
 import com.SmartAir.ParentDashboard.model.ParentModel;
+import com.SmartAir.ParentDashboard.model.PefLogsModel;
 import com.SmartAir.ParentDashboard.presenter.ParentDashboardPresenter;
 import com.SmartAir.R;
 import com.google.firebase.FirebaseApp;
@@ -49,6 +50,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.mySpinner);
 
         List<String> childList = new ArrayList<>();
+        List<String> childIdList = new ArrayList<>();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -57,14 +59,17 @@ public class ParentDashboardActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        getUserChildren(adapter, childList);
+        getUserChildren(adapter, childList, childIdList);
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedChild = childList.get(i);
-                dbTest(box1,selectedChild);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String selectedChild = childList.get(position);
+                String selectedId = childIdList.get(position);
+//                dbTest(box1,selectedChild);
+
+                updateZone(selectedId, box1);
 
             }
 
@@ -81,8 +86,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
 
     @SuppressLint("SetTextI18n")
-    protected void getUserChildren(ArrayAdapter<String> adapter, List<String> childList){
+    protected void getUserChildren(ArrayAdapter<String> adapter, List<String> childList, List<String> childIdList){
         Log.i("DEBUG", "Get Children");
+
         db.collection("users").document("1")
                 .collection("children")
                 .get().
@@ -93,7 +99,12 @@ public class ParentDashboardActivity extends AppCompatActivity {
                        String childName = document.getString("name");
                        if (childName != null) {
                            childList.add(childName);
+                           childIdList.add(document.getId());
                        }
+                   }
+
+                   for (DocumentSnapshot document : queryDocumentSnapshots) {
+
                    }
 
                    adapter.notifyDataSetChanged();
@@ -105,30 +116,25 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
     }
 
-//    @SuppressLint("SetTextI18n")
-//    protected void updateDashboard(String selectedChild, TextView box1){
-//        Log.i("DEBUG", "function initilize");
-//
-//        db.collection("users").
-//                document("1")
-//                .get()
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    if (documentSnapshot.exists()) {
-//                        ParentModel user = documentSnapshot.toObject((ParentModel.class));
-//                        String name = documentSnapshot.getString("name");
-//                        String role = documentSnapshot.getString("role");
-//
-//                        assert user != null;
-//                        test_text.setText("Name: " + user.getName() + "Role: " + user.getRole());
-//
-//                        Log.i("DEBUG", "DEBUG NAME:" + name + "   " + role);
-//                    }
-//                })
-//                .addOnFailureListener(e ->{
-//
-//                });
-//
-//    }
+    @SuppressLint("SetTextI18n")
+    protected void updateZone(String childID, TextView box1){
+        Log.i("DEBUG", "function initilize");
+
+        db.collection("pefLogs").
+                document(childID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        PefLogsModel info = documentSnapshot.toObject(PefLogsModel.class);
+                        assert info != null;
+                        box1.setText("Today's Zone:    " + info.getZone());
+                    }
+                })
+                .addOnFailureListener(e ->{
+
+                });
+
+    }
 
 
     @SuppressLint("SetTextI18n")
