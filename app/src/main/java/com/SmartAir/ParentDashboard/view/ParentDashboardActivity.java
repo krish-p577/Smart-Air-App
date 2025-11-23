@@ -20,6 +20,8 @@ import com.SmartAir.R;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -69,7 +71,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
                 String selectedId = childIdList.get(position);
 //                dbTest(box1,selectedChild);
 
-                updateZone(selectedId, box1);
+                updateZone(selectedId, box1, box2, box3);
 
             }
 
@@ -117,7 +119,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    protected void updateZone(String childID, TextView box1){
+    protected void updateZone(String childID, TextView box1, TextView box2, TextView box3){
         Log.i("DEBUG", "function initilize");
 
         db.collection("pefLogs").
@@ -132,6 +134,19 @@ public class ParentDashboardActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e ->{
 
+                });
+
+        db.collection("rescueLogs")
+                .whereEqualTo("childid", childID)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
+
+                        box2.setText("Last Rescue Time: " + doc.getTimestamp("timestamp"));
+                    }
                 });
 
     }

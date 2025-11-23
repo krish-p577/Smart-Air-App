@@ -80,6 +80,20 @@
         app:layout_constraintTop_toBottomOf="@+id/myText" />
 
     <TextView
+        android:id="@+id/myText5"
+        style="@style/DashboardText"
+        android:layout_width="350dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="112dp"
+        android:background="@drawable/notifbox"
+        android:text="Notification Alerts (FCM) On:  \nRed-ZoneDay,\nRapid Rescue Repeats \nWorse After Dose, \nTriage Escalation, \nLow/Expired Inventory"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myText3" />
+
+    <TextView
         android:id="@+id/r6_test"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
