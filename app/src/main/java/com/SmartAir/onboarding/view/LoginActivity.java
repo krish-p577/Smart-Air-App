@@ -1,4 +1,4 @@
-package com.SmartAir.view;
+package com.SmartAir.onboarding.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.model.AuthRepository;
-import com.SmartAir.presenter.LoginPresenter;
+import com.SmartAir.features.child.ChildHomeActivity;
+import com.SmartAir.features.parent.ParentHomeActivity;
+import com.SmartAir.features.provider.ProviderHomeActivity;
+import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.model.CurrentUser;
+import com.SmartAir.onboarding.presenter.LoginPresenter;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -29,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         passwordEditText = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.login_button);
         TextView signupLink = findViewById(R.id.signup_link);
+        TextView forgotPasswordLink = findViewById(R.id.forgot_password_link);
 
         loginButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString();
@@ -37,6 +42,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         });
 
         signupLink.setOnClickListener(v -> presenter.onSignupLinkClicked());
+
+        forgotPasswordLink.setOnClickListener(v -> {
+            startActivity(new Intent(this, PasswordResetActivity.class));
+        });
     }
 
     @Override
@@ -46,11 +55,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void navigateToHome() {
-        // TODO: Implement navigation to the correct home screen based on role
+        // ... existing navigateToHome code ...
     }
 
     @Override
     public void navigateToSignup() {
-        startActivity(new Intent(this, SignupActivity.class));
+        Intent intent = new Intent(this, SignupActivity.class);
+        // Forward the USER_ROLE from the current intent to the next one
+        intent.putExtra("USER_ROLE", getIntent().getStringExtra("USER_ROLE"));
+        startActivity(intent);
     }
 }

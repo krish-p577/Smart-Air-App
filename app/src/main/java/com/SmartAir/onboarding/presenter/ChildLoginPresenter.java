@@ -1,7 +1,7 @@
-package com.SmartAir.presenter;
+package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.model.AuthRepository;
-import com.SmartAir.view.ChildLoginView;
+import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.view.ChildLoginView;
 
 public class ChildLoginPresenter {
 

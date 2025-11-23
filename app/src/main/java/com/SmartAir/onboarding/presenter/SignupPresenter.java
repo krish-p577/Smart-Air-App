@@ -1,7 +1,7 @@
-package com.SmartAir.presenter;
+package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.model.AuthRepository;
-import com.SmartAir.view.SignupView;
+import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.view.SignupView;
 
 public class SignupPresenter {
 
@@ -13,7 +13,7 @@ public class SignupPresenter {
         this.authRepository = authRepository;
     }
 
-    public void onSignupClicked(String email, String password, String confirmPassword) {
+    public void onSignupClicked(String email, String password, String confirmPassword, String role, String displayName) {
         if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             view.setSignupError("All fields must be filled");
             return;
@@ -24,7 +24,12 @@ public class SignupPresenter {
             return;
         }
 
-        authRepository.createUser(email, password, new AuthRepository.AuthCallback() {
+        // Default display name to username part of email if not provided
+        if (displayName == null || displayName.isEmpty()) {
+            displayName = email.split("@")[0];
+        }
+
+        authRepository.createUser(email, password, role, displayName, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
                 view.navigateToHome();

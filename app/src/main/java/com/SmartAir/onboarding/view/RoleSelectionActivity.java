@@ -1,4 +1,4 @@
-package com.SmartAir.view;
+package com.SmartAir.onboarding.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.presenter.RoleSelectionPresenter;
+import com.SmartAir.onboarding.presenter.RoleSelectionPresenter;
 
 public class RoleSelectionActivity extends AppCompatActivity implements RoleSelectionView {
 

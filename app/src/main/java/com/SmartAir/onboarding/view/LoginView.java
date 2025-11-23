@@ -1,4 +1,4 @@
-package com.SmartAir.view;
+package com.SmartAir.onboarding.view;
 
 public interface LoginView {
     void setLoginError(String message);

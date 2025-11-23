@@ -1,6 +1,6 @@
-package com.SmartAir.presenter;
+package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.view.WelcomeView;
+import com.SmartAir.onboarding.view.WelcomeView;
 
 public class WelcomePresenter {
 

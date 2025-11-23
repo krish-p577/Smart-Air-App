@@ -1,6 +1,6 @@
-package com.SmartAir.presenter;
+package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.view.RoleSelectionView;
+import com.SmartAir.onboarding.view.RoleSelectionView;
 
 public class RoleSelectionPresenter {
 

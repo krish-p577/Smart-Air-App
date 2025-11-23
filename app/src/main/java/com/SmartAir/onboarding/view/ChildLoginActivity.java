@@ -1,5 +1,6 @@
-package com.SmartAir.view;
+package com.SmartAir.onboarding.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -7,8 +8,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.model.AuthRepository;
-import com.SmartAir.presenter.ChildLoginPresenter;
+import com.SmartAir.features.child.ChildHomeActivity;
+import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.presenter.ChildLoginPresenter;
 
 public class ChildLoginActivity extends AppCompatActivity implements ChildLoginView {
 
@@ -41,6 +43,9 @@ public class ChildLoginActivity extends AppCompatActivity implements ChildLoginV
 
     @Override
     public void navigateToChildHome() {
-        // TODO: Implement navigation to the child home screen
+        Intent intent = new Intent(this, ChildHomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
