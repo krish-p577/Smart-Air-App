@@ -9,10 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.features.child.ChildHomeActivity;
-import com.SmartAir.features.parent.ParentHomeActivity;
-import com.SmartAir.features.provider.ProviderHomeActivity;
-import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.presenter.LoginPresenter;
 
@@ -27,7 +23,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        presenter = new LoginPresenter(this, new AuthRepository());
+        presenter = new LoginPresenter(this);
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
@@ -55,13 +51,37 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void navigateToHome() {
-        // ... existing navigateToHome code ...
+        String role = CurrentUser.getInstance().getRole();
+        Intent intent;
+
+        if (role == null) {
+            Toast.makeText(this, "Error: User role not found.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        switch (role.toLowerCase()) {
+            case "parent":
+                intent = new Intent(this, ParentHomeActivity.class);
+                break;
+            case "provider":
+                intent = new Intent(this, ProviderHomeActivity.class);
+                break;
+            case "child":
+                intent = new Intent(this, ChildHomeActivity.class);
+                break;
+            default:
+                Toast.makeText(this, "Invalid user role: " + role, Toast.LENGTH_SHORT).show();
+                return;
+        }
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void navigateToSignup() {
         Intent intent = new Intent(this, SignupActivity.class);
-        // Forward the USER_ROLE from the current intent to the next one
         intent.putExtra("USER_ROLE", getIntent().getStringExtra("USER_ROLE"));
         startActivity(intent);
     }

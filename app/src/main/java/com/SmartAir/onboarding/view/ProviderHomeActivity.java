@@ -1,4 +1,4 @@
-package com.SmartAir.features.provider;
+package com.SmartAir.onboarding.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
-import com.SmartAir.onboarding.view.WelcomeActivity;
 
 public class ProviderHomeActivity extends AppCompatActivity {
 
@@ -17,8 +16,7 @@ public class ProviderHomeActivity extends AppCompatActivity {
 
         Button logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(v -> {
-            AuthRepository authRepository = new AuthRepository();
-            authRepository.logout();
+            AuthRepository.getInstance().logout();
 
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

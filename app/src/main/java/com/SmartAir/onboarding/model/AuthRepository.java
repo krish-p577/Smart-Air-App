@@ -1,7 +1,6 @@
 package com.SmartAir.onboarding.model;
 
 import androidx.annotation.NonNull;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -15,14 +14,28 @@ import java.util.Map;
 
 public class AuthRepository {
 
+    private static volatile AuthRepository instance;
+
     private final FirebaseAuth firebaseAuth;
     private final FirebaseFirestore firestore;
     private final CurrentUser currentUser;
 
-    public AuthRepository() {
+    // Private constructor to enforce Singleton pattern
+    private AuthRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.firestore = FirebaseFirestore.getInstance();
         this.currentUser = CurrentUser.getInstance();
+    }
+
+    public static AuthRepository getInstance() {
+        if (instance == null) {
+            synchronized (AuthRepository.class) {
+                if (instance == null) {
+                    instance = new AuthRepository();
+                }
+            }
+        }
+        return instance;
     }
 
     public void createUser(String email, String password, String role, String displayName, @NonNull final AuthCallback callback) {

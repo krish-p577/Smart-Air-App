@@ -8,9 +8,9 @@ public class LoginPresenter {
     private final LoginView view;
     private final AuthRepository authRepository;
 
-    public LoginPresenter(LoginView view, AuthRepository authRepository) {
+    public LoginPresenter(LoginView view) {
         this.view = view;
-        this.authRepository = authRepository;
+        this.authRepository = AuthRepository.getInstance();
     }
 
     public void onLoginClicked(String email, String password) {

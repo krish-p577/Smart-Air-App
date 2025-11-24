@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -41,13 +42,13 @@
 
         <!-- Home Activities -->
         <activity
-            android:name=".features.parent.ParentHomeActivity"
+            android:name=".onboarding.view.ParentHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".features.provider.ProviderHomeActivity"
+            android:name=".onboarding.view.ProviderHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".features.child.ChildHomeActivity"
+            android:name=".onboarding.view.ChildHomeActivity"
             android:exported="false" />
 
     </application>

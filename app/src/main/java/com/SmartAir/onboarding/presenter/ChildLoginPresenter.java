@@ -8,9 +8,9 @@ public class ChildLoginPresenter {
     private final ChildLoginView view;
     private final AuthRepository authRepository;
 
-    public ChildLoginPresenter(ChildLoginView view, AuthRepository authRepository) {
+    public ChildLoginPresenter(ChildLoginView view) {
         this.view = view;
-        this.authRepository = authRepository;
+        this.authRepository = AuthRepository.getInstance();
     }
 
     public void onLoginClicked(String username, String password) {

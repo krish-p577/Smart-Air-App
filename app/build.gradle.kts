@@ -17,8 +17,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -37,6 +38,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
+    implementation ("com.google.firebase:firebase-appcheck-debug") // Add the debug provider
+
+    // implementation("com.google.firebase:firebase-appcheck-playintegrity")
 
     implementation(libs.appcompat)
     implementation(libs.material)

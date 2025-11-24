@@ -20,7 +20,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_reset);
 
-        authRepository = new AuthRepository();
+        authRepository = AuthRepository.getInstance();
 
         emailOrUsernameEditText = findViewById(R.id.email_or_username);
         sendResetEmailButton = findViewById(R.id.send_reset_email_button);
@@ -32,14 +32,14 @@ public class PasswordResetActivity extends AppCompatActivity {
                 return;
             }
 
-            sendResetEmailButton.setEnabled(false); // Disable the button to prevent multiple clicks
+            sendResetEmailButton.setEnabled(false);
 
             authRepository.sendPasswordResetEmail(emailOrUsername, new AuthRepository.AuthCallback() {
                 @Override
                 public void onSuccess() {
                     sendResetEmailButton.setEnabled(true);
                     Toast.makeText(PasswordResetActivity.this, "Password reset email sent.", Toast.LENGTH_LONG).show();
-                    finish(); // Close the activity
+                    finish();
                 }
 
                 @Override

@@ -8,8 +8,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.features.child.ChildHomeActivity;
-import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.presenter.ChildLoginPresenter;
 
 public class ChildLoginActivity extends AppCompatActivity implements ChildLoginView {
@@ -23,7 +21,7 @@ public class ChildLoginActivity extends AppCompatActivity implements ChildLoginV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_child_login);
 
-        presenter = new ChildLoginPresenter(this, new AuthRepository());
+        presenter = new ChildLoginPresenter(this);
 
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);

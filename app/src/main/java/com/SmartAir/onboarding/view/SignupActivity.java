@@ -9,10 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.features.child.ChildHomeActivity;
-import com.SmartAir.features.parent.ParentHomeActivity;
-import com.SmartAir.features.provider.ProviderHomeActivity;
-import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.presenter.SignupPresenter;
 
@@ -30,7 +26,7 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        presenter = new SignupPresenter(this, new AuthRepository());
+        presenter = new SignupPresenter(this);
 
         displayNameEditText = findViewById(R.id.displayName);
         emailEditText = findViewById(R.id.email);
@@ -68,7 +64,7 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
             return;
         }
 
-        switch (role) {
+        switch (role.toLowerCase()) {
             case "parent":
                 intent = new Intent(this, ParentHomeActivity.class);
                 break;
@@ -79,7 +75,7 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
                 intent = new Intent(this, ChildHomeActivity.class);
                 break;
             default:
-                Toast.makeText(this, "Invalid user role.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid user role: " + role, Toast.LENGTH_SHORT).show();
                 return;
         }
 

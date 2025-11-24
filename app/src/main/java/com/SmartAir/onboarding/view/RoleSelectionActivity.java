@@ -32,14 +32,14 @@ public class RoleSelectionActivity extends AppCompatActivity implements RoleSele
     @Override
     public void navigateToParentSignIn() {
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("USER_ROLE", "Parent");
+        intent.putExtra("USER_ROLE", "parent");
         startActivity(intent);
     }
 
     @Override
     public void navigateToProviderSignIn() {
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("USER_ROLE", "Provider");
+        intent.putExtra("USER_ROLE", "provider");
         startActivity(intent);
     }
 

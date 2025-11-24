@@ -8,9 +8,9 @@ public class SignupPresenter {
     private final SignupView view;
     private final AuthRepository authRepository;
 
-    public SignupPresenter(SignupView view, AuthRepository authRepository) {
+    public SignupPresenter(SignupView view) {
         this.view = view;
-        this.authRepository = authRepository;
+        this.authRepository = AuthRepository.getInstance();
     }
 
     public void onSignupClicked(String email, String password, String confirmPassword, String role, String displayName) {
@@ -24,7 +24,6 @@ public class SignupPresenter {
             return;
         }
 
-        // Default display name to username part of email if not provided
         if (displayName == null || displayName.isEmpty()) {
             displayName = email.split("@")[0];
         }
