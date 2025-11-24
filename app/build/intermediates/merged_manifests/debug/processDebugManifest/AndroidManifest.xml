@@ -43,8 +43,26 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.SmartAir.view.startTriageActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.SmartAir.view.RoleSelectionActivity"
             android:exported="false" />
+        <activity
+            android:name="com.SmartAir.view.OneTapActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.google.firebase.auth.internal.GenericIdpActivity"
             android:excludeFromRecents="true"

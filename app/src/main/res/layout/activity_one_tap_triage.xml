@@ -8,15 +8,13 @@
 
     <LinearLayout
         android:id="@+id/Questions_layout"
-        android:layout_width="464dp"
-        android:layout_height="679dp"
+        android:layout_width="414dp"
+        android:layout_height="663dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="-1dp"
-        tools:layout_editor_absoluteY="82dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SafetyNote_layout" >
+        app:layout_constraintTop_toBottomOf="@+id/SafetyNote_layout">
 
         <LinearLayout
             android:id="@+id/Q1"
@@ -260,7 +258,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/submitButton"
                 android:layout_width="117dp"
                 android:layout_height="68dp"
                 android:layout_weight="1"
@@ -288,11 +286,9 @@
 
     <LinearLayout
         android:id="@+id/SafetyNote_layout"
-        android:layout_width="466dp"
-        android:layout_height="77dp"
+        android:layout_width="402dp"
+        android:layout_height="57dp"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -314,8 +310,8 @@
 
         <Button
             android:id="@+id/helpButton"
-            android:layout_width="165dp"
-            android:layout_height="63dp"
+            android:layout_width="71dp"
+            android:layout_height="69dp"
             android:text="@string/help"
             android:textColorLink="#FB0707"
             android:textIsSelectable="false"

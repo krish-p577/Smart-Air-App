@@ -28,6 +28,10 @@
         "source": "com.SmartAir.app-main-46:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
+        "merged": "com.SmartAir.app-debug-44:/layout_button_for_triage.xml.flat",
+        "source": "com.SmartAir.app-main-46:/layout/button_for_triage.xml"
+    },
+    {
         "merged": "com.SmartAir.app-debug-44:/layout_activity_role_selection.xml.flat",
         "source": "com.SmartAir.app-main-46:/layout/activity_role_selection.xml"
     },

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-30:12
+ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-48:12
+INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-48:12
+INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-48:12
+INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:1-48:12
 MERGED from [com.google.firebase:firebase-auth:24.0.1] /Users/vedthakar/.gradle/caches/transforms-4/d9d74a1f385212360ad57d475dd23c2d/transformed/firebase-auth-24.0.1/AndroidManifest.xml:17:1-75:12
 MERGED from [com.google.firebase:firebase-database:22.0.1] /Users/vedthakar/.gradle/caches/transforms-4/730712ed5e3f73140d518558f4958907/transformed/firebase-database-22.0.1/AndroidManifest.xml:15:1-38:12
 MERGED from [com.google.android.material:material:1.10.0] /Users/vedthakar/.gradle/caches/transforms-4/643aa4307edf04d89a5a12879ee76917/transformed/material-1.10.0/AndroidManifest.xml:17:1-24:12
@@ -84,8 +84,8 @@ MERGED from [com.google.android.play:core-common:2.0.3] /Users/vedthakar/.gradle
 	xmlns:android
 		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:2:11-69
 application
-ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:5:5-28:19
-INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:5:5-28:19
+ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:5:5-46:19
+INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:5:5-46:19
 MERGED from [com.google.firebase:firebase-auth:24.0.1] /Users/vedthakar/.gradle/caches/transforms-4/d9d74a1f385212360ad57d475dd23c2d/transformed/firebase-auth-24.0.1/AndroidManifest.xml:28:5-73:19
 MERGED from [com.google.firebase:firebase-auth:24.0.1] /Users/vedthakar/.gradle/caches/transforms-4/d9d74a1f385212360ad57d475dd23c2d/transformed/firebase-auth-24.0.1/AndroidManifest.xml:28:5-73:19
 MERGED from [com.google.firebase:firebase-database:22.0.1] /Users/vedthakar/.gradle/caches/transforms-4/730712ed5e3f73140d518558f4958907/transformed/firebase-database-22.0.1/AndroidManifest.xml:25:5-36:19
@@ -168,12 +168,24 @@ category#android.intent.category.LAUNCHER
 ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:22:17-77
 	android:name
 		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:22:27-74
-activity#com.SmartAir.view.RoleSelectionActivity
-ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:25:9-27:40
+activity#com.SmartAir.view.startTriageActivity
+ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:25:9-33:20
 	android:exported
-		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:27:13-37
+		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:27:13-36
 	android:name
-		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:26:13-55
+		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:26:13-53
+activity#com.SmartAir.view.RoleSelectionActivity
+ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:34:9-36:40
+	android:exported
+		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:36:13-37
+	android:name
+		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:35:13-55
+activity#com.SmartAir.view.OneTapActivity
+ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:37:9-45:20
+	android:exported
+		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:39:13-36
+	android:name
+		ADDED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml:38:13-48
 uses-sdk
 INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/vedthakar/StudioProjects/Smart-Air-App/app/src/main/AndroidManifest.xml

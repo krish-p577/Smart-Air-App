@@ -32,14 +32,19 @@ public class startTriageActivity extends AppCompatActivity implements startTriag
 
     @Override
     public void openForm() {
-
+        runnable.run();
     }
 
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            open();
             h.postDelayed(runnable, 600000);
         }
     };
+
+    public void open(){
+        startActivity(new Intent(this, OneTapActivity.class));
+    }
 
 }
