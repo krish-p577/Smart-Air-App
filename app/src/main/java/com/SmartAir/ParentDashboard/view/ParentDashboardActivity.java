@@ -15,9 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.SmartAir.ParentDashboard.model.ChildModel;
 import com.SmartAir.ParentDashboard.model.ParentModel;
 import com.SmartAir.ParentDashboard.model.PefLogsModel;
+import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.SmartAir.ParentDashboard.presenter.ParentDashboardPresenter;
 import com.SmartAir.R;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.Query;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ParentDashboardActivity extends AppCompatActivity {
@@ -95,22 +98,22 @@ public class ParentDashboardActivity extends AppCompatActivity {
                 .collection("children")
                 .get().
                 addOnSuccessListener(queryDocumentSnapshots -> {
-                   childList.clear();
+                    childList.clear();
 
-                   for (DocumentSnapshot document : queryDocumentSnapshots) {
-                       String childName = document.getString("name");
-                       if (childName != null) {
-                           childList.add(childName);
-                           childIdList.add(document.getId());
-                       }
-                   }
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        String childName = document.getString("name");
+                        if (childName != null) {
+                            childList.add(childName);
+                            childIdList.add(document.getId());
+                        }
+                    }
 
-                   for (DocumentSnapshot document : queryDocumentSnapshots) {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
 
-                   }
+                    }
 
-                   adapter.notifyDataSetChanged();
-                   Log.i("SPINNER TAG", "Loaded Children" + childList);
+                    adapter.notifyDataSetChanged();
+                    Log.i("SPINNER TAG", "Loaded Children" + childList);
 
                 }).addOnFailureListener(e ->{
                     Log.e("SPINNER FAILUE", "ERR", e);
@@ -137,16 +140,38 @@ public class ParentDashboardActivity extends AppCompatActivity {
                 });
 
         db.collection("rescueLogs")
-                .whereEqualTo("childid", childID)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .limit(1)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    if (!querySnapshot.isEmpty()) {
-                        DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
+                    DocumentSnapshot mostRecentLog = null;
+                    Timestamp latestTimestamp = null;
 
-                        box2.setText("Last Rescue Time: " + doc.getTimestamp("timestamp"));
+                    // Loop through documents and find the most recent log for this childID
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        if (childID.equals(doc.getString("childid"))) {
+                            Timestamp ts = doc.getTimestamp("timestamp"); // use getTimestamp()
+                            if (ts != null && (latestTimestamp == null || ts.compareTo(latestTimestamp) > 0)) {
+                                latestTimestamp = ts;
+                                mostRecentLog = doc;
+                            }
+                        }
                     }
+
+                    if (mostRecentLog != null && latestTimestamp != null) {
+                        RescueLogModel log = mostRecentLog.toObject(RescueLogModel.class);
+                        if (log != null) {
+                            // Convert Timestamp to Date
+                            Date date = latestTimestamp.toDate();
+                            box2.setText("Last Rescue Time: " + date.toString());
+                            return;
+                        }
+                    }
+
+                    // No logs found
+                    box2.setText("No rescue logs found.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error fetching logs", e);
+                    box2.setText("Error fetching logs");
                 });
 
     }
@@ -160,16 +185,16 @@ public class ParentDashboardActivity extends AppCompatActivity {
                 document("1")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                   if (documentSnapshot.exists()) {
-                       ParentModel user = documentSnapshot.toObject((ParentModel.class));
-                       String name = documentSnapshot.getString("name");
-                       String role = documentSnapshot.getString("role");
+                    if (documentSnapshot.exists()) {
+                        ParentModel user = documentSnapshot.toObject((ParentModel.class));
+                        String name = documentSnapshot.getString("name");
+                        String role = documentSnapshot.getString("role");
 
-                       assert user != null;
-                       test_text.setText("Name: " + user.getName() + "Role: " + user.getRole());
+                        assert user != null;
+                        test_text.setText("Name: " + user.getName() + "Role: " + user.getRole());
 
-                       Log.i("DEBUG", "DEBUG NAME:" + name + "   " + role);
-                   }
+                        Log.i("DEBUG", "DEBUG NAME:" + name + "   " + role);
+                    }
                 })
                 .addOnFailureListener(e ->{
 
