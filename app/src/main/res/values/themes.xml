@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.B07DemoSummer2024" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.SmartAir" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/secondary</item>
     </style>
 
-    <style name="Theme.B07DemoSummer2024" parent="Base.Theme.B07DemoSummer2024" />
+    <style name="Theme.SmartAir" parent="Base.Theme.SmartAir" />
 </resources>
