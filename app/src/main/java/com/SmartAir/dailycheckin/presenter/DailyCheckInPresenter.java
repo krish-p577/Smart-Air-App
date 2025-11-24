@@ -2,8 +2,8 @@ package com.SmartAir.dailycheckin.presenter;
 import com.SmartAir.dailycheckin.DailyCheckInContract;
 import com.SmartAir.dailycheckin.model.DailyCheckInRepository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DailyCheckInPresenter implements DailyCheckInContract.Presenter {
@@ -40,12 +40,9 @@ public class DailyCheckInPresenter implements DailyCheckInContract.Presenter {
         });
     }
 
-    public String getCurrentDate(){
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        return now.format(formatter);
+    public String getCurrentDate() {
+        Date now = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(now);
     }
-
-
 }
