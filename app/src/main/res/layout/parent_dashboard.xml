@@ -115,5 +115,15 @@
         app:layout_constraintStart_toEndOf="@+id/r6_test"
         app:layout_constraintTop_toBottomOf="@+id/r6_test3" />
 
+    <Button
+        android:id="@+id/pdfbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginBottom="15dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

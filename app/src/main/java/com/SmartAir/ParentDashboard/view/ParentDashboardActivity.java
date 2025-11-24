@@ -26,11 +26,13 @@ import com.google.firebase.firestore.Query;
 
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class ParentDashboardActivity extends AppCompatActivity {
+public class ParentDashboardActivity extends AppCompatActivity implements ParentDashboardView {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -51,6 +53,23 @@ public class ParentDashboardActivity extends AppCompatActivity {
         TextView box1 = findViewById(R.id.myText);
         TextView box2 = findViewById(R.id.myText3);
         TextView box3 = findViewById(R.id.myText4);
+        Button pdfbutton = findViewById(R.id.pdfbutton);
+
+
+        List<ReportGenerationActivity.CheckIn> data = Arrays.asList(
+                new ReportGenerationActivity.CheckIn("2024-11-15", "Red", 4, "Wheezing, Cough", "Had trouble sleeping due to cough."),
+                new ReportGenerationActivity.CheckIn("2024-11-14", "Yellow", 1, "Mild Cough", "Played soccer, used rescue once.")
+                );
+        pdfbutton.setOnClickListener(v -> {
+            View reportContent = ReportGenerationActivity.createMockReportView(this, data);
+
+            File pdfFile = ReportGenerationActivity.generatePdfFromView(this, reportContent, "AsthamaReport");
+
+            if (pdfFile != null) {
+                ReportGenerationActivity.sharePdfFile(this, pdfFile);
+            }
+
+        });
 
         Spinner spinner = findViewById(R.id.mySpinner);
 
@@ -83,6 +102,15 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+    }
+
+    @Override
+    public void navToPdf () {
+//        View reportContent = ReportGenerationActivity.createMockReportView(this, data);
 
 
 
@@ -145,15 +173,18 @@ public class ParentDashboardActivity extends AppCompatActivity {
                     DocumentSnapshot mostRecentLog = null;
                     Timestamp latestTimestamp = null;
 
+                    int count = 0;
                     // Loop through documents and find the most recent log for this childID
                     for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
                         if (childID.equals(doc.getString("childid"))) {
+                            count += 1;
                             Timestamp ts = doc.getTimestamp("timestamp"); // use getTimestamp()
                             if (ts != null && (latestTimestamp == null || ts.compareTo(latestTimestamp) > 0)) {
                                 latestTimestamp = ts;
                                 mostRecentLog = doc;
                             }
                         }
+                        box3.setText("Weekly Rescue Count: " + count);
                     }
 
                     if (mostRecentLog != null && latestTimestamp != null) {
@@ -166,6 +197,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
                         }
                     }
 
+
                     // No logs found
                     box2.setText("No rescue logs found.");
                 })
@@ -173,6 +205,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
                     Log.e("Firestore", "Error fetching logs", e);
                     box2.setText("Error fetching logs");
                 });
+
+
+
 
     }
 
