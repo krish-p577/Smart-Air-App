@@ -11,7 +11,6 @@ public class DailyCheckInPresenter implements DailyCheckInContract.Presenter {
     private final DailyCheckInContract.View view;
     private final DailyCheckInContract.Repository repository;
 
-    private String tempUser = "Child"; // TODO: Delete later when we know what user logged in
     private String tempChildName = "Raihan"; // TODO: delete later when child selection functionality added
 
     public DailyCheckInPresenter(DailyCheckInContract.View view){
@@ -19,13 +18,13 @@ public class DailyCheckInPresenter implements DailyCheckInContract.Presenter {
         this.repository = new DailyCheckInRepository();
     }
     @Override
-    public void submitDailyCheckIn(Boolean isNightWalking, Boolean hasLimitedAbility,
+    public void submitDailyCheckIn(String role, Boolean isNightWalking, Boolean hasLimitedAbility,
                                    Boolean isSick, List<String> triggers){
         String date = getCurrentDate();
 
         // TODO: Get rid of temp data and replace with user data
 
-        DailyCheckInDataModel data = new DailyCheckInDataModel(date, tempUser, tempChildName,
+        DailyCheckInDataModel data = new DailyCheckInDataModel(date, role, tempChildName,
                 isNightWalking, hasLimitedAbility, isSick, triggers);
         repository.sendDataToDatabase(data, new DailyCheckInContract.Repository.SaveCallback() {
             @Override

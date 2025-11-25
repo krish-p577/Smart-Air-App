@@ -7,32 +7,41 @@ import com.SmartAir.dailycheckin.DailyCheckInContract;
 import com.SmartAir.dailycheckin.presenter.DailyCheckInPresenter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.chip.Chip;
+import com.SmartAir.onboarding.model.CurrentUser;
+import android.os.Handler;
 
 import java.util.ArrayList;
 
+import android.widget.Toast;
 import android.os.Bundle;
-import android.widget.TextView;
 
 public class DailyCheckInActivity extends AppCompatActivity implements DailyCheckInContract.View {
 
     private Button submitBtn;
     private Button exitBtn;
 
-    private TextView outputLog;
     private CheckBox nightWakingCheckBox;
     private CheckBox limitedAbilityCheckBox;
     private CheckBox sickCheckBox;
     private ChipGroup triggerChipGroup;
 
     DailyCheckInContract.Presenter presenter;
+    CurrentUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_check_in);
 
-        // TODO: Based upon user if Parent can choose which child to submit daily activiy
-        // TODO: Cannot submit more then one daily activity per day per child
+        user = CurrentUser.getInstance(); // Get current user
+
+        if (user.getRole().equals("Parent")){
+            // TODO: implement parent specialized view
+            // TODO: Parent can choose which child to submit daily activity
+        }
+        else{
+            // TODO: implement child specialized view
+        }
 
         presenter = new DailyCheckInPresenter(this);
 
@@ -42,8 +51,6 @@ public class DailyCheckInActivity extends AppCompatActivity implements DailyChec
         limitedAbilityCheckBox = findViewById(R.id.dailyCheckInLimitActivityChkBox);
         sickCheckBox = findViewById(R.id.dailyCheckInSickChkBox);
         triggerChipGroup = findViewById(R.id.dailyCheckInTriggerChipGroup);
-        outputLog = findViewById(R.id.ouputResults); // TODO: Delete later
-
 
         submitBtn.setOnClickListener(v -> {
             SubmitDataToPresenter();
@@ -57,11 +64,12 @@ public class DailyCheckInActivity extends AppCompatActivity implements DailyChec
     public void SubmitDataToPresenter(){
         boolean isNightWalking, hasLimitedAbility, isSick;
         String content;
+        String role;
 
         isNightWalking = nightWakingCheckBox.isChecked();
         hasLimitedAbility = limitedAbilityCheckBox.isChecked();
         isSick = sickCheckBox.isChecked();
-
+        role = user.getRole();
         ArrayList<String> triggers = new ArrayList<>();
 
         for (int id: triggerChipGroup.getCheckedChipIds()) {
@@ -79,18 +87,21 @@ public class DailyCheckInActivity extends AppCompatActivity implements DailyChec
 
         }
 
-        presenter.submitDailyCheckIn(isNightWalking,hasLimitedAbility,isSick,triggers);
+        presenter.submitDailyCheckIn(role, isNightWalking,hasLimitedAbility,isSick,triggers);
     }
 
     @Override
     public void showSubmitSuccess(){
-        outputLog.setText("Submit Success"); // TODO: delete later
-        finish();
+        Toast.makeText(this, "Saved successfully! Returning to Dashboard...",
+                Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> finish(), 1500);
     }
 
     @Override
     public void showSubmitFailure(){
-        outputLog.setText("Submit Fail"); // TODO: delete later
+        Toast.makeText(this, "Failed to save! Returning to Dashboard...",
+                Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> finish(), 1500);
     }
 
 }
