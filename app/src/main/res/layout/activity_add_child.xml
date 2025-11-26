@@ -4,73 +4,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".onboarding.view.LoginActivity">
+    tools:context=".onboarding.view.AddChildActivity">
 
-    <!-- Login Form Content -->
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Form Content -->
     <androidx.constraintlayout.widget.Group
         android:id="@+id/form_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="email,password,login_button,forgot_password_link,signup_link" />
+        app:constraint_referenced_ids="username_label,username_edit_text,password_label,password_edit_text,add_child_button" />
+
+    <TextView
+        android:id="@+id/username_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Child's Username"
+        app:layout_constraintStart_toStartOf="@+id/username_edit_text"
+        app:layout_constraintBottom_toTopOf="@+id/username_edit_text" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/username_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:autofillHints="emailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/password"
+        android:hint="Enter a unique username"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/password_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Child's Password"
+        app:layout_constraintStart_toStartOf="@+id/password_edit_text"
+        app:layout_constraintBottom_toTopOf="@+id/password_edit_text" />
+
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/password_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:hint="@string/password"
+        android:hint="Enter a password"
         android:inputType="textPassword"
-        android:autofillHints="password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/add_child_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/login"
+        android:text="Add Child Account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
-
-    <TextView
-        android:id="@+id/forgot_password_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/forgot_password"
-        app:layout_constraintEnd_toEndOf="@+id/login_button"
-        app:layout_constraintStart_toStartOf="@+id/login_button"
-        app:layout_constraintTop_toBottomOf="@+id/login_button" />
-
-    <TextView
-        android:id="@+id/signup_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/dont_have_account"
-        app:layout_constraintEnd_toEndOf="@+id/forgot_password_link"
-        app:layout_constraintStart_toStartOf="@+id/forgot_password_link"
-        app:layout_constraintTop_toBottomOf="@+id/forgot_password_link" />
+        app:layout_constraintTop_toBottomOf="@+id/password_edit_text" />
 
     <!-- Included Loading Layout -->
     <include

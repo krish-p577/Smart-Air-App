@@ -2,15 +2,21 @@ package com.SmartAir.onboarding.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 
 import com.SmartAir.R;
+import com.SmartAir.onboarding.view.ChildHomeActivity;
+import com.SmartAir.onboarding.view.ParentHomeActivity;
+import com.SmartAir.onboarding.view.ProviderHomeActivity;
+
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.presenter.SignupPresenter;
+import com.google.android.material.snackbar.Snackbar;
 
 public class SignupActivity extends AppCompatActivity implements SignupView {
 
@@ -19,6 +25,8 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
+    private Group formContent;
+    private View loadingLayout;
     private String userRole;
 
     @Override
@@ -33,6 +41,8 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirm_password);
         Button signupButton = findViewById(R.id.signup_button);
+        formContent = findViewById(R.id.form_content);
+        loadingLayout = findViewById(R.id.loading_layout);
         TextView loginLink = findViewById(R.id.login_link);
 
         userRole = getIntent().getStringExtra("USER_ROLE");
@@ -51,34 +61,16 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
 
     @Override
     public void setSignupError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        setLoading(false);
+        showSnackbar(message);
     }
 
+    /**
+     * After signup, this method now navigates to the OnboardingActivity.
+     */
     @Override
     public void navigateToHome() {
-        String role = CurrentUser.getInstance().getRole();
-        Intent intent;
-
-        if (role == null) {
-            Toast.makeText(this, "Error: User role not found.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        switch (role.toLowerCase()) {
-            case "parent":
-                intent = new Intent(this, ParentHomeActivity.class);
-                break;
-            case "provider":
-                intent = new Intent(this, ProviderHomeActivity.class);
-                break;
-            case "child":
-                intent = new Intent(this, ChildHomeActivity.class);
-                break;
-            default:
-                Toast.makeText(this, "Invalid user role: " + role, Toast.LENGTH_SHORT).show();
-                return;
-        }
-
+        Intent intent = new Intent(this, OnboardingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -88,5 +80,20 @@ public class SignupActivity extends AppCompatActivity implements SignupView {
     public void navigateToLogin() {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
+    }
+
+    @Override
+    public void setLoading(boolean isLoading) {
+        if (isLoading) {
+            formContent.setVisibility(View.GONE);
+            loadingLayout.setVisibility(View.VISIBLE);
+        } else {
+            formContent.setVisibility(View.VISIBLE);
+            loadingLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
     }
 }

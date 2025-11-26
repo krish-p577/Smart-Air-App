@@ -1,26 +1,19 @@
 package com.SmartAir.onboarding.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class User {
+public abstract class BaseUser {
 
     private String role;
     private String email;
     private String displayName;
-    private String parentId; // For child users
-    private List<String> childrenIds; // For parent users
+    private boolean hasCompletedOnboarding = false; // New field
 
     // Required empty public constructor for Firestore
-    public User() {}
+    public BaseUser() {}
 
-    public User(String role, String email, String displayName) {
+    public BaseUser(String role, String email, String displayName) {
         this.role = role;
         this.email = email;
         this.displayName = displayName;
-        if ("parent".equalsIgnoreCase(role)) {
-            this.childrenIds = new ArrayList<>();
-        }
     }
 
     // Getters and Setters
@@ -48,19 +41,11 @@ public class User {
         this.displayName = displayName;
     }
 
-    public String getParentId() {
-        return parentId;
+    public boolean isHasCompletedOnboarding() {
+        return hasCompletedOnboarding;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public List<String> getChildrenIds() {
-        return childrenIds;
-    }
-
-    public void setChildrenIds(List<String> childrenIds) {
-        this.childrenIds = childrenIds;
+    public void setHasCompletedOnboarding(boolean hasCompletedOnboarding) {
+        this.hasCompletedOnboarding = hasCompletedOnboarding;
     }
 }

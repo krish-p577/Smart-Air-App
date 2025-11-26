@@ -1,6 +1,7 @@
 package com.SmartAir.onboarding.presenter;
 
 import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.view.ChildLoginView;
 
 public class ChildLoginPresenter {
@@ -22,7 +23,12 @@ public class ChildLoginPresenter {
         authRepository.signInChild(username, password, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
-                view.navigateToChildHome();
+                // Check if user has completed onboarding
+                if (CurrentUser.getInstance().getUserProfile() != null && CurrentUser.getInstance().getUserProfile().isHasCompletedOnboarding()) {
+                    view.navigateToChildHome();
+                } else {
+                    view.navigateToOnboarding();
+                }
             }
 
             @Override

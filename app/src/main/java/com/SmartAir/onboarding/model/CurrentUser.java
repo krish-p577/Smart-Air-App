@@ -7,7 +7,7 @@ public class CurrentUser {
 
     private static CurrentUser instance;
     private FirebaseUser firebaseUser;
-    private User userProfile;
+    private BaseUser userProfile; // Changed from User to BaseUser
 
     private CurrentUser() {
         // Private constructor to enforce singleton pattern
@@ -28,11 +28,11 @@ public class CurrentUser {
         this.firebaseUser = firebaseUser;
     }
 
-    public User getUserProfile() {
+    public BaseUser getUserProfile() { // Changed from User to BaseUser
         return userProfile;
     }
 
-    public void setUserProfile(User userProfile) {
+    public void setUserProfile(BaseUser userProfile) { // Changed from User to BaseUser
         this.userProfile = userProfile;
     }
 
@@ -57,7 +57,6 @@ public class CurrentUser {
     public void clear() {
         firebaseUser = null;
         userProfile = null;
-        // logout from firebase
-        FirebaseAuth.getInstance().signOut();
+        // The AuthRepository now handles the sign out call
     }
 }

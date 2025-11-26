@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".onboarding.view.SignupActivity">
 
+    <!-- Signup Form Content -->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/form_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="displayName,email,password,confirm_password,signup_button,login_link" />
+
     <EditText
         android:id="@+id/displayName"
         android:layout_width="0dp"
@@ -84,5 +91,15 @@
         app:layout_constraintEnd_toEndOf="@+id/signup_button"
         app:layout_constraintStart_toStartOf="@+id/signup_button"
         app:layout_constraintTop_toBottomOf="@+id/signup_button" />
+
+    <!-- Included Loading Layout -->
+    <include
+        android:id="@+id/loading_layout"
+        layout="@layout/activity_loading"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
