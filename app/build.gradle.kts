@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.firestore)
 
     // JUnit and Mockito - Upgraded for Java 21 compatibility
     testImplementation(libs.junit)

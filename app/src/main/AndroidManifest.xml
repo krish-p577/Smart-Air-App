@@ -63,7 +63,13 @@
         <activity
             android:name=".onboarding.view.SelectChildLoginActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".ChildDashboard.view.ChildDashboardActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".view.RoleSelectionActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
