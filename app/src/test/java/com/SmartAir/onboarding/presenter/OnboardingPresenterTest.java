@@ -5,7 +5,6 @@ import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.model.OnboardingStep;
 import com.SmartAir.onboarding.view.OnboardingView;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -35,15 +34,7 @@ public class OnboardingPresenterTest {
     @Mock
     private CurrentUser mockCurrentUser;
 
-    private OnboardingPresenter presenter;
-
-    @Before
-    public void setUp() {
-        try (MockedStatic<AuthRepository> mockedAuthRepo = Mockito.mockStatic(AuthRepository.class)) {
-            mockedAuthRepo.when(AuthRepository::getInstance).thenReturn(mockAuthRepository);
-            presenter = new OnboardingPresenter(mockView);
-        }
-    }
+    // No @Before block is needed. The presenter is instantiated inside each test.
 
     @Test
     public void onViewCreated_withParentRole_displaysParentSpecificSteps() {
@@ -51,6 +42,7 @@ public class OnboardingPresenterTest {
             mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getRole()).thenReturn("parent");
 
+            OnboardingPresenter presenter = new OnboardingPresenter(mockView);
             presenter.onViewCreated();
 
             ArgumentCaptor<List<OnboardingStep>> stepsCaptor = ArgumentCaptor.forClass(List.class);
@@ -69,6 +61,7 @@ public class OnboardingPresenterTest {
             mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getRole()).thenReturn("provider");
 
+            OnboardingPresenter presenter = new OnboardingPresenter(mockView);
             presenter.onViewCreated();
 
             ArgumentCaptor<List<OnboardingStep>> stepsCaptor = ArgumentCaptor.forClass(List.class);
@@ -87,6 +80,7 @@ public class OnboardingPresenterTest {
             mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getRole()).thenReturn("child");
 
+            OnboardingPresenter presenter = new OnboardingPresenter(mockView);
             presenter.onViewCreated();
 
             ArgumentCaptor<List<OnboardingStep>> stepsCaptor = ArgumentCaptor.forClass(List.class);
@@ -105,19 +99,27 @@ public class OnboardingPresenterTest {
             mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getRole()).thenReturn(null);
 
+            OnboardingPresenter presenter = new OnboardingPresenter(mockView);
             presenter.onViewCreated();
 
-            // Verify that the safe exit path is taken
             verify(mockView).navigateToWelcomeAndLogout();
-            // Verify that we never tried to display the onboarding steps
             verify(mockView, never()).displayOnboardingSteps(any());
         }
     }
 
     @Test
     public void onFinished_marksOnboardingAsCompleteAndNavigatesHome() {
-        presenter.onFinished();
-        verify(mockAuthRepository).markOnboardingAsCompleted();
-        verify(mockView).navigateToHome();
+        // This test requires the AuthRepository mock.
+        try (MockedStatic<AuthRepository> mockedAuthRepo = Mockito.mockStatic(AuthRepository.class)) {
+            mockedAuthRepo.when(AuthRepository::getInstance).thenReturn(mockAuthRepository);
+
+            // Presenter must be created *after* the static mock is set up.
+            OnboardingPresenter presenter = new OnboardingPresenter(mockView);
+            presenter.onFinished();
+
+            // Assert
+            verify(mockAuthRepository).markOnboardingAsCompleted();
+            verify(mockView).navigateToHome();
+        }
     }
 }
