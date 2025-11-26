@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-android {namespace = "com.SmartAir"
+android {
+    namespace = "com.SmartAir"
     compileSdk = 34
 
     defaultConfig {
@@ -16,8 +17,9 @@ android {namespace = "com.SmartAir"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -30,12 +32,15 @@ android {namespace = "com.SmartAir"
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-} // <-- This closing brace was missing
+}
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
+    implementation ("com.google.firebase:firebase-appcheck-debug") // Add the debug provider
+
+    // implementation("com.google.firebase:firebase-appcheck-playintegrity")
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -46,4 +51,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation("com.google.android.material:material:1.10.0")
 }
