@@ -25,3 +25,9 @@ local.properties
 /captures
 .externalNativeBuild
 .cxx
+
+# Google Services file
+google-services.json
+
+#Keys
+release-temp.jks
