@@ -1,28 +1,39 @@
 package com.SmartAir.onboarding.presenter;
 
-import android.util.Patterns;
-
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.view.SignupView;
+
+import java.util.regex.Pattern;
 
 public class SignupPresenter {
 
     private final SignupView view;
     private final AuthRepository authRepository;
 
+    // Standard email regex pattern - no Android dependency.
+    private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+            "@" +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+            "(" +
+            "\\." +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+            ")+"
+    );
+
     public SignupPresenter(SignupView view) {
         this.view = view;
         this.authRepository = AuthRepository.getInstance();
     }
 
-    public void onSignupClicked(String email, String password, String confirmPassword, String role, String displayName) {
-        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            view.setSignupError("All fields must be filled");
-            return;
-        }
+    boolean isValidEmail(String email) {
+        return email != null && EMAIL_ADDRESS_PATTERN.matcher(email).matches();
+    }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            view.setSignupError("Please enter a valid email address");
+    public void onSignupClicked(String email, String password, String confirmPassword, String role, String displayName) {
+        // Added displayName to the required fields check.
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || displayName == null || displayName.trim().isEmpty()) {
+            view.setSignupError("All fields must be filled");
             return;
         }
 
@@ -36,21 +47,20 @@ public class SignupPresenter {
             return;
         }
 
-        if (displayName == null || displayName.isEmpty()) {
-            displayName = email.split("@")[0];
+        if (!isValidEmail(email)) {
+            view.setSignupError("Please enter a valid email address");
+            return;
         }
 
-        view.setLoading(true); // Inform the view that loading has started
+        view.setLoading(true);
         authRepository.createUser(email, password, role, displayName, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
-                // The view will handle setting loading to false upon navigation
                 view.navigateToHome();
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                // The view will handle setting loading to false
                 view.setSignupError(errorMessage);
             }
         });
