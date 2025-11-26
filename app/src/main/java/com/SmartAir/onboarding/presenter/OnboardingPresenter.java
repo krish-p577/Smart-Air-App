@@ -19,15 +19,21 @@ public class OnboardingPresenter {
     }
 
     public void onViewCreated() {
-        List<OnboardingStep> steps = buildOnboardingSteps();
+        String role = CurrentUser.getInstance().getRole();
+
+        if (role == null) {
+            // This is a critical error state. The user should not be here without a role.
+            // Safest action is to log out and return to the start.
+            view.navigateToWelcomeAndLogout();
+            return;
+        }
+
+        List<OnboardingStep> steps = buildOnboardingSteps(role);
         view.displayOnboardingSteps(steps);
     }
 
-    private List<OnboardingStep> buildOnboardingSteps() {
+    private List<OnboardingStep> buildOnboardingSteps(String role) {
         List<OnboardingStep> steps = new ArrayList<>();
-        String role = CurrentUser.getInstance().getRole();
-        if (role == null) role = "parent"; // Default for safety
-
         steps.add(new OnboardingStep("Welcome to Smart Air!", "This app helps you understand and manage asthma by logging symptoms, practicing inhaler technique, and sharing progress."));
 
         switch (role.toLowerCase()) {

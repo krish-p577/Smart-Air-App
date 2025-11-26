@@ -16,16 +16,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.SmartAir.R;
+import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.model.OnboardingStep;
 import com.SmartAir.onboarding.presenter.OnboardingPresenter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-// Corrected imports for Home Activities
-import com.SmartAir.onboarding.view.ChildHomeActivity;
-import com.SmartAir.onboarding.view.ParentHomeActivity;
-import com.SmartAir.onboarding.view.ProviderHomeActivity;
 
 import java.util.List;
 
@@ -89,24 +85,34 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingV
         Intent intent;
 
         if (role == null) {
-            intent = new Intent(this, WelcomeActivity.class);
-        } else {
-            switch (role.toLowerCase()) {
-                case "parent":
-                    intent = new Intent(this, ParentHomeActivity.class);
-                    break;
-                case "provider":
-                    intent = new Intent(this, ProviderHomeActivity.class);
-                    break;
-                case "child":
-                    intent = new Intent(this, ChildHomeActivity.class);
-                    break;
-                default:
-                    intent = new Intent(this, WelcomeActivity.class);
-                    break;
-            }
+            navigateToWelcomeAndLogout();
+            return;
         }
 
+        switch (role.toLowerCase()) {
+            case "parent":
+                intent = new Intent(this, ParentHomeActivity.class);
+                break;
+            case "provider":
+                intent = new Intent(this, ProviderHomeActivity.class);
+                break;
+            case "child":
+                intent = new Intent(this, ChildHomeActivity.class);
+                break;
+            default:
+                intent = new Intent(this, WelcomeActivity.class);
+                break;
+        }
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void navigateToWelcomeAndLogout() {
+        AuthRepository.getInstance().logout();
+        Intent intent = new Intent(this, WelcomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
