@@ -2,10 +2,13 @@ package com.SmartAir.ChildDashboard.data;
 
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,10 +30,6 @@ public class ChildDashboardRepository {
     }
 
     public Task<String> getChildName() {
-        if (!isChild()) {
-            return Tasks.forException(new Exception("Error: Child account not found."));
-        }
-
         String childId = user.getUid();
 
         return db.collection("Users")
@@ -135,30 +134,36 @@ public class ChildDashboardRepository {
             });
     }
 
-    public Task<List<String>> getBadgeEarnedDates() {
+    public Task<List<Date>> getBadgeEarnedDates() {
         String childId = user.getUid();
 
         return db.collection("badges")
-                .document(childId)
-                .get()
-                .continueWith(task -> {
-                    if (!task.isSuccessful()) {
-                        throw Objects.requireNonNull(task.getException());
+            .document(childId)
+            .get()
+            .continueWith(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+
+                DocumentSnapshot doc = task.getResult();
+
+                if (doc.exists()) {
+                    List<Timestamp> badgesEarnedAt = (List<Timestamp>) doc.get("earnedAt");
+
+                    if (badgesEarnedAt == null) {
+                        throw new Exception("Badge earned dates not found.");
                     }
 
-                    DocumentSnapshot doc = task.getResult();
+                    List<Date> badgesEarnedAtDates = new ArrayList<>(badgesEarnedAt.size());
 
-                    if (doc.exists()) {
-                        List<String> earnedAt = (List<String>) doc.get("earnedAt");
-
-                        if (earnedAt == null) {
-                            throw new Exception("Badge earned dates not found.");
-                        }
-
-                        return earnedAt;
-                    } else {
-                        throw new Exception("Badges not found.");
+                    for (int i = 0; i < badgesEarnedAt.size(); i++) {
+                        badgesEarnedAtDates.add(badgesEarnedAt.get(i).toDate());
                     }
-                });
+
+                    return badgesEarnedAtDates;
+                } else {
+                    throw new Exception("Badges not found.");
+                }
+            });
     }
 }
