@@ -2,6 +2,7 @@ package com.SmartAir.ChildDashboard.presenter;
 
 import com.SmartAir.ChildDashboard.view.ChildDashboardView;
 import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
+import com.google.android.gms.tasks.Tasks;
 
 public class ChildDashboardPresenter {
 
@@ -13,8 +14,28 @@ public class ChildDashboardPresenter {
         this.repo = repo;
     }
 
-    public void onScreenStart(String parentId, String childId) {
-        repo.getChildName();
+    public void onScreenStart() {
+        if (!repo.isChild()) {
+            view.showMessage("Error: Child account not found.");
+            return;
+        }
+
+        repo.getChildName()
+            .addOnSuccessListener(childName -> {
+                view.showWelcomeMessage(childName);
+                view.showSecondaryMessage("Welcome back!");
+
+                repo.getControllerStreak()
+                    .addOnSuccessListener(controllerStreak -> {
+                        view.showControllerStreak(controllerStreak);
+
+                        repo.getTechniqueStreak()
+                            .addOnSuccessListener(techniqueStreak -> {
+                                view.showTechniqueStreak(techniqueStreak);
+
+                            }).addOnFailureListener(e -> view.showMessage("Technique streak error: " + e.getMessage()));
+                    }).addOnFailureListener(e -> view.showMessage("Controller streak error: " + e.getMessage()));
+            }).addOnFailureListener(e -> view.showMessage("Child name error: " + e.getMessage()));
     }
 
     public void onDailyCheckInClicked() {
