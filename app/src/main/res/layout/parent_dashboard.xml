@@ -95,13 +95,13 @@
 
     <TextView
         android:id="@+id/r6_test"
-        android:layout_width="70dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="97dp"
         android:layout_marginTop="22dp"
         android:background="@drawable/text_box"
         android:padding="12dp"
-        android:text="Child:"
+        android:text="Select Child:"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/r6_test3" />
@@ -109,7 +109,7 @@
     <Spinner
         android:id="@+id/mySpinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="31dp"
         app:layout_constraintStart_toEndOf="@+id/r6_test"
@@ -119,11 +119,21 @@
         android:id="@+id/pdfbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="54dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="16dp"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/radio_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="178dp"
+        android:layout_marginBottom="14dp"
+        android:text="Schedule"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

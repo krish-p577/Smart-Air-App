@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
+import com.SmartAir.ParentDashboard.model.RescueLogModel;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
