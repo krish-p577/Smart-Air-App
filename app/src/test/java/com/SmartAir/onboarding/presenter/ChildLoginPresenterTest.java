@@ -4,8 +4,6 @@ import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.BaseUser;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.view.ChildLoginView;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -16,93 +14,110 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChildLoginPresenterTest {
 
-    @Mock
-    private ChildLoginView mockView;
+    @Mock private ChildLoginView mockView;
+    @Mock private AuthRepository mockAuthRepository;
+    @Mock private CurrentUser mockCurrentUser;
+    @Mock private BaseUser mockUser;
 
-    @Mock
-    private AuthRepository mockAuthRepository;
+    @Captor private ArgumentCaptor<AuthRepository.AuthCallback> authCallbackCaptor;
 
-    @Mock
-    private CurrentUser mockCurrentUser;
-
-    @Mock
-    private BaseUser mockUser;
-
-    @Captor
-    private ArgumentCaptor<AuthRepository.AuthCallback> authCallbackCaptor;
-
-    private ChildLoginPresenter presenter;
-
-    @Before
-    public void setUp() {
-        presenter = new ChildLoginPresenter(mockView);
-        // Mock the AuthRepository singleton
-        try (MockedStatic<AuthRepository> mockedAuthRepo = Mockito.mockStatic(AuthRepository.class)) {
-            mockedAuthRepo.when(AuthRepository::getInstance).thenReturn(mockAuthRepository);
-        }
+    @Test
+    public void onLoginClicked_withNullUsername_showsError() {
+        ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
+        presenter.onLoginClicked(null, "password123");
+        verify(mockView).setLoginError("Username and password cannot be empty");
+        verify(mockAuthRepository, never()).signInChild(anyString(), anyString(), any());
     }
 
     @Test
     public void onLoginClicked_withEmptyUsername_showsError() {
+        ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
         presenter.onLoginClicked("", "password123");
         verify(mockView).setLoginError("Username and password cannot be empty");
+        verify(mockAuthRepository, never()).signInChild(anyString(), anyString(), any());
+    }
+
+    @Test
+    public void onLoginClicked_withNullPassword_showsError() {
+        ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
+        presenter.onLoginClicked("child_user", null);
+        verify(mockView).setLoginError("Username and password cannot be empty");
+        verify(mockAuthRepository, never()).signInChild(anyString(), anyString(), any());
+    }
+
+    @Test
+    public void onLoginClicked_withEmptyPassword_showsError() {
+        ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
+        presenter.onLoginClicked("child_user", "");
+        verify(mockView).setLoginError("Username and password cannot be empty");
+        verify(mockAuthRepository, never()).signInChild(anyString(), anyString(), any());
     }
 
     @Test
     public void onLoginClicked_withSuccessfulLogin_andOnboardingComplete_navigatesToChildHome() {
-        try (MockedStatic<CurrentUser> mockedCurrentUser = Mockito.mockStatic(CurrentUser.class)) {
-            // Arrange
-            mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
+        try (MockedStatic<CurrentUser> currentUserStatic = Mockito.mockStatic(CurrentUser.class)) {
+            currentUserStatic.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getUserProfile()).thenReturn(mockUser);
             when(mockUser.isHasCompletedOnboarding()).thenReturn(true);
 
+            ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
             presenter.onLoginClicked("child_user", "password123");
 
-            // Act
-            verify(mockAuthRepository).signInChild(anyString(), anyString(), authCallbackCaptor.capture());
+            verify(mockAuthRepository).signInChild(eq("child_user"), eq("password123"), authCallbackCaptor.capture());
             authCallbackCaptor.getValue().onSuccess();
 
-            // Assert
             verify(mockView).navigateToChildHome();
         }
     }
 
     @Test
     public void onLoginClicked_withSuccessfulLogin_andOnboardingIncomplete_navigatesToOnboarding() {
-        try (MockedStatic<CurrentUser> mockedCurrentUser = Mockito.mockStatic(CurrentUser.class)) {
-            // Arrange
-            mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
+        try (MockedStatic<CurrentUser> currentUserStatic = Mockito.mockStatic(CurrentUser.class)) {
+            currentUserStatic.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getUserProfile()).thenReturn(mockUser);
             when(mockUser.isHasCompletedOnboarding()).thenReturn(false);
 
+            ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
             presenter.onLoginClicked("child_user", "password123");
 
-            // Act
-            verify(mockAuthRepository).signInChild(anyString(), anyString(), authCallbackCaptor.capture());
+            verify(mockAuthRepository).signInChild(eq("child_user"), eq("password123"), authCallbackCaptor.capture());
             authCallbackCaptor.getValue().onSuccess();
 
-            // Assert
+            verify(mockView).navigateToOnboarding();
+        }
+    }
+
+    @Test
+    public void onLoginClicked_withSuccessfulLogin_andNullProfile_navigatesToOnboarding() {
+        try (MockedStatic<CurrentUser> currentUserStatic = Mockito.mockStatic(CurrentUser.class)) {
+            currentUserStatic.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
+            when(mockCurrentUser.getUserProfile()).thenReturn(null);
+
+            ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
+            presenter.onLoginClicked("child_user", "password123");
+
+            verify(mockAuthRepository).signInChild(eq("child_user"), eq("password123"), authCallbackCaptor.capture());
+            authCallbackCaptor.getValue().onSuccess();
+
             verify(mockView).navigateToOnboarding();
         }
     }
 
     @Test
     public void onLoginClicked_withFailedLogin_showsError() {
-        // Arrange
+        ChildLoginPresenter presenter = new ChildLoginPresenter(mockView, mockAuthRepository);
         String errorMessage = "Username not found";
+
         presenter.onLoginClicked("nonexistent_user", "password123");
 
-        // Act
-        verify(mockAuthRepository).signInChild(anyString(), anyString(), authCallbackCaptor.capture());
+        verify(mockAuthRepository).signInChild(eq("nonexistent_user"), eq("password123"), authCallbackCaptor.capture());
         authCallbackCaptor.getValue().onFailure(errorMessage);
 
-        // Assert
         verify(mockView).setLoginError(errorMessage);
     }
 }

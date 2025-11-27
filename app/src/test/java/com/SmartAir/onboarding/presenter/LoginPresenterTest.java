@@ -12,10 +12,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,64 +42,96 @@ public class LoginPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new LoginPresenter(mockView);
-        // Mock the AuthRepository singleton
-        try (MockedStatic<AuthRepository> mockedAuthRepo = Mockito.mockStatic(AuthRepository.class)) {
-            mockedAuthRepo.when(AuthRepository::getInstance).thenReturn(mockAuthRepository);
-        }
+        presenter = new LoginPresenter(mockView, mockAuthRepository);
+    }
+
+    // ====================
+    // Tests for login click
+    // ====================
+
+    @Test
+    public void onLoginClicked_withEmptyEmail_showsError() {
+        presenter.onLoginClicked("", "password123");
+        verify(mockView).setLoginError("Email and password cannot be empty");
     }
 
     @Test
+    public void onLoginClicked_withEmptyPassword_showsError() {
+        presenter.onLoginClicked("test@example.com", "");
+        verify(mockView).setLoginError("Email and password cannot be empty");
+    }
+
+    @Test
+    public void onLoginClicked_withNullEmail_showsError() {
+        presenter.onLoginClicked(null, "password123");
+        verify(mockView).setLoginError("Email and password cannot be empty");
+    }
+
+    @Test
+    public void onLoginClicked_withNullPassword_showsError() {
+        presenter.onLoginClicked("test@example.com", null);
+        verify(mockView).setLoginError("Email and password cannot be empty");
+    }
+
+    @Test
+    public void onLoginClicked_trimsInputBeforeLogin() {
+        presenter.onLoginClicked("  test@example.com  ", "  password123  ");
+
+        verify(mockAuthRepository).signInUser(
+                eq("test@example.com"),
+                eq("password123"),
+                authCallbackCaptor.capture()
+        );
+    }
+
+
+    @Test
     public void onLoginClicked_withSuccessfulLogin_andOnboardingComplete_navigatesToHome() {
-        try (MockedStatic<CurrentUser> mockedCurrentUser = Mockito.mockStatic(CurrentUser.class)) {
-            // Arrange
+        try (MockedStatic<CurrentUser> mockedCurrentUser = mockStatic(CurrentUser.class)) {
             mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getUserProfile()).thenReturn(mockUser);
             when(mockUser.isHasCompletedOnboarding()).thenReturn(true);
 
             presenter.onLoginClicked("test@example.com", "password123");
 
-            // Act
             verify(mockAuthRepository).signInUser(anyString(), anyString(), authCallbackCaptor.capture());
             authCallbackCaptor.getValue().onSuccess();
 
-            // Assert
             verify(mockView).navigateToHome();
         }
     }
 
     @Test
     public void onLoginClicked_withSuccessfulLogin_andOnboardingIncomplete_navigatesToOnboarding() {
-        try (MockedStatic<CurrentUser> mockedCurrentUser = Mockito.mockStatic(CurrentUser.class)) {
-            // Arrange
+        try (MockedStatic<CurrentUser> mockedCurrentUser = mockStatic(CurrentUser.class)) {
             mockedCurrentUser.when(CurrentUser::getInstance).thenReturn(mockCurrentUser);
             when(mockCurrentUser.getUserProfile()).thenReturn(mockUser);
             when(mockUser.isHasCompletedOnboarding()).thenReturn(false);
 
             presenter.onLoginClicked("test@example.com", "password123");
 
-            // Act
             verify(mockAuthRepository).signInUser(anyString(), anyString(), authCallbackCaptor.capture());
             authCallbackCaptor.getValue().onSuccess();
 
-            // Assert
             verify(mockView).navigateToOnboarding();
         }
     }
 
     @Test
     public void onLoginClicked_withFailedLogin_showsError() {
-        // Arrange
         String errorMessage = "Invalid credentials";
+
         presenter.onLoginClicked("test@example.com", "wrongpassword");
 
-        // Act
         verify(mockAuthRepository).signInUser(anyString(), anyString(), authCallbackCaptor.capture());
         authCallbackCaptor.getValue().onFailure(errorMessage);
 
-        // Assert
         verify(mockView).setLoginError(errorMessage);
     }
+
+    // ====================
+    // Tests for signup link
+    // ====================
 
     @Test
     public void onSignupLinkClicked_navigatesToSignup() {
