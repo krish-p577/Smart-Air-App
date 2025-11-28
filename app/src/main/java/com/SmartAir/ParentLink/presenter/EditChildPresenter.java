@@ -25,8 +25,7 @@ public class EditChildPresenter {
                 view.setChildName(child.getDisplayName());
                 view.setChildAge(child.getAge());
                 if (child.getDateOfBirth() != null) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-                    view.setChildDob(sdf.format(child.getDateOfBirth()));
+                    view.setChildDob(child.getDateOfBirth());
                 } else {
                     view.setChildDob("");
                 }
