@@ -32,8 +32,7 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
     private RecyclerView parentDashboardRecyclerView;
     private ParentDashboardAdapter adapter;
     private AuthRepository authRepository;
-    private ListenerRegistration childrenListener;
-    private List<ChildUser> childrenList = new ArrayList<>();
+    private final List<ChildUser> childrenList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,18 +85,24 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onStop() {
         super.onStop();
+        ListenerRegistration childrenListener = (ListenerRegistration) parentDashboardRecyclerView.getTag();
         if (childrenListener != null) {
             childrenListener.remove();
         }
     }
 
     private void listenForChildrenUpdates() {
-        childrenListener = authRepository.listenForChildrenForParent(authRepository.getCurrentFirebaseUser().getUid(), new AuthRepository.ChildrenCallback() {
+        ListenerRegistration childrenListener = authRepository.listenForChildrenForParent(authRepository.getCurrentFirebaseUser().getUid(), new AuthRepository.ChildrenCallback() {
             @Override
             public void onSuccess(List<ChildUser> children) {
+                int oldSize = childrenList.size();
                 childrenList.clear();
                 childrenList.addAll(children);
-                adapter.notifyDataSetChanged();
+                int newSize = childrenList.size();
+                if (oldSize > newSize) {
+                    adapter.notifyItemRangeRemoved(newSize, oldSize - newSize);
+                }
+                adapter.notifyItemRangeChanged(0, newSize);
             }
 
             @Override
@@ -105,6 +110,7 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
                 // Handle error
             }
         });
+        parentDashboardRecyclerView.setTag(childrenListener);
     }
 
     @Override

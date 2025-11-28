@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
-import com.SmartAir.onboarding.model.ParentUser;
 import com.SmartAir.ParentLink.view.AddChildView;
 
 import java.util.List;

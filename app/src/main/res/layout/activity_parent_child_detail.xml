@@ -45,21 +45,21 @@
                     android:id="@+id/manage_sharing_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Manage Sharing" />
+                    android:text="@string/manage_sharing" />
 
                 <Button
                     android:id="@+id/edit_details_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Edit Details" />
+                    android:text="@string/edit_details" />
 
                 <Button
                     android:id="@+id/generate_invite_code_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Generate Invite Code" />
+                    android:text="@string/generate_invite_code" />
 
                 <LinearLayout
                     android:id="@+id/invite_code_layout"
@@ -82,7 +82,7 @@
                         android:id="@+id/copy_invite_code_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Copy" />
+                        android:text="@string/copy" />
                 </LinearLayout>
 
                 <Button
@@ -90,10 +90,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Revoke Invite Code"
+                    android:text="@string/revoke_invite_code"
                     android:visibility="gone" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/shared_data_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
     </LinearLayout>
 </LinearLayout>
