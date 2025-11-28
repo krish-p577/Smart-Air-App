@@ -621,8 +621,19 @@ public class AuthRepository {
                 .update("lastLogin", Timestamp.now());
     }
 
-    public void updateChildDetails(String childId, String newName, String newAge, String newDob, String newNotes, AuthCallback childDetailsUpdated) {
+    public void updateChildDetails(String childId, String newName, String newAge, String newDob, String newNotes, @NonNull AuthCallback callback) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("displayName", newName);
+        updates.put("age", newAge);
+        updates.put("dateOfBirth", newDob);
+        updates.put("notes", newNotes);
+
+        firestore.collection("Users").document(childId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
+
 
     // ------------------ CALLBACK INTERFACES ------------------
 
