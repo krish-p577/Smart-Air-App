@@ -1,9 +1,10 @@
-package com.SmartAir.onboarding.view;
+package com.SmartAir.homepage.view;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,16 +14,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.view.WelcomeActivity;
 import com.google.android.material.navigation.NavigationView;
 
-public class ProviderHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ChildHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_provider_home);
+        setContentView(R.layout.activity_child_home);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -31,13 +33,27 @@ public class ProviderHomeActivity extends AppCompatActivity implements Navigatio
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Ensure the correct menu items are visible for providers
+        // Ensure the correct menu items are visible for children
         Menu navMenu = navigationView.getMenu();
+        navMenu.findItem(R.id.nav_manage_children).setVisible(false);
         navMenu.findItem(R.id.nav_child_login).setVisible(false);
+        navMenu.findItem(R.id.nav_logout).setVisible(true);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        // Handle the back press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
@@ -51,14 +67,5 @@ public class ProviderHomeActivity extends AppCompatActivity implements Navigatio
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 }

@@ -1,6 +1,9 @@
 package com.SmartAir.onboarding.model;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
+
+import com.SmartAir.ParentLink.model.InviteCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
@@ -8,17 +11,22 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class AuthRepository {
 
+    private static final String TAG = "AuthRepository";
     private static volatile AuthRepository instance;
 
     private final FirebaseAuth firebaseAuth;
@@ -55,6 +63,7 @@ public class AuthRepository {
                         for (DocumentSnapshot document : task.getResult().getDocuments()) {
                             ChildUser child = document.toObject(ChildUser.class);
                             if (child != null) {
+                                child.setUid(document.getId());
                                 children.add(child);
                             }
                         }
@@ -64,6 +73,67 @@ public class AuthRepository {
                     }
                 });
     }
+
+    public void fetchLinkedChildrenForProvider(String providerId, @NonNull final ChildrenCallback callback) {
+        firestore.collection("Users")
+                .whereArrayContains("linkedProviders", providerId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<ChildUser> children = new ArrayList<>();
+                        for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                            ChildUser child = document.toObject(ChildUser.class);
+                            if (child != null) {
+                                child.setUid(document.getId());
+                                children.add(child);
+                            }
+                        }
+                        callback.onSuccess(children);
+                    } else {
+                        callback.onFailure("Failed to fetch linked children.");
+                    }
+                });
+    }
+
+    public void fetchChildProfile(String childId, @NonNull final ChildProfileCallback callback) {
+        firestore.collection("Users").document(childId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        ChildUser child = task.getResult().toObject(ChildUser.class);
+                        if (child != null) {
+                            child.setUid(task.getResult().getId());
+                            callback.onSuccess(child);
+                        } else {
+                            callback.onFailure("Child profile not found.");
+                        }
+                    } else {
+                        callback.onFailure("Failed to fetch child profile.");
+                    }
+                });
+    }
+
+    public void fetchActiveInviteCodeForChild(String childId, @NonNull final InviteCodeCallback callback) {
+        firestore.collection("InviteCodes")
+                .whereEqualTo("childId", childId)
+                .whereEqualTo("active", true)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                        InviteCode inviteCode = doc.toObject(InviteCode.class);
+                        if (inviteCode != null && inviteCode.getExpiresAt().after(new java.util.Date())) {
+                            callback.onSuccess(inviteCode.getCode());
+                        } else {
+                            callback.onFailure("No active invite code found.");
+                        }
+                    } else {
+                        callback.onFailure("No invite codes found for this child.");
+                    }
+                });
+    }
+
 
     public void markOnboardingAsCompleted() {
         FirebaseUser user = getCurrentFirebaseUser();
@@ -142,6 +212,7 @@ public class AuthRepository {
                             } else {
                                 userProfile = new ProviderUser(email, displayName);
                             }
+                            userProfile.setUid(newUser.getUid());
 
                             firestore.collection("Users").document(newUser.getUid())
                                     .set(userProfile)
@@ -193,8 +264,10 @@ public class AuthRepository {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        ChildUser childUser = task.getResult().getDocuments().get(0).toObject(ChildUser.class);
+                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                        ChildUser childUser = doc.toObject(ChildUser.class);
                         if (childUser != null && childUser.getEmail() != null && !childUser.getEmail().isEmpty()) {
+                            childUser.setUid(doc.getId());
                             signInUser(childUser.getEmail(), password, callback);
                         } else {
                             callback.onFailure("Child account is not configured correctly for login.");
@@ -242,6 +315,7 @@ public class AuthRepository {
                         }
 
                         if (userProfile != null) {
+                            userProfile.setUid(doc.getId());
                             currentUser.setFirebaseUser(firebaseUser);
                             currentUser.setUserProfile(userProfile);
                             updateLastLogin(firebaseUser.getUid());
@@ -270,6 +344,156 @@ public class AuthRepository {
         }
     }
 
+    public void generateInviteCode(String childId, @NonNull final InviteCodeCallback callback) {
+        FirebaseUser currentUser = getCurrentFirebaseUser();
+        if (currentUser == null) {
+            callback.onFailure("No authenticated user found.");
+            return;
+        }
+        String parentId = currentUser.getUid();
+        final String code = UUID.randomUUID().toString().substring(0, 8);
+
+        firestore.collection("InviteCodes")
+                .whereEqualTo("childId", childId)
+                .whereEqualTo("active", true)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        WriteBatch batch = firestore.batch();
+                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                        for (DocumentSnapshot document : documents) {
+                            batch.update(document.getReference(), "active", false);
+                        }
+
+                        // Create the new invite code as a Map
+                        Map<String, Object> newCodeData = new HashMap<>();
+                        newCodeData.put("code", code);
+                        newCodeData.put("childId", childId);
+                        newCodeData.put("parentId", parentId);
+                        newCodeData.put("createdAt", FieldValue.serverTimestamp());
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.add(Calendar.DAY_OF_YEAR, 7);
+                        newCodeData.put("expiresAt", calendar.getTime());
+                        newCodeData.put("active", true);
+
+                        DocumentReference newCodeRef = firestore.collection("InviteCodes").document(code);
+                        batch.set(newCodeRef, newCodeData);
+
+                        // Commit the batch
+                        batch.commit().addOnSuccessListener(aVoid -> callback.onSuccess(code))
+                                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                    } else {
+                        callback.onFailure(task.getException() != null ? task.getException().getMessage() : "Failed to query existing codes.");
+                    }
+                });
+    }
+
+    public void revokeInviteCode(String code, @NonNull final AuthCallback callback) {
+        firestore.collection("InviteCodes").document(code)
+                .update("active", false)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    public void linkProviderToChild(String inviteCode, @NonNull final AuthCallback callback) {
+        String providerId = getCurrentFirebaseUser().getUid();
+        firestore.collection("InviteCodes").document(inviteCode).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                        InviteCode code = task.getResult().toObject(InviteCode.class);
+                        if (code != null && code.isActive() && code.getExpiresAt().after(new java.util.Date())) {
+                            String childId = code.getChildId();
+
+                            WriteBatch batch = firestore.batch();
+                            DocumentReference childRef = firestore.collection("Users").document(childId);
+                            batch.update(childRef, "linkedProviders", FieldValue.arrayUnion(providerId));
+
+                            DocumentReference providerRef = firestore.collection("Users").document(providerId);
+                            batch.update(providerRef, "linkedChildren", FieldValue.arrayUnion(childId));
+                            
+                            DocumentReference codeRef = firestore.collection("InviteCodes").document(inviteCode);
+                            batch.update(codeRef, "active", false);
+
+                            batch.commit()
+                                    .addOnSuccessListener(aVoid -> callback.onSuccess())
+                                    .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                        } else {
+                            callback.onFailure("Invalid or expired invite code.");
+                        }
+                    } else {
+                        callback.onFailure("Invite code not found.");
+                    }
+                });
+    }
+
+    public void updateSharingSettings(String childId, Map<String, Boolean> sharingSettings, @NonNull final AuthCallback callback) {
+        firestore.collection("Users").document(childId)
+                .update("sharingSettings", sharingSettings)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    public void revokeAllPermissions(String childId, @NonNull final AuthCallback callback) {
+        firestore.collection("Users").document(childId)
+                .update("sharingSettings", new HashMap<String, Boolean>())
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    public void revokeAllPermissionsAndUnlink(String childId, @NonNull final AuthCallback callback) {
+        final DocumentReference childRef = firestore.collection("Users").document(childId);
+
+        firestore.runTransaction(transaction -> {
+            DocumentSnapshot childSnapshot = transaction.get(childRef);
+            if (!childSnapshot.exists()) {
+                throw new FirebaseFirestoreException("Child document does not exist!",
+                        FirebaseFirestoreException.Code.ABORTED);
+            }
+
+            List<String> linkedProviders = (List<String>) childSnapshot.get("linkedProviders");
+
+            // Unlink from all providers
+            if (linkedProviders != null && !linkedProviders.isEmpty()) {
+                for (String providerId : linkedProviders) {
+                    DocumentReference providerRef = firestore.collection("Users").document(providerId);
+                    transaction.update(providerRef, "linkedChildren", FieldValue.arrayRemove(childId));
+                }
+            }
+
+            // Clear sharing settings and linkedProviders on the child document
+            transaction.update(childRef, "sharingSettings", new HashMap<String, Boolean>());
+            transaction.update(childRef, "linkedProviders", new ArrayList<String>());
+
+            return null; // Transaction success
+        }).addOnSuccessListener(result -> {
+            // After transaction, clean up invite codes
+            cleanupInviteCodes(childId, callback);
+        }).addOnFailureListener(e -> {
+            callback.onFailure("Failed to revoke permissions and unlink: " + e.getMessage());
+        });
+    }
+
+    private void cleanupInviteCodes(String childId, @NonNull final AuthCallback callback) {
+        firestore.collection("InviteCodes").whereEqualTo("childId", childId).whereEqualTo("active", true).get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    WriteBatch batch = firestore.batch();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        batch.update(document.getReference(), "active", false);
+                    }
+                    batch.commit()
+                        .addOnSuccessListener(aVoid -> callback.onSuccess())
+                        .addOnFailureListener(e -> callback.onFailure("Failed to cleanup invite codes: " + e.getMessage()));
+                } else {
+                    // If fetching codes fails, we might still consider the operation partially successful
+                    // as the main unlinking logic has completed.
+                    callback.onFailure("Failed to fetch invite codes for cleanup.");
+                }
+            });
+    }
+
+
+
     private void updateLastLogin(String uid) {
         Map<String, Object> updates = new HashMap<>();
         updates.put("lastLoginAt", Timestamp.now());
@@ -283,6 +507,16 @@ public class AuthRepository {
 
     public interface ChildrenCallback {
         void onSuccess(List<ChildUser> children);
+        void onFailure(String errorMessage);
+    }
+
+    public interface ChildProfileCallback {
+        void onSuccess(ChildUser child);
+        void onFailure(String errorMessage);
+    }
+
+    public interface InviteCodeCallback {
+        void onSuccess(String code);
         void onFailure(String errorMessage);
     }
 }

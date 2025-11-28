@@ -1,7 +1,9 @@
-package com.SmartAir.onboarding.presenter;
+package com.SmartAir.ParentLink.presenter;
+
+
 
 import com.SmartAir.onboarding.model.AuthRepository;
-import com.SmartAir.onboarding.view.AddChildView;
+import com.SmartAir.ParentLink.view.AddChildView;
 
 import java.util.ArrayList;
 import java.util.List;

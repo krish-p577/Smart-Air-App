@@ -6,10 +6,15 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/child_name_text_view"
+        android:id="@+id/option_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
+
+    <Switch
+        android:id="@+id/option_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

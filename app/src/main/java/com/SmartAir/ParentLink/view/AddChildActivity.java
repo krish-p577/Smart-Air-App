@@ -1,11 +1,10 @@
-package com.SmartAir.onboarding.view;
+package com.SmartAir.ParentLink.view;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
-import com.SmartAir.onboarding.presenter.AddChildPresenter;
+import com.SmartAir.ParentLink.presenter.AddChildPresenter;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 

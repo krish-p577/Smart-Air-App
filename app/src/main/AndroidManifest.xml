@@ -7,6 +7,7 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartAir"
         tools:targetApi="31">
+
+        <!-- Required for Google Play Services (prevents SecurityException) -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <!-- Entry Point -->
         <activity
@@ -26,43 +32,27 @@
             </intent-filter>
         </activity>
 
-        <!-- Onboarding & Home Activities -->
-        <activity
-            android:name=".onboarding.view.WelcomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.OnboardingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.RoleSelectionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.SignupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.ChildLoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.PasswordResetActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.ParentHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.ProviderHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.ChildHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.AddChildActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.SelectChildLoginActivity"
-            android:exported="false" />
+        <!-- Onboarding -->
+        <activity android:name=".onboarding.view.WelcomeActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.OnboardingActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.RoleSelectionActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.LoginActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.SignupActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.ChildLoginActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.PasswordResetActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.SelectChildLoginActivity" android:exported="false" />
+
+        <!-- Homepage -->
+        <activity android:name=".homepage.view.ParentHomeActivity" android:exported="false" />
+        <activity android:name=".homepage.view.ProviderHomeActivity" android:exported="false" />
+        <activity android:name=".homepage.view.ChildHomeActivity" android:exported="false" />
+        <activity android:name=".homepage.view.ParentChildDetailActivity" android:exported="false" />
+        <activity android:name=".homepage.view.ProviderChildDetailActivity" android:exported="false" />
+
+        <!-- ParentLink -->
+        <activity android:name=".ParentLink.view.ManageChildrenActivity" android:exported="false" />
+        <activity android:name=".ParentLink.view.SharingSettingsActivity" android:exported="false" />
+        <activity android:name=".ParentLink.view.AddChildActivity" android:exported="false" />
 
     </application>
 

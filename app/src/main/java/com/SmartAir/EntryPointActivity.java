@@ -8,9 +8,9 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 // Corrected imports for Home Activities
-import com.SmartAir.onboarding.view.ChildHomeActivity;
-import com.SmartAir.onboarding.view.ParentHomeActivity;
-import com.SmartAir.onboarding.view.ProviderHomeActivity;
+import com.SmartAir.homepage.view.ChildHomeActivity;
+import com.SmartAir.homepage.view.ParentHomeActivity;
+import com.SmartAir.homepage.view.ProviderHomeActivity;
 
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;

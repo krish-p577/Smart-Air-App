@@ -1,11 +1,13 @@
 package com.SmartAir.onboarding.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ParentUser extends BaseUser {
 
     private List<String> childrenIds;
+    private Date lastLoginAt;
 
     // Required empty public constructor for Firestore
     public ParentUser() {
@@ -25,5 +27,13 @@ public class ParentUser extends BaseUser {
 
     public void setChildrenIds(List<String> childrenIds) {
         this.childrenIds = childrenIds;
+    }
+
+    public Date getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(Date lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 }
