@@ -1,5 +1,6 @@
 package com.SmartAir.onboarding.presenter;
 
+import android.content.Context;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.BaseUser;
 import com.SmartAir.onboarding.model.CurrentUser;
@@ -16,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,6 +27,9 @@ public class LoginPresenterTest {
 
     @Mock
     private LoginView mockView;
+
+    @Mock
+    private Context mockContext;
 
     @Mock
     private AuthRepository mockAuthRepository;
@@ -42,7 +47,7 @@ public class LoginPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new LoginPresenter(mockView, mockAuthRepository);
+        presenter = new LoginPresenter(mockContext, mockView, mockAuthRepository);
     }
 
     // ====================
