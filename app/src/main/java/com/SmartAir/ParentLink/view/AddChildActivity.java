@@ -46,6 +46,7 @@ public class AddChildActivity extends AppCompatActivity implements AddChildView 
         nameEditText = findViewById(R.id.name_edit_text);
         ageEditText = findViewById(R.id.age_edit_text);
         dobPicker = findViewById(R.id.dob_picker);
+        dobPicker.setMaxDate(System.currentTimeMillis());
         notesEditText = findViewById(R.id.notes_edit_text);
         usernameEditText = findViewById(R.id.username_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
