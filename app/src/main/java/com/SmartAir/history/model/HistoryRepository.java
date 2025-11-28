@@ -1,4 +1,5 @@
 package com.SmartAir.history.model;
+import com.google.firebase.firestore.FieldPath;
 
 import com.SmartAir.history.HistoryContract;
 import com.SmartAir.history.presenter.FilterDataModel;
@@ -18,7 +19,7 @@ public class HistoryRepository implements HistoryContract.Repository {
 
     public HistoryRepository(){
         db = FirebaseFirestore.getInstance();
-        ref = db.collection("daily_check_in");
+        ref = db.collection("daily_check_ins");
     }
     @Override
     public void getData(FilterDataModel filter, LoadCallback callback){
@@ -39,7 +40,7 @@ public class HistoryRepository implements HistoryContract.Repository {
         }
 
         if (filter.getSick() != null){
-            query = query.whereEqualTo("Cough/Wheeze", filter.getSick());
+            query = query.whereEqualTo(FieldPath.of("Cough/Wheeze"), filter.getSick());
         }
 
         // Filter by Start date and end date
@@ -70,10 +71,28 @@ public class HistoryRepository implements HistoryContract.Repository {
         filteredQuery.get().addOnSuccessListener(snapshot->{
             List<HistoryItem> result = new ArrayList<>();
             for (DocumentSnapshot doc : snapshot) {
-                HistoryItem item = doc.toObject(HistoryItem.class);
-                if (item != null) {
-                    result.add(item);
+                String date = doc.getString("Date");
+                String childName = doc.getString("Child");
+                String author = doc.getString("Entry Author");
+                Boolean nightWaking = doc.getBoolean("Night Waking");
+                Object sickObj = doc.get(FieldPath.of("Cough/Wheeze"));
+                Boolean sick = null;
+                if (sickObj instanceof Boolean) {
+                    sick = (Boolean) sickObj;
                 }
+                Boolean limitedAbility = doc.getBoolean("Limited Ability");
+                Object triggersObj = doc.get("Triggers");
+                List<String> triggers = null;
+                if (triggersObj instanceof List) {
+                    triggers = (List<String>) triggersObj;
+                }
+                if (triggers == null) {
+                    triggers = new ArrayList<>();
+                }
+
+                HistoryItem item = new HistoryItem(date, author, childName, nightWaking,
+                        limitedAbility, sick, triggers);
+                result.add(item);
             }
             callback.onSuccess(result);
         }).addOnFailureListener(callback::onFailure);

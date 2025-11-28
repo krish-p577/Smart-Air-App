@@ -18,11 +18,13 @@ public class HistoryPresenter implements HistoryContract.Presenter {
         repository.getData(filter, new HistoryContract.Repository.LoadCallback() {
             @Override
             public void onSuccess(List<HistoryItem> items) {
+                view.hideLoading();
                 view.showHistory(items);
             }
 
             @Override
             public void onFailure(Exception e) {
+                view.hideLoading();
                 view.showLoadError("Error fetching data");
             }
         });

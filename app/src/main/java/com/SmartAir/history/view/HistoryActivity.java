@@ -1,9 +1,12 @@
 package com.SmartAir.history.view;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.SmartAir.R;
@@ -11,6 +14,7 @@ import com.SmartAir.history.HistoryContract;
 import com.SmartAir.history.presenter.FilterDataModel;
 import com.SmartAir.history.presenter.HistoryItem;
 import com.SmartAir.history.presenter.HistoryPresenter;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,8 @@ public class HistoryActivity extends AppCompatActivity  implements HistoryContra
     private RecyclerView recyclerView;
     private HistoryContract.Presenter presenter;
     private HistoryContract.Adapter adapter;
-    private Button exitBtn;
+    private ImageButton exitBtn;
+    private CircularProgressIndicator loading;
 
     private FilterDataModel filter;
 
@@ -30,18 +35,23 @@ public class HistoryActivity extends AppCompatActivity  implements HistoryContra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        presenter = new HistoryPresenter(this);
-        filter = new FilterDataModel(null,null,null, getDefaultStartDate(),
-                getToday(), new ArrayList<String>());
+        exitBtn = findViewById(R.id.historyBtnClose);
+        recyclerView = findViewById(R.id.historyRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        adapter = new HistoryAdapter();
+        recyclerView.setAdapter((RecyclerView.Adapter) adapter);
 
-        presenter.loadData(filter);
-
-        // TODO: filter button to change data
-        // TODO: export button to get current filter and export
-
+        loading = findViewById(R.id.historyLoading);
 
         exitBtn.setOnClickListener(v->finish());
+
+        presenter = new HistoryPresenter(this);
+        filter = new FilterDataModel(null,null,null,
+                getDefaultStartDate(), getToday(), new ArrayList<String>());
+
+        showLoading();
+        presenter.loadData(filter);
     }
 
     public String getDefaultStartDate(){
@@ -57,20 +67,24 @@ public class HistoryActivity extends AppCompatActivity  implements HistoryContra
     }
 
     @Override
-    public void showSubmitSuccess(){
-
-    }
-    @Override
     public void showHistory(List<HistoryItem> items){
         adapter.setItems(items);
     }
     @Override
     public void showLoadError(String message){
-
+        Toast.makeText(this, "Failed to Fetch Data, Please Try Again Later.",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showSubmitFailure(){
+    public void showLoading() {
+        loading.setVisibility(View.VISIBLE);
+        loading.show();
+    }
 
+    @Override
+    public void hideLoading() {
+        loading.hide();
+        loading.setVisibility(View.GONE);
     }
 }
