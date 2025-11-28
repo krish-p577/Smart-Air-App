@@ -44,6 +44,7 @@
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="back_button_desc">Back</string>
+    <string name="shared_with_provider">Shared with Provider</string>
 
     <!-- Parent Child Detail -->
     <string name="manage_sharing">Manage Sharing</string>
