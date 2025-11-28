@@ -16,6 +16,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.Timestamp;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +35,8 @@ public class AuthRepository {
     private final FirebaseFirestore firestore;
     private final CurrentUser currentUser;
 
+    // These must reflect the currently-known parent credentials in this app session.
+    // They are set in signInUser(...) and can be explicitly stored by the caller via storeParentCredentials(...)
     private String parentEmail;
     private String parentPassword;
 
@@ -52,6 +56,48 @@ public class AuthRepository {
         }
         return instance;
     }
+
+    // -------------------------------------------------------
+    // Helper: allow presenter/activity to store parent creds
+    // (call this after the parent successfully logs in).
+    // -------------------------------------------------------
+    public void storeParentCredentials(@NonNull String email, @NonNull String password) {
+        this.parentEmail = email;
+        this.parentPassword = password;
+    }
+// ------------------ CREDENTIAL PERSISTENCE ------------------
+
+    private static final String PREFS = "auth_prefs";
+    private static final String KEY_EMAIL = "parent_email";
+    private static final String KEY_PASSWORD = "parent_password";
+
+    // Call this after successful login
+    public void persistParentCredentials(Context context, String email, String password) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        prefs.edit()
+                .putString(KEY_EMAIL, email)
+                .putString(KEY_PASSWORD, password)
+                .apply();
+    }
+    public void ensureParentCredentialsLoaded(Context context) {
+        if (parentEmail == null || parentPassword == null) {
+            loadPersistedParentCredentials(context);
+        }
+    }
+
+    // Call this at app startup (e.g., Splash screen / MainActivity)
+    public void loadPersistedParentCredentials(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        parentEmail = prefs.getString(KEY_EMAIL, null);
+        parentPassword = prefs.getString(KEY_PASSWORD, null);
+    }
+
+    public void clearPersistedCredentials(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        prefs.edit().clear().apply();
+    }
+
+    // ------------------ CHILD FETCH METHODS ------------------
 
     public void fetchChildrenForParent(String parentId, @NonNull final ChildrenCallback callback) {
         firestore.collection("Users")
@@ -133,13 +179,38 @@ public class AuthRepository {
                     }
                 });
     }
+    public void refreshCurrentParentChildren(@NonNull final ChildrenCallback callback) {
+        BaseUser user = currentUser.getUserProfile();
+        if (user == null || !"parent".equalsIgnoreCase(user.getRole())) {
+            callback.onFailure("Current user is not a parent.");
+            return;
+        }
 
+        fetchChildrenForParent(user.getUid(), new ChildrenCallback() {
+            @Override
+            public void onSuccess(List<ChildUser> children) {
+                // Update currentUser's children list if you have one
+                if (currentUser.getUserProfile() instanceof ParentUser) {
+                    ((ParentUser) currentUser.getUserProfile()).setChildren(children);
+                }
+                callback.onSuccess(children);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                callback.onFailure(errorMessage);
+            }
+        });
+    }
+
+
+    // ------------------ ONBOARDING ------------------
 
     public void markOnboardingAsCompleted() {
         FirebaseUser user = getCurrentFirebaseUser();
         if (user != null) {
             firestore.collection("Users").document(user.getUid())
-                .update("hasCompletedOnboarding", true);
+                    .update("hasCompletedOnboarding", true);
         }
     }
 
@@ -147,58 +218,7 @@ public class AuthRepository {
         return firebaseAuth.getCurrentUser();
     }
 
-    public void createChildUser(String username, String password, @NonNull final AuthCallback callback) {
-        FirebaseUser parentFirebaseUser = getCurrentFirebaseUser();
-        if (parentFirebaseUser == null) {
-            callback.onFailure("You must be logged in as a parent to add a child.");
-            return;
-        }
-
-        String parentUid = parentFirebaseUser.getUid();
-        String fakeEmail = username.toLowerCase() + "@" + parentUid.substring(0, 8) + ".smartair.user";
-
-        firebaseAuth.createUserWithEmailAndPassword(fakeEmail, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && task.getResult().getUser() != null) {
-                        FirebaseUser newChildUser = task.getResult().getUser();
-                        String childUid = newChildUser.getUid();
-
-                        ChildUser childProfile = new ChildUser(fakeEmail, username, parentUid);
-
-                        WriteBatch batch = firestore.batch();
-
-                        DocumentReference childDocRef = firestore.collection("Users").document(childUid);
-                        batch.set(childDocRef, childProfile);
-
-                        DocumentReference parentDocRef = firestore.collection("Users").document(parentUid);
-                        batch.update(parentDocRef, "childrenIds", FieldValue.arrayUnion(childUid));
-
-                        batch.commit().addOnSuccessListener(aVoid -> {
-                            reauthenticateParent(new AuthCallback() {
-                                @Override
-                                public void onSuccess() {
-                                    callback.onSuccess();
-                                }
-
-                                @Override
-                                public void onFailure(String errorMessage) {
-                                    callback.onFailure("Child created, but failed to restore parent session. Please log in again.");
-                                }
-                            });
-                        }).addOnFailureListener(e -> callback.onFailure("Failed to save user data: " + e.getMessage()));
-
-                    } else {
-                        Exception exception = task.getException();
-                        if (exception instanceof FirebaseAuthUserCollisionException) {
-                            callback.onFailure("This username might be taken. Please try another.");
-                        } else if (exception != null) {
-                            callback.onFailure(exception.getMessage());
-                        } else {
-                            callback.onFailure("An unknown error occurred.");
-                        }
-                    }
-                });
-    }
+    // ------------------ CREATE USERS ------------------
 
     public void createUser(String email, String password, String role, String displayName, @NonNull final AuthCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -238,9 +258,101 @@ public class AuthRepository {
                 });
     }
 
+    // ------------------ CREATE CHILD ------------------
+
+    /**
+     * Creates a child account. IMPORTANT:
+     * - parentEmail/parentPassword must be available in memory (set via signInUser() or storeParentCredentials()).
+     * - If parent credentials are not available, we fail fast to avoid corrupting the auth session.
+     */
+    public void createChildUser(String name, String age, String dob, String notes,
+                                String username, String password, @NonNull final AuthCallback callback) {
+
+        FirebaseUser parentFirebaseUser = getCurrentFirebaseUser();
+        if (parentFirebaseUser == null) {
+            callback.onFailure("You must be logged in as a parent to add a child.");
+            return;
+        }
+
+        if (parentEmail == null || parentPassword == null) {
+            callback.onFailure("Parent credentials are missing. Please sign in again.");
+            return;
+        }
+
+        String parentUid = parentFirebaseUser.getUid();
+        String fakeEmail = username.toLowerCase() + "@" + parentUid.substring(0, 8) + ".smartair.user";
+
+        firebaseAuth.createUserWithEmailAndPassword(fakeEmail, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().getUser() != null) {
+                        FirebaseUser newChildUser = task.getResult().getUser();
+                        String childUid = newChildUser.getUid();
+
+                        ChildUser childProfile = new ChildUser(fakeEmail, name, parentUid);
+                        childProfile.setAge(age);
+                        childProfile.setDateOfBirth(dob);
+                        childProfile.setNotes(notes);
+                        childProfile.setDisplayName(name);
+
+                        WriteBatch batch = firestore.batch();
+
+                        DocumentReference childDocRef = firestore.collection("Users").document(childUid);
+                        batch.set(childDocRef, childProfile);
+
+                        DocumentReference parentDocRef = firestore.collection("Users").document(parentUid);
+                        batch.update(parentDocRef, "childrenIds", FieldValue.arrayUnion(childUid));
+
+                        batch.commit().addOnSuccessListener(aVoid -> {
+                            // REFRESH parent children list
+                            refreshCurrentParentChildren(new ChildrenCallback() {
+                                @Override
+                                public void onSuccess(List<ChildUser> children) {
+                                    // Re-auth parent
+                                    reauthenticateParent(new AuthCallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            callback.onSuccess(); // ready, UI can observe updated children list
+                                        }
+
+                                        @Override
+                                        public void onFailure(String errorMessage) {
+                                            callback.onFailure("Child created, but failed to restore parent session.");
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onFailure(String errorMessage) {
+                                    callback.onFailure("Child created, but failed to refresh children.");
+                                }
+                            });
+                        }).addOnFailureListener(e -> callback.onFailure("Failed to save child data: " + e.getMessage()));
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception instanceof FirebaseAuthUserCollisionException) {
+                            callback.onFailure("This username might be taken. Please try another.");
+                        } else if (exception != null) {
+                            callback.onFailure(exception.getMessage());
+                        } else {
+                            callback.onFailure("Unknown error creating child.");
+                        }
+                    }
+                });
+    }
+
+
+
+    // ------------------ SIGN IN ------------------
+
+    /**
+     * Sign in as parent (or any generic user). This method captures parent credentials for later re-auth when creating children.
+     * Callers should call storeParentCredentials(...) after a successful sign-in if they want to ensure credentials are preserved.
+     */
     public void signInUser(String email, String password, @NonNull final AuthCallback callback) {
+        // Save credentials in-memory for session use (required to re-auth after createChildUser)
         this.parentEmail = email;
         this.parentPassword = password;
+
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
@@ -296,6 +408,8 @@ public class AuthRepository {
         parentPassword = null;
     }
 
+    // ------------------ USER PROFILE ------------------
+
     public void fetchUserProfile(FirebaseUser firebaseUser, @NonNull final AuthCallback callback) {
         firestore.collection("Users").document(firebaseUser.getUid()).get()
                 .addOnCompleteListener(task -> {
@@ -329,12 +443,24 @@ public class AuthRepository {
                 });
     }
 
-    private void reauthenticateParent(AuthCallback callback) {
+    // ------------------ REAUTH PARENT ------------------
+
+    /**
+     * Re-authenticates the parent using the in-memory stored credentials.
+     * This is intended to be called immediately after creating a child account (which temporarily signs-in as the child).
+     */
+    public void reauthenticateParent(AuthCallback callback) {
         if (parentEmail != null && parentPassword != null) {
             firebaseAuth.signInWithEmailAndPassword(parentEmail, parentPassword)
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            callback.onSuccess();
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            FirebaseUser signedInUser = task.getResult().getUser();
+                            if (signedInUser != null) {
+                                // Refresh the currentUser object and finish
+                                fetchUserProfile(signedInUser, callback);
+                            } else {
+                                callback.onFailure("Re-authentication failed to get user.");
+                            }
                         } else {
                             callback.onFailure("Failed to re-authenticate parent.");
                         }
@@ -343,6 +469,8 @@ public class AuthRepository {
             callback.onFailure("Parent credentials not available for re-authentication.");
         }
     }
+
+    // ------------------ INVITE CODES ------------------
 
     public void generateInviteCode(String childId, @NonNull final InviteCodeCallback callback) {
         FirebaseUser currentUser = getCurrentFirebaseUser();
@@ -360,12 +488,10 @@ public class AuthRepository {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         WriteBatch batch = firestore.batch();
-                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                        for (DocumentSnapshot document : documents) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
                             batch.update(document.getReference(), "active", false);
                         }
 
-                        // Create the new invite code as a Map
                         Map<String, Object> newCodeData = new HashMap<>();
                         newCodeData.put("code", code);
                         newCodeData.put("childId", childId);
@@ -379,7 +505,6 @@ public class AuthRepository {
                         DocumentReference newCodeRef = firestore.collection("InviteCodes").document(code);
                         batch.set(newCodeRef, newCodeData);
 
-                        // Commit the batch
                         batch.commit().addOnSuccessListener(aVoid -> callback.onSuccess(code))
                                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
                     } else {
@@ -410,7 +535,7 @@ public class AuthRepository {
 
                             DocumentReference providerRef = firestore.collection("Users").document(providerId);
                             batch.update(providerRef, "linkedChildren", FieldValue.arrayUnion(childId));
-                            
+
                             DocumentReference codeRef = firestore.collection("InviteCodes").document(inviteCode);
                             batch.update(codeRef, "active", false);
 
@@ -425,6 +550,8 @@ public class AuthRepository {
                     }
                 });
     }
+
+    // ------------------ CHILD SETTINGS ------------------
 
     public void updateSharingSettings(String childId, Map<String, Boolean> sharingSettings, @NonNull final AuthCallback callback) {
         firestore.collection("Users").document(childId)
@@ -444,61 +571,60 @@ public class AuthRepository {
         final DocumentReference childRef = firestore.collection("Users").document(childId);
 
         firestore.runTransaction(transaction -> {
-            DocumentSnapshot childSnapshot = transaction.get(childRef);
-            if (!childSnapshot.exists()) {
-                throw new FirebaseFirestoreException("Child document does not exist!",
-                        FirebaseFirestoreException.Code.ABORTED);
-            }
-
-            List<String> linkedProviders = (List<String>) childSnapshot.get("linkedProviders");
-
-            // Unlink from all providers
-            if (linkedProviders != null && !linkedProviders.isEmpty()) {
-                for (String providerId : linkedProviders) {
-                    DocumentReference providerRef = firestore.collection("Users").document(providerId);
-                    transaction.update(providerRef, "linkedChildren", FieldValue.arrayRemove(childId));
-                }
-            }
-
-            // Clear sharing settings and linkedProviders on the child document
-            transaction.update(childRef, "sharingSettings", new HashMap<String, Boolean>());
-            transaction.update(childRef, "linkedProviders", new ArrayList<String>());
-
-            return null; // Transaction success
-        }).addOnSuccessListener(result -> {
-            // After transaction, clean up invite codes
-            cleanupInviteCodes(childId, callback);
-        }).addOnFailureListener(e -> {
-            callback.onFailure("Failed to revoke permissions and unlink: " + e.getMessage());
-        });
-    }
-
-    private void cleanupInviteCodes(String childId, @NonNull final AuthCallback callback) {
-        firestore.collection("InviteCodes").whereEqualTo("childId", childId).whereEqualTo("active", true).get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    WriteBatch batch = firestore.batch();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        batch.update(document.getReference(), "active", false);
+                    DocumentSnapshot childSnapshot = transaction.get(childRef);
+                    if (!childSnapshot.exists()) {
+                        throw new FirebaseFirestoreException("Child document does not exist!",
+                                FirebaseFirestoreException.Code.ABORTED);
                     }
-                    batch.commit()
-                        .addOnSuccessListener(aVoid -> callback.onSuccess())
-                        .addOnFailureListener(e -> callback.onFailure("Failed to cleanup invite codes: " + e.getMessage()));
-                } else {
-                    // If fetching codes fails, we might still consider the operation partially successful
-                    // as the main unlinking logic has completed.
-                    callback.onFailure("Failed to fetch invite codes for cleanup.");
-                }
-            });
+
+                    List<String> linkedProviders = (List<String>) childSnapshot.get("linkedProviders");
+
+                    if (linkedProviders != null && !linkedProviders.isEmpty()) {
+                        for (String providerId : linkedProviders) {
+                            DocumentReference providerRef = firestore.collection("Users").document(providerId);
+                            transaction.update(providerRef, "linkedChildren", FieldValue.arrayRemove(childId));
+                        }
+                    }
+
+                    transaction.update(childRef, "sharingSettings", new HashMap<String, Boolean>());
+                    transaction.update(childRef, "linkedProviders", new ArrayList<String>());
+
+                    return null;
+                }).addOnSuccessListener(result -> cleanupInviteCodes(childId, callback))
+                .addOnFailureListener(e -> callback.onFailure("Failed to revoke permissions and unlink: " + e.getMessage()));
     }
 
+    private void cleanupInviteCodes(String childId, @NonNull AuthCallback callback) {
+        firestore.collection("InviteCodes")
+                .whereEqualTo("childId", childId)
+                .whereEqualTo("active", true)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        WriteBatch batch = firestore.batch();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            batch.update(doc.getReference(), "active", false);
+                        }
+                        batch.commit()
+                                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                                .addOnFailureListener(e -> callback.onFailure("Failed to clean up invite codes: " + e.getMessage()));
+                    } else {
+                        callback.onFailure("No active invite codes found or failed to fetch.");
+                    }
+                });
+    }
 
+    // ------------------ LAST LOGIN ------------------
 
     private void updateLastLogin(String uid) {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("lastLoginAt", Timestamp.now());
-        firestore.collection("Users").document(uid).update(updates);
+        firestore.collection("Users").document(uid)
+                .update("lastLogin", Timestamp.now());
     }
+
+    public void updateChildDetails(String childId, String newName, String newAge, String newDob, String newNotes, AuthCallback childDetailsUpdated) {
+    }
+
+    // ------------------ CALLBACK INTERFACES ------------------
 
     public interface AuthCallback {
         void onSuccess();

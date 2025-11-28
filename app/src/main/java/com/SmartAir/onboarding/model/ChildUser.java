@@ -8,12 +8,13 @@ import java.util.Map;
 public class ChildUser extends BaseUser {
 
     private String parentId;
-    private Integer personalBestPEF; // Personal Best Peak Expiratory Flow
-    private Date dateOfBirth;
+    private String age;
+    private String dateOfBirth;
     private String notes;
+    private Integer personalBestPEF; // Personal Best Peak Expiratory Flow
     private Map<String, Boolean> sharingSettings;
     private List<String> linkedProviders;
-    private Date lastLoginAt;
+    private Date lastLogin;
     private Object schedule;
 
     // Required empty public constructor for Firestore
@@ -37,19 +38,19 @@ public class ChildUser extends BaseUser {
         this.parentId = parentId;
     }
 
-    public Integer getPersonalBestPEF() {
-        return personalBestPEF;
+    public String getAge() {
+        return age;
     }
 
-    public void setPersonalBestPEF(Integer personalBestPEF) {
-        this.personalBestPEF = personalBestPEF;
+    public void setAge(String age) {
+        this.age = age;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -59,6 +60,14 @@ public class ChildUser extends BaseUser {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Integer getPersonalBestPEF() {
+        return personalBestPEF;
+    }
+
+    public void setPersonalBestPEF(Integer personalBestPEF) {
+        this.personalBestPEF = personalBestPEF;
     }
 
     public Map<String, Boolean> getSharingSettings() {
@@ -77,12 +86,12 @@ public class ChildUser extends BaseUser {
         this.linkedProviders = linkedProviders;
     }
 
-    public Date getLastLoginAt() {
-        return lastLoginAt;
+    public Date getLastLogin() {
+        return lastLogin;
     }
 
-    public void setLastLoginAt(Date lastLoginAt) {
-        this.lastLoginAt = lastLoginAt;
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     public Object getSchedule() {
@@ -96,6 +105,9 @@ public class ChildUser extends BaseUser {
         return new HashMap<>(); // Return an empty map if it's not a map
     }
 
+    public void setScheduleAsMap(Map<String, Object> schedule) {
+        this.schedule = schedule;
+    }
 
     public void setSchedule(Object schedule) {
         this.schedule = schedule;

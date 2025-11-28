@@ -32,7 +32,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         setContentView(R.layout.activity_login);
 
         // Inject the singleton repository
-        presenter = new LoginPresenter(this, AuthRepository.getInstance());
+        presenter = new LoginPresenter(this, this, AuthRepository.getInstance());
+
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);

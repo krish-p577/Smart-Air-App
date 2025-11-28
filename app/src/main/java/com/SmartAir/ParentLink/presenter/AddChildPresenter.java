@@ -1,11 +1,12 @@
 package com.SmartAir.ParentLink.presenter;
 
-
+import androidx.annotation.NonNull;
 
 import com.SmartAir.onboarding.model.AuthRepository;
+import com.SmartAir.onboarding.model.ChildUser;
+import com.SmartAir.onboarding.model.ParentUser;
 import com.SmartAir.ParentLink.view.AddChildView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddChildPresenter {
@@ -13,38 +14,61 @@ public class AddChildPresenter {
     private final AddChildView view;
     private final AuthRepository authRepository;
 
-    // Only one constructor: everything must be injected
-    public AddChildPresenter(AddChildView view, AuthRepository authRepository) {
+    public AddChildPresenter(@NonNull AddChildView view, @NonNull AuthRepository authRepository) {
         this.view = view;
         this.authRepository = authRepository;
     }
 
-    public void onAddChildClicked(String username, String password, String confirmPassword) {
-        if (username == null || password == null || confirmPassword == null || username.trim().isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            view.setAddChildError("All fields must be filled");
+    // ------------------ PASSWORD VALIDATION ------------------
+
+    public void validatePasswordRealtime(@NonNull String password) {
+        List<String> failedRules = PasswordValidator.getFailedRules(password);
+        List<String> passedRules = PasswordValidator.getPassedRules(password);
+        view.updatePasswordRequirements(passedRules, failedRules);
+    }
+
+    // ------------------ ADD CHILD ------------------
+
+    public void onAddChildClicked(String name, String age, String dob, String notes,
+                                  String username, String password, String confirmPassword) {
+
+        // Simple validation
+        if (name.isEmpty() || age.isEmpty() || dob.isEmpty() || username.isEmpty()
+                || password.isEmpty() || confirmPassword.isEmpty()) {
+            view.setAddChildError("All fields are required.");
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            view.setAddChildError("Passwords do not match");
+            view.setAddChildError("Passwords do not match.");
             return;
         }
 
-        String passwordValidationMessage = getPasswordValidationMessage(password);
-        if (passwordValidationMessage != null) {
-            view.setAddChildError(passwordValidationMessage);
+        List<String> failedRules = PasswordValidator.getFailedRules(password);
+        if (!failedRules.isEmpty()) {
+            view.setAddChildError("Password does not meet all requirements.");
             return;
         }
-
-        username = username.trim();
 
         view.setLoading(true);
 
-        authRepository.createChildUser(username, password, new AuthRepository.AuthCallback() {
+        authRepository.createChildUser(name, age, dob, notes, username, password, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
-                view.setLoading(false);
-                view.showSuccessMessage("Child account created successfully!");
+                // Refresh parent children list in-memory
+                authRepository.refreshCurrentParentChildren(new AuthRepository.ChildrenCallback() {
+                    @Override
+                    public void onSuccess(List<ChildUser> children) {
+                        view.setLoading(false);
+                        view.showSuccessMessage("Child added successfully!");
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        view.setLoading(false);
+                        view.setAddChildError("Child added but failed to refresh children: " + errorMessage);
+                    }
+                });
             }
 
             @Override
@@ -53,47 +77,5 @@ public class AddChildPresenter {
                 view.setAddChildError(errorMessage);
             }
         });
-    }
-
-    public void validatePasswordRealtime(String password) {
-        List<String> passedRules = new ArrayList<>();
-        List<String> failedRules = new ArrayList<>();
-
-        if (password.length() < 6) {
-            failedRules.add("Password must be at least 6 characters long");
-        } else {
-            passedRules.add("Password must be at least 6 characters long");
-        }
-        if (!password.matches(".*[A-Z].*")) {
-            failedRules.add("Password must contain at least one uppercase letter");
-        } else {
-            passedRules.add("Password must contain at least one uppercase letter");
-        }
-        if (!password.matches(".*[a-z].*")) {
-            failedRules.add("Password must contain at least one lowercase letter");
-        } else {
-            passedRules.add("Password must contain at least one lowercase letter");
-        }
-        if (!password.matches(".*\\d.*")) {
-            failedRules.add("Password must contain at least one digit");
-        } else {
-            passedRules.add("Password must contain at least one digit");
-        }
-        if (!password.matches(".*[!@#$%^&*()].*")) {
-            failedRules.add("Password must contain at least one special character (!@#$%^&*())");
-        } else {
-            passedRules.add("Password must contain at least one special character (!@#$%^&*())");
-        }
-
-        view.updatePasswordRequirements(passedRules, failedRules);
-    }
-
-    private String getPasswordValidationMessage(String password) {
-        if (password.length() < 6) return "Password must be at least 6 characters long";
-        if (!password.matches(".*[A-Z].*")) return "Password must contain at least one uppercase letter";
-        if (!password.matches(".*[a-z].*")) return "Password must contain at least one lowercase letter";
-        if (!password.matches(".*\\d.*")) return "Password must contain at least one digit";
-        if (!password.matches(".*[!@#$%^&*()].*")) return "Password must contain at least one special character (!@#$%^&*())";
-        return null; // all rules passed
     }
 }

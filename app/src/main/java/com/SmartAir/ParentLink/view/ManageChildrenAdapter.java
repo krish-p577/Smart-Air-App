@@ -39,6 +39,11 @@ public class ManageChildrenAdapter extends RecyclerView.Adapter<ManageChildrenAd
         return children.size();
     }
 
+    public void setChildren(List<ChildUser> newChildren) {
+        children.clear();
+        children.addAll(newChildren);
+    }
+
     public interface OnChildClickListener {
         void onChildClicked(ChildUser child);
     }

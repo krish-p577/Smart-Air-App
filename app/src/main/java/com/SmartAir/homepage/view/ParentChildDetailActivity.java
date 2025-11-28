@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.SmartAir.ParentLink.view.EditChildActivity;
 import com.SmartAir.ParentLink.view.SharingSettingsActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
@@ -42,6 +43,7 @@ public class ParentChildDetailActivity extends AppCompatActivity {
 
         TextView childNameHeader = findViewById(R.id.child_name_header);
         Button manageSharingButton = findViewById(R.id.manage_sharing_button);
+        Button editDetailsButton = findViewById(R.id.edit_details_button);
         generateInviteCodeButton = findViewById(R.id.generate_invite_code_button);
         revokeInviteCodeButton = findViewById(R.id.revoke_invite_code_button);
         copyInviteCodeButton = findViewById(R.id.copy_invite_code_button);
@@ -63,6 +65,12 @@ public class ParentChildDetailActivity extends AppCompatActivity {
 
         manageSharingButton.setOnClickListener(v -> {
             Intent intent = new Intent(ParentChildDetailActivity.this, SharingSettingsActivity.class);
+            intent.putExtra("childId", childId);
+            startActivity(intent);
+        });
+
+        editDetailsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ParentChildDetailActivity.this, EditChildActivity.class);
             intent.putExtra("childId", childId);
             startActivity(intent);
         });

@@ -19,6 +19,7 @@ import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
 import com.SmartAir.ParentLink.presenter.ManageChildrenPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManageChildrenActivity extends AppCompatActivity implements ManageChildrenView, ManageChildrenAdapter.OnChildClickListener {
@@ -26,6 +27,7 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
     private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
     private ManageChildrenPresenter presenter;
+    private ManageChildrenAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +44,21 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize empty adapter
+        adapter = new ManageChildrenAdapter(new ArrayList<>(), this);
+        recyclerView.setAdapter(adapter);
+
         presenter = new ManageChildrenPresenter(this, AuthRepository.getInstance());
 
         addChildButton.setOnClickListener(v -> presenter.onAddChildClicked());
 
+        presenter.fetchChildren();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh children list when returning to this activity
         presenter.fetchChildren();
     }
 
@@ -72,7 +85,9 @@ public class ManageChildrenActivity extends AppCompatActivity implements ManageC
 
     @Override
     public void displayChildren(List<ChildUser> children) {
-        recyclerView.setAdapter(new ManageChildrenAdapter(children, this));
+        // Update existing adapter's data instead of creating a new one
+        adapter.setChildren(children);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
