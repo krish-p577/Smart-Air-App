@@ -22,6 +22,7 @@ public interface HistoryContract {
             public abstract void onSuccess(List<HistoryItem> items);
             public abstract void onFailure(Exception e);
         }
+
         public abstract void getData(FilterDataModel filter, LoadCallback callback);
     }
 

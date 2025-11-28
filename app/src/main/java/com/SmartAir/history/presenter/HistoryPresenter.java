@@ -15,6 +15,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     }
 
     public void loadData(FilterDataModel filter){
+        view.showLoading();
         repository.getData(filter, new HistoryContract.Repository.LoadCallback() {
             @Override
             public void onSuccess(List<HistoryItem> items) {
@@ -25,6 +26,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
             @Override
             public void onFailure(Exception e) {
                 view.hideLoading();
+                e.printStackTrace();
                 view.showLoadError("Error fetching data");
             }
         });

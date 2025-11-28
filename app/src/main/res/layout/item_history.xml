@@ -1,34 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
     android:padding="12dp">
 
-    <TextView
-        android:id="@+id/textDate"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2025-11-26"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/textChild"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="5sp"
+        >
 
-    <TextView
-        android:id="@+id/textChild"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alex"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025-11-26"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="#000000"
+            />
 
-    <TextView
-        android:id="@+id/textAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Author: Parent"
-        app:layout_constraintStart_toStartOf="@id/textDate"
-        app:layout_constraintTop_toBottomOf="@id/textDate" />
+        <TextView
+            android:id="@+id/textAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parent"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textDate"
+            android:textColor="#000000"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textChild"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Child Name"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textAuthor"
+            android:textColor="#000000"
+            />
+
+        <TextView
+            android:id="@+id/textNightWaking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Night waking: Yes"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/textChild"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="#000000"
+            />
+
+        <TextView
+            android:id="@+id/textLimitedAbility"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Limited ability: No"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/textNightWaking"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="#000000"
+            />
+
+        <TextView
+            android:id="@+id/textSick"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cough/Wheeze: True"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/textLimitedAbility"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="#000000"
+
+            />
+
+        <TextView
+            android:id="@+id/textTriggers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Triggers: None"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/textSick"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="#000000"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
