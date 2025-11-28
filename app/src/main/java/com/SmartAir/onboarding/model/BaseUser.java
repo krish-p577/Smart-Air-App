@@ -1,13 +1,16 @@
 package com.SmartAir.onboarding.model;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
 
 public abstract class BaseUser implements Serializable {
 
+    private String uid; // Unique ID from Firebase Auth
     private String role;
     private String email;
     private String displayName;
-    private boolean hasCompletedOnboarding = false; // New field
+    private boolean hasCompletedOnboarding = false;
 
     // Required empty public constructor for Firestore
     public BaseUser() {}
@@ -18,7 +21,16 @@ public abstract class BaseUser implements Serializable {
         this.displayName = displayName;
     }
 
-    // Getters and Setters
+    @Exclude // Exclude from Firestore serialization, as the UID is the document ID.
+    public String getUid() {
+        return uid;
+    }
+
+    // Package-private setter allows only classes in the same package (e.g., AuthRepository) to set the ID.
+    void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getRole() {
         return role;
     }

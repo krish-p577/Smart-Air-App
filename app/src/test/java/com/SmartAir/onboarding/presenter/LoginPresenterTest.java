@@ -1,5 +1,6 @@
 package com.SmartAir.onboarding.presenter;
 
+import android.content.Context;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.BaseUser;
 import com.SmartAir.onboarding.model.CurrentUser;
@@ -27,6 +28,9 @@ public class LoginPresenterTest {
     private LoginView mockView;
 
     @Mock
+    private Context mockContext;
+
+    @Mock
     private AuthRepository mockAuthRepository;
 
     @Mock
@@ -42,7 +46,7 @@ public class LoginPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new LoginPresenter(mockView, mockAuthRepository);
+        presenter = new LoginPresenter(mockContext, mockView, mockAuthRepository);
     }
 
     // ====================

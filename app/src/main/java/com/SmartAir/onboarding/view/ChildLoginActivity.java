@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
 import com.SmartAir.R;
+import com.SmartAir.homepage.view.ChildHomeActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.presenter.ChildLoginPresenter;
 import com.google.android.material.snackbar.Snackbar;

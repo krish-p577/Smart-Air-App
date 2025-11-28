@@ -18,6 +18,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.SmartAir.R;
+import com.SmartAir.homepage.view.ChildHomeActivity;
+import com.SmartAir.homepage.view.ParentHomeActivity;
+import com.SmartAir.homepage.view.ProviderHomeActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.model.OnboardingStep;

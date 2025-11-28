@@ -1,4 +1,4 @@
-package com.SmartAir.onboarding.view;
+package com.SmartAir.homepage.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,23 +8,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.ChildUser;
-
 import java.util.List;
 
-public class ChildLoginAdapter extends RecyclerView.Adapter<ChildLoginAdapter.ViewHolder> {
+public class LinkedChildrenAdapter extends RecyclerView.Adapter<LinkedChildrenAdapter.ViewHolder> {
 
     private final List<ChildUser> children;
-    private final SelectChildLoginView view;
+    private final OnChildClickListener listener;
 
-    public ChildLoginAdapter(List<ChildUser> children, SelectChildLoginView view) {
+    public LinkedChildrenAdapter(List<ChildUser> children, OnChildClickListener listener) {
         this.children = children;
-        this.view = view;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_child, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_linked_child, parent, false);
         return new ViewHolder(view);
     }
 
@@ -32,7 +31,7 @@ public class ChildLoginAdapter extends RecyclerView.Adapter<ChildLoginAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChildUser child = children.get(position);
         holder.childNameTextView.setText(child.getDisplayName());
-        holder.itemView.setOnClickListener(v -> view.promptForChildPassword(child));
+        holder.itemView.setOnClickListener(v -> listener.onChildClicked(child));
     }
 
     @Override
@@ -40,10 +39,14 @@ public class ChildLoginAdapter extends RecyclerView.Adapter<ChildLoginAdapter.Vi
         return children.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView childNameTextView;
+    public interface OnChildClickListener {
+        void onChildClicked(ChildUser child);
+    }
 
-        public ViewHolder(View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView childNameTextView;
+
+        ViewHolder(View itemView) {
             super(itemView);
             childNameTextView = itemView.findViewById(R.id.child_name_text_view);
         }
