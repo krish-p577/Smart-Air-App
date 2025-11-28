@@ -52,11 +52,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         signupLink.setOnClickListener(v -> presenter.onSignupLinkClicked());
 
-        forgotPasswordLink.setOnClickListener(v -> {
-            startActivity(new Intent(this, PasswordResetActivity.class));
-        });
+        forgotPasswordLink.setOnClickListener(this::navigateToPasswordReset);
     }
 
+    private void navigateToPasswordReset(View v) {
+        startActivity(new Intent(this, PasswordResetActivity.class));
+    }
 
     @Override
     public void setLoginError(String message) {

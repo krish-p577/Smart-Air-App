@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -39,9 +40,10 @@ public class ParentChildDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        TextView childNameHeader = findViewById(R.id.child_name_header);
         Button manageSharingButton = findViewById(R.id.manage_sharing_button);
         Button editDetailsButton = findViewById(R.id.edit_details_button);
         generateInviteCodeButton = findViewById(R.id.generate_invite_code_button);
@@ -78,6 +80,13 @@ public class ParentChildDetailActivity extends AppCompatActivity {
         generateInviteCodeButton.setOnClickListener(v -> generateInviteCode());
         revokeInviteCodeButton.setOnClickListener(v -> revokeInviteCode());
         copyInviteCodeButton.setOnClickListener(v -> copyInviteCode());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -91,7 +100,7 @@ public class ParentChildDetailActivity extends AppCompatActivity {
             @Override
             public void onSuccess(ChildUser fetchedChild) {
                 child = fetchedChild;
-                ((TextView) findViewById(R.id.child_name_header)).setText(child.getDisplayName() + "'s Dashboard");
+                ((TextView) findViewById(R.id.child_name_header)).setText(getString(R.string.child_dashboard_title, child.getDisplayName()));
                 updateInviteCodeUI();
             }
 
@@ -172,7 +181,7 @@ public class ParentChildDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

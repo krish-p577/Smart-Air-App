@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +20,6 @@ import com.SmartAir.ParentLink.presenter.EditChildPresenter;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.Calendar;
 import java.util.Locale;
 
 public class EditChildActivity extends AppCompatActivity implements EditChildView {
@@ -71,6 +71,22 @@ public class EditChildActivity extends AppCompatActivity implements EditChildVie
             String newNotes = getSafeText(notesEditText);
             presenter.onSaveClicked(childId, newName, newAge, newDob, newNotes);
         });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (hasUnsavedChanges()) {
+                    new AlertDialog.Builder(EditChildActivity.this)
+                            .setTitle("Unsaved Changes")
+                            .setMessage("You have unsaved changes. Are you sure you want to discard them?")
+                            .setPositiveButton("Discard", (dialog, which) -> finish())
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                } else {
+                    finish();
+                }
+            }
+        });
     }
 
     private String getSafeText(TextInputEditText editText) {
@@ -88,24 +104,10 @@ public class EditChildActivity extends AppCompatActivity implements EditChildVie
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (hasUnsavedChanges()) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Unsaved Changes")
-                    .setMessage("You have unsaved changes. Are you sure you want to discard them?")
-                    .setPositiveButton("Discard", (dialog, which) -> finish())
-                    .setNegativeButton("Cancel", null)
-                    .show();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private boolean hasUnsavedChanges() {

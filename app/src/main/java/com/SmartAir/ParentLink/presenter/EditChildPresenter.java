@@ -3,13 +3,10 @@ package com.SmartAir.ParentLink.presenter;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.ParentLink.view.EditChildView;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 public class EditChildPresenter {
 
-    private EditChildView view;
-    private AuthRepository authRepository;
+    private final EditChildView view;
+    private final AuthRepository authRepository;
 
     public EditChildPresenter(EditChildView view, AuthRepository authRepository) {
         this.view = view;

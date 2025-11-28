@@ -1,6 +1,5 @@
 package com.SmartAir.onboarding.model;
 
-import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.SmartAir.ParentLink.model.InviteCode;
@@ -29,7 +28,6 @@ import java.util.UUID;
 
 public class AuthRepository {
 
-    private static final String TAG = "AuthRepository";
     private static volatile AuthRepository instance;
 
     private final FirebaseAuth firebaseAuth;
@@ -91,11 +89,6 @@ public class AuthRepository {
         SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         parentEmail = prefs.getString(KEY_EMAIL, null);
         parentPassword = prefs.getString(KEY_PASSWORD, null);
-    }
-
-    public void clearPersistedCredentials(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        prefs.edit().clear().apply();
     }
 
     // ------------------ CHILD FETCH METHODS ------------------
@@ -584,13 +577,7 @@ public class AuthRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    public void revokeAllPermissions(String childId, @NonNull final AuthCallback callback) {
-        firestore.collection("Users").document(childId)
-                .update("sharingSettings", new HashMap<String, Boolean>())
-                .addOnSuccessListener(aVoid -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-    }
-
+    @SuppressWarnings("unchecked")
     public void revokeAllPermissionsAndUnlink(String childId, @NonNull final AuthCallback callback) {
         final DocumentReference childRef = firestore.collection("Users").document(childId);
 

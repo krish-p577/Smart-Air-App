@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,8 +32,10 @@ public class ProviderChildDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         childNameTextView = findViewById(R.id.child_name_text_view);
         sharedDataRecyclerView = findViewById(R.id.shared_data_recycler_view);
@@ -48,11 +51,18 @@ public class ProviderChildDetailActivity extends AppCompatActivity {
         }
 
         loadChildDetails();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        getOnBackPressedDispatcher().onBackPressed();
         return true;
     }
 
@@ -60,7 +70,7 @@ public class ProviderChildDetailActivity extends AppCompatActivity {
         authRepository.fetchChildProfile(childId, new AuthRepository.ChildProfileCallback() {
             @Override
             public void onSuccess(ChildUser child) {
-                childNameTextView.setText(child.getDisplayName() + "'s Shared Data");
+                childNameTextView.setText(getString(R.string.provider_child_detail_title, child.getDisplayName()));
 
                 List<String> sharedItems = new ArrayList<>();
                 if (child.getSharingSettings() != null) {
