@@ -10,4 +10,22 @@ public interface ChildDashboardView {
     void showTechniqueStreak(int numDays);
 
     void showMessage(String message);
+
+    void showDailyCheckIn();
+
+    void showLogController();
+
+    void showLogRescue();
+
+    void showPEFEntry();
+
+    void showTriage();
+
+    void showPracticeTechnique();
+
+    void showGlossary();
+
+    void showUpdateInventory();
+
+    void showBadges();
 }

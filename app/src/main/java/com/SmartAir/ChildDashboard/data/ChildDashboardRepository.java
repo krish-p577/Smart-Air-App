@@ -85,32 +85,6 @@ public class ChildDashboardRepository {
         String childId = user.getUid();
 
         return db.collection("streaks")
-                .document(childId)
-                .get()
-                .continueWith(task -> {
-                    if (!task.isSuccessful()) {
-                        throw Objects.requireNonNull(task.getException());
-                    }
-
-                    DocumentSnapshot doc = task.getResult();
-
-                    if (doc.exists()) {
-                        Long techniqueStreak = doc.getLong("techniqueStreak");
-                        if (techniqueStreak == null) {
-                            throw new Exception("Technique streak not found.");
-                        }
-
-                        return techniqueStreak.intValue();
-                    } else {
-                        throw new Exception("Streaks not found.");
-                    }
-                });
-    }
-
-    public Task<List<String>> getBadges() {
-        String childId = user.getUid();
-
-        return db.collection("badges")
             .document(childId)
             .get()
             .continueWith(task -> {
@@ -121,48 +95,14 @@ public class ChildDashboardRepository {
                 DocumentSnapshot doc = task.getResult();
 
                 if (doc.exists()) {
-                    List<String> badges = (List<String>) doc.get("badges");
-
-                    if (badges == null) {
-                        throw new Exception("Badges not found.");
+                    Long techniqueStreak = doc.getLong("techniqueStreak");
+                    if (techniqueStreak == null) {
+                        throw new Exception("Technique streak not found.");
                     }
 
-                    return badges;
+                    return techniqueStreak.intValue();
                 } else {
-                    throw new Exception("Badges not found.");
-                }
-            });
-    }
-
-    public Task<List<Date>> getBadgeEarnedDates() {
-        String childId = user.getUid();
-
-        return db.collection("badges")
-            .document(childId)
-            .get()
-            .continueWith(task -> {
-                if (!task.isSuccessful()) {
-                    throw Objects.requireNonNull(task.getException());
-                }
-
-                DocumentSnapshot doc = task.getResult();
-
-                if (doc.exists()) {
-                    List<Timestamp> badgesEarnedAt = (List<Timestamp>) doc.get("earnedAt");
-
-                    if (badgesEarnedAt == null) {
-                        throw new Exception("Badge earned dates not found.");
-                    }
-
-                    List<Date> badgesEarnedAtDates = new ArrayList<>(badgesEarnedAt.size());
-
-                    for (int i = 0; i < badgesEarnedAt.size(); i++) {
-                        badgesEarnedAtDates.add(badgesEarnedAt.get(i).toDate());
-                    }
-
-                    return badgesEarnedAtDates;
-                } else {
-                    throw new Exception("Badges not found.");
+                    throw new Exception("Streaks not found.");
                 }
             });
     }

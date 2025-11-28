@@ -19,4 +19,8 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
+
+    <string name="badge1_image_desc">Locked badge image</string>
+    <string name="badge2_image_desc">Locked badge image</string>
+    <string name="badge3_image_desc">Locked badge image</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.SmartAir.ChildDashboard.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -7,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.SmartAir.Badges.view.BadgesActivity;
 import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
 import com.SmartAir.ChildDashboard.presenter.ChildDashboardPresenter;
 import com.SmartAir.R;
@@ -52,6 +54,12 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
 
         Button viewBadgesButton = findViewById(R.id.btn_view_badges);
         viewBadgesButton.setOnClickListener(v -> presenter.onViewBadgesClicked());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.onScreenStart();
     }
 
     @Override
@@ -101,5 +109,51 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
     @Override
     public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showDailyCheckIn() {
+        // TODO: wire to daily check in page
+    }
+
+    @Override
+    public void showLogController() {
+        // TODO: wire to controller logging page
+    }
+
+    @Override
+    public void showLogRescue() {
+        // TODO: wire to rescue logging page
+    }
+
+    @Override
+    public void showPEFEntry() {
+        // TODO: wire to PEF entry page
+    }
+
+    @Override
+    public void showTriage() {
+        // TODO: wire to triage page
+    }
+
+    @Override
+    public void showPracticeTechnique() {
+        // TODO: wire to practice technique page
+    }
+
+    @Override
+    public void showGlossary() {
+        // TODO: wire to glossary page
+    }
+
+    @Override
+    public void showUpdateInventory() {
+        // TODO: wire to update inventory page
+    }
+
+    @Override
+    public void showBadges() {
+        Intent intent = new Intent(ChildDashboardActivity.this, BadgesActivity.class);
+        startActivity(intent);
     }
 }

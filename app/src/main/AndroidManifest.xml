@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartAir"
         tools:targetApi="31">
-        <!-- This is the main entry point of the app. It's the first screen the user sees. -->
         <activity
             android:name=".ChildDashboard.view.ChildDashboardActivity"
             android:exported="true">
@@ -23,7 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.RoleSelectionActivity"
+            android:name=".onboarding.view.RoleSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Badges.view.BadgesActivity"
             android:exported="false" />
     </application>
 

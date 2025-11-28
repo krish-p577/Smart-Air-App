@@ -1,5 +1,9 @@
 package com.SmartAir.ChildDashboard.presenter;
 
+import android.content.Intent;
+
+import com.SmartAir.Badges.view.BadgesActivity;
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.ChildDashboard.view.ChildDashboardView;
 import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
 import com.google.android.gms.tasks.Tasks;
@@ -33,44 +37,44 @@ public class ChildDashboardPresenter {
                             .addOnSuccessListener(techniqueStreak -> {
                                 view.showTechniqueStreak(techniqueStreak);
 
-                            }).addOnFailureListener(e -> view.showMessage("Technique streak error: " + e.getMessage()));
-                    }).addOnFailureListener(e -> view.showMessage("Controller streak error: " + e.getMessage()));
-            }).addOnFailureListener(e -> view.showMessage("Child name error: " + e.getMessage()));
+                            }).addOnFailureListener(e -> view.showMessage("Error while getting technique streak: " + e.getMessage()));
+                    }).addOnFailureListener(e -> view.showMessage("Error while getting controller streak: " + e.getMessage()));
+            }).addOnFailureListener(e -> view.showMessage("Error while getting child name: " + e.getMessage()));
     }
 
     public void onDailyCheckInClicked() {
-        // TODO: Navigate to daily check in page
+        view.showDailyCheckIn();
     }
 
     public void onLogControllerClicked() {
-        // TODO: Navigate to log controller page
+        view.showLogController();
     }
 
     public void onLogRescueClicked() {
-        // TODO: Navigate to log rescue page
+        view.showLogRescue();
     }
 
     public void onPEFEntryClicked() {
-        // TODO: Navigate to PEF entry page
+        view.showPEFEntry();
     }
 
     public void onTriageClicked() {
-        // TODO: Navigate to triage page
+        view.showTriage();
     }
 
     public void onPracticeTechniqueClicked() {
-        // TODO: Navigate to practice inhaler technique page
+        view.showPracticeTechnique();
     }
 
     public void onGlossaryClicked() {
-        // TODO: Navigate to glossary page
+        view.showGlossary();
     }
 
     public void onUpdateInventoryClicked() {
-        // TODO: Navigate to update inventory page
+        view.showUpdateInventory();
     }
 
     public void onViewBadgesClicked() {
-        // TODO: Navigate to badges page
+        view.showBadges();
     }
 }
