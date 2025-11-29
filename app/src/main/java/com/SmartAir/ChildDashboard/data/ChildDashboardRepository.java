@@ -43,7 +43,7 @@ public class ChildDashboardRepository {
                 DocumentSnapshot doc = task.getResult();
 
                 if (doc.exists()) {
-                    String name = doc.getString("name");
+                    String name = doc.getString("displayName");
                     if (name == null || name.trim().isEmpty()) {
                         throw new Exception("Child name missing.");
                     } else {
