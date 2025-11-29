@@ -1,6 +1,12 @@
 package com.SmartAir.ChildDashboard.view;
 
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+
 public interface ChildDashboardView {
+    boolean onNavigationItemSelected(@NonNull MenuItem item);
+
     void showWelcomeMessage(String name);
 
     void showSecondaryMessage(String secondaryMessage);
