@@ -12,7 +12,8 @@ public interface DailyCheckInContract {
     }
 
     interface Presenter {
-        public abstract void submitDailyCheckIn(String role, Boolean isNightWalking, Boolean hasLimitedAbility,
+        public abstract void submitDailyCheckIn(String role, String childName, String parentId,
+                                                Boolean isNightWalking, Boolean hasLimitedAbility,
                                                 Boolean isSick, List<String> triggers);
     }
 

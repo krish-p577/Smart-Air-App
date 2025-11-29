@@ -19,6 +19,7 @@ public class DailyCheckInRepository implements DailyCheckInContract.Repository {
         map.put("Entry Author", data.getEntryAuthor());
         map.put("Date", data.getDate());
         map.put("Child", data.getChildName());
+        map.put("parentId", data.getParentId());
         map.put("Night Waking", data.getNightWaking());
         map.put("Limited Ability", data.getLimitedAbility());
         map.put("Cough/Wheeze", data.getSick());
@@ -27,6 +28,5 @@ public class DailyCheckInRepository implements DailyCheckInContract.Repository {
         db.collection("daily_check_ins").add(map).addOnSuccessListener(
                 doc -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e));
-
     }
 }
