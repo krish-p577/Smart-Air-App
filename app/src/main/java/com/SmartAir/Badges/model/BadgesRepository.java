@@ -17,9 +17,90 @@ public class BadgesRepository {
 
     private final CurrentUser user;
 
+    private static final int DEFAULT_MIN_CONTROLLER_STREAK_THRESHOLD = 7;
+    private static final int DEFAULT_MIN_TECHNIQUE_SESSIONS_THRESHOLD = 10;
+    private static final int DEFAULT_MAX_RESCUE_DAYS_THRESHOLD = 4;
+
     public BadgesRepository() {
         this.db = FirebaseFirestore.getInstance();
         this.user = CurrentUser.getInstance();
+    }
+
+    public Task<Integer> getMinControllerStreakThreshold() {
+        String childId = user.getUid();
+
+        return db.collection("badges")
+            .document(childId)
+            .get()
+            .continueWith(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+
+                DocumentSnapshot doc = task.getResult();
+
+                if (doc.exists()) {
+                    Long minControllerStreakThreshold = doc.getLong("minControllerStreakThreshold");
+                    if (minControllerStreakThreshold != null) {
+                        return minControllerStreakThreshold.intValue();
+                    }
+                }
+
+                return DEFAULT_MIN_CONTROLLER_STREAK_THRESHOLD;
+            });
+    }
+
+    public Task<Integer> getMinTechniqueSessionsThreshold() {
+        String childId = user.getUid();
+
+        return db.collection("badges")
+            .document(childId)
+            .get()
+            .continueWith(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+
+                DocumentSnapshot doc = task.getResult();
+
+                if (doc.exists()) {
+                    Long minTechniqueSessionsThreshold = doc.getLong("minTechniqueSessionsThreshold");
+                    if (minTechniqueSessionsThreshold != null) {
+                        return minTechniqueSessionsThreshold.intValue();
+                    }
+                }
+
+                return DEFAULT_MIN_TECHNIQUE_SESSIONS_THRESHOLD;
+            });
+    }
+
+    public Task<Integer> getMaxRescueDaysThreshold() {
+        String childId = user.getUid();
+
+        return db.collection("badges")
+            .document(childId)
+            .get()
+            .continueWith(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+
+                DocumentSnapshot doc = task.getResult();
+
+                if (doc.exists()) {
+                    Long maxRescueDaysThreshold = doc.getLong("maxRescueDaysThreshold");
+                    if (maxRescueDaysThreshold != null) {
+                        return maxRescueDaysThreshold.intValue();
+                    }
+
+                }
+
+                return DEFAULT_MAX_RESCUE_DAYS_THRESHOLD;
+            });
+    }
+
+    public void updateBadges() {
+        // TODO: update badges awarded based on badge thresholds
     }
 
     public Task<List<String>> getBadges() {
