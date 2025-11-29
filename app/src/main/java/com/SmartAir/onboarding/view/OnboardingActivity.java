@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
@@ -122,7 +123,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingV
                 intent = new Intent(this, ProviderHomeActivity.class);
                 break;
             case "child":
-                intent = new Intent(this, ChildHomeActivity.class);
+                intent = new Intent(this, ChildDashboardActivity.class);
                 break;
             default:
                 intent = new Intent(this, WelcomeActivity.class);

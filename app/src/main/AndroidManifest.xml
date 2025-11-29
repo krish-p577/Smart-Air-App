@@ -55,9 +55,6 @@
             android:name=".onboarding.view.ProviderHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".onboarding.view.ChildHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".onboarding.view.AddChildActivity"
             android:exported="false" />
         <activity
@@ -65,14 +62,11 @@
             android:exported="false" />
         <activity
             android:name=".ChildDashboard.view.ChildDashboardActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".onboarding.view.RoleSelectionActivity"
-            android:exported="false" />
+            android:exported="true"/>
         <activity
             android:name=".Badges.view.BadgesActivity"
-            android:exported="false" />
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

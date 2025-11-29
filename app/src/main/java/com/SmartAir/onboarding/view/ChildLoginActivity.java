@@ -8,6 +8,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.presenter.ChildLoginPresenter;
@@ -52,7 +53,7 @@ public class ChildLoginActivity extends AppCompatActivity implements ChildLoginV
 
     @Override
     public void navigateToChildHome() {
-        Intent intent = new Intent(this, ChildHomeActivity.class);
+        Intent intent = new Intent(this, ChildDashboardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

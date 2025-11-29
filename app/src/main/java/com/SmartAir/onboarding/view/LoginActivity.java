@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
@@ -79,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                 intent = new Intent(this, ProviderHomeActivity.class);
                 break;
             case "child":
-                intent = new Intent(this, ChildHomeActivity.class);
+                intent = new Intent(this, ChildDashboardActivity.class);
                 break;
             default:
                 setLoading(false);

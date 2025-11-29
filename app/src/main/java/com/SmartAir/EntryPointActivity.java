@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 // Corrected imports for Home Activities
-import com.SmartAir.onboarding.view.ChildHomeActivity;
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.onboarding.view.ParentHomeActivity;
 import com.SmartAir.onboarding.view.ProviderHomeActivity;
 
@@ -96,7 +96,7 @@ public class EntryPointActivity extends AppCompatActivity {
                 intent = new Intent(this, ProviderHomeActivity.class);
                 break;
             case "child":
-                intent = new Intent(this, ChildHomeActivity.class);
+                intent = new Intent(this, ChildDashboardActivity.class);
                 break;
             default:
                 intent = new Intent(this, WelcomeActivity.class);

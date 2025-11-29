@@ -1,3 +1,8 @@
+# Built application files
+/build
+
+# Google Services file
 google-services.json
 
-/build
+#Keys
+release-temp.jks
