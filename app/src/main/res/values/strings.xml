@@ -19,4 +19,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
+    <string name="submit_button">Submit Button</string>
+    <string name="enter_the_personal_best_pb">Enter the Personal Best PB</string>
+    <string name="pb">PB:</string>
 </resources>
