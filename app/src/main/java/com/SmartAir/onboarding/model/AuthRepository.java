@@ -2,14 +2,19 @@ package com.SmartAir.onboarding.model;
 
 import androidx.annotation.NonNull;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AuthRepository {
@@ -20,7 +25,9 @@ public class AuthRepository {
     private final FirebaseFirestore firestore;
     private final CurrentUser currentUser;
 
-    // Private constructor to enforce Singleton pattern
+    private String parentEmail;
+    private String parentPassword;
+
     private AuthRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.firestore = FirebaseFirestore.getInstance();
@@ -38,13 +45,104 @@ public class AuthRepository {
         return instance;
     }
 
+    public void fetchChildrenForParent(String parentId, @NonNull final ChildrenCallback callback) {
+        firestore.collection("Users")
+                .whereEqualTo("parentId", parentId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<ChildUser> children = new ArrayList<>();
+                        for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                            ChildUser child = document.toObject(ChildUser.class);
+                            if (child != null) {
+                                children.add(child);
+                            }
+                        }
+                        callback.onSuccess(children);
+                    } else {
+                        callback.onFailure("Failed to fetch children.");
+                    }
+                });
+    }
+
+    public void markOnboardingAsCompleted() {
+        FirebaseUser user = getCurrentFirebaseUser();
+        if (user != null) {
+            firestore.collection("Users").document(user.getUid())
+                .update("hasCompletedOnboarding", true);
+        }
+    }
+
+    public FirebaseUser getCurrentFirebaseUser() {
+        return firebaseAuth.getCurrentUser();
+    }
+
+    public void createChildUser(String username, String password, @NonNull final AuthCallback callback) {
+        FirebaseUser parentFirebaseUser = getCurrentFirebaseUser();
+        if (parentFirebaseUser == null) {
+            callback.onFailure("You must be logged in as a parent to add a child.");
+            return;
+        }
+
+        String parentUid = parentFirebaseUser.getUid();
+        String fakeEmail = username.toLowerCase() + "@" + parentUid.substring(0, 8) + ".smartair.user";
+
+        firebaseAuth.createUserWithEmailAndPassword(fakeEmail, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().getUser() != null) {
+                        FirebaseUser newChildUser = task.getResult().getUser();
+                        String childUid = newChildUser.getUid();
+
+                        ChildUser childProfile = new ChildUser(fakeEmail, username, parentUid);
+
+                        WriteBatch batch = firestore.batch();
+
+                        DocumentReference childDocRef = firestore.collection("Users").document(childUid);
+                        batch.set(childDocRef, childProfile);
+
+                        DocumentReference parentDocRef = firestore.collection("Users").document(parentUid);
+                        batch.update(parentDocRef, "childrenIds", FieldValue.arrayUnion(childUid));
+
+                        batch.commit().addOnSuccessListener(aVoid -> {
+                            reauthenticateParent(new AuthCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    callback.onSuccess();
+                                }
+
+                                @Override
+                                public void onFailure(String errorMessage) {
+                                    callback.onFailure("Child created, but failed to restore parent session. Please log in again.");
+                                }
+                            });
+                        }).addOnFailureListener(e -> callback.onFailure("Failed to save user data: " + e.getMessage()));
+
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception instanceof FirebaseAuthUserCollisionException) {
+                            callback.onFailure("This username might be taken. Please try another.");
+                        } else if (exception != null) {
+                            callback.onFailure(exception.getMessage());
+                        } else {
+                            callback.onFailure("An unknown error occurred.");
+                        }
+                    }
+                });
+    }
+
     public void createUser(String email, String password, String role, String displayName, @NonNull final AuthCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         FirebaseUser newUser = task.getResult().getUser();
                         if (newUser != null) {
-                            User userProfile = new User(role, email, displayName);
+                            BaseUser userProfile;
+                            if ("parent".equalsIgnoreCase(role)) {
+                                userProfile = new ParentUser(email, displayName);
+                            } else {
+                                userProfile = new ProviderUser(email, displayName);
+                            }
+
                             firestore.collection("Users").document(newUser.getUid())
                                     .set(userProfile)
                                     .addOnSuccessListener(aVoid -> {
@@ -57,12 +155,21 @@ public class AuthRepository {
                             callback.onFailure("Failed to create user.");
                         }
                     } else {
-                        callback.onFailure(task.getException() != null ? task.getException().getMessage() : "An unknown signup error occurred.");
+                        Exception exception = task.getException();
+                        if (exception instanceof FirebaseAuthUserCollisionException) {
+                            callback.onFailure("This email is already in use. Please try logging in.");
+                        } else if (exception != null) {
+                            callback.onFailure(exception.getMessage());
+                        } else {
+                            callback.onFailure("An unknown signup error occurred.");
+                        }
                     }
                 });
     }
 
     public void signInUser(String email, String password, @NonNull final AuthCallback callback) {
+        this.parentEmail = email;
+        this.parentPassword = password;
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
@@ -73,7 +180,7 @@ public class AuthRepository {
                             callback.onFailure("Login failed.");
                         }
                     } else {
-                        callback.onFailure(task.getException() != null ? task.getException().getMessage() : "An unknown login error occurred.");
+                        callback.onFailure("Invalid email or password.");
                     }
                 });
     }
@@ -86,10 +193,9 @@ public class AuthRepository {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot userDoc = task.getResult().getDocuments().get(0);
-                        String email = userDoc.getString("email");
-                        if (email != null && !email.isEmpty()) {
-                            signInUser(email, password, callback);
+                        ChildUser childUser = task.getResult().getDocuments().get(0).toObject(ChildUser.class);
+                        if (childUser != null && childUser.getEmail() != null && !childUser.getEmail().isEmpty()) {
+                            signInUser(childUser.getEmail(), password, callback);
                         } else {
                             callback.onFailure("Child account is not configured correctly for login.");
                         }
@@ -99,85 +205,69 @@ public class AuthRepository {
                 });
     }
 
-    public void sendPasswordResetEmail(String emailOrUsername, @NonNull final AuthCallback callback) {
-        if (emailOrUsername.contains("@")) {
-            firebaseAuth.sendPasswordResetEmail(emailOrUsername)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            callback.onSuccess();
-                        } else {
-                            callback.onFailure(task.getException() != null ? task.getException().getMessage() : "Failed to send reset email.");
-                        }
-                    });
-        } else {
-            firestore.collection("Users")
-                    .whereEqualTo("displayName", emailOrUsername)
-                    .whereEqualTo("role", "child")
-                    .limit(1)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                            DocumentSnapshot childUserDoc = task.getResult().getDocuments().get(0);
-                            String childId = childUserDoc.getId();
-                            firestore.collectionGroup("children").whereEqualTo(FieldPath.documentId(), childId)
-                                .limit(1)
-                                .get()
-                                .addOnCompleteListener(parentSearchTask -> {
-                                    if (parentSearchTask.isSuccessful() && parentSearchTask.getResult() != null && !parentSearchTask.getResult().isEmpty()) {
-                                        DocumentSnapshot childSubcollectionDoc = parentSearchTask.getResult().getDocuments().get(0);
-                                        DocumentReference parentRef = childSubcollectionDoc.getReference().getParent().getParent();
-                                        if (parentRef != null) {
-                                            parentRef.get().addOnSuccessListener(parentDoc -> {
-                                                String parentEmail = parentDoc.getString("email");
-                                                if (parentEmail != null && !parentEmail.isEmpty()) {
-                                                    firebaseAuth.sendPasswordResetEmail(parentEmail)
-                                                        .addOnCompleteListener(resetTask -> {
-                                                            if (resetTask.isSuccessful()) {
-                                                                callback.onSuccess();
-                                                            } else {
-                                                                callback.onFailure(resetTask.getException() != null ? resetTask.getException().getMessage() : "Failed to send reset email.");
-                                                            }
-                                                        });
-                                                } else {
-                                                    callback.onFailure("Parent account does not have an email address.");
-                                                }
-                                            }).addOnFailureListener(e -> callback.onFailure("Could not find the parent account."));
-                                        } else {
-                                             callback.onFailure("Could not determine the parent account.");
-                                        }
-                                    } else {
-                                        callback.onFailure("Child is not linked to any parent account.");
-                                    }
-                                });
-                        } else {
-                            callback.onFailure("Username not found.");
-                        }
-                    });
-        }
+    public void sendPasswordResetEmail(String email, @NonNull final AuthCallback callback) {
+        firebaseAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFailure(task.getException() != null ? task.getException().getMessage() : "Failed to send reset email.");
+                    }
+                });
     }
 
     public void logout() {
         firebaseAuth.signOut();
         currentUser.clear();
+        parentEmail = null;
+        parentPassword = null;
     }
 
-    private void fetchUserProfile(FirebaseUser firebaseUser, @NonNull final AuthCallback callback) {
+    public void fetchUserProfile(FirebaseUser firebaseUser, @NonNull final AuthCallback callback) {
         firestore.collection("Users").document(firebaseUser.getUid()).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        User userProfile = task.getResult().toObject(User.class);
+                        DocumentSnapshot doc = task.getResult();
+                        String role = doc.getString("role");
+                        BaseUser userProfile = null;
+
+                        if (role != null) {
+                            if ("parent".equalsIgnoreCase(role)) {
+                                userProfile = doc.toObject(ParentUser.class);
+                            } else if ("child".equalsIgnoreCase(role)) {
+                                userProfile = doc.toObject(ChildUser.class);
+                            } else if ("provider".equalsIgnoreCase(role)) {
+                                userProfile = doc.toObject(ProviderUser.class);
+                            }
+                        }
+
                         if (userProfile != null) {
                             currentUser.setFirebaseUser(firebaseUser);
                             currentUser.setUserProfile(userProfile);
                             updateLastLogin(firebaseUser.getUid());
                             callback.onSuccess();
                         } else {
-                            callback.onFailure("User data not found in database.");
+                            callback.onFailure("User data not found or role is missing.");
                         }
                     } else {
                         callback.onFailure("Failed to fetch user profile.");
                     }
                 });
+    }
+
+    private void reauthenticateParent(AuthCallback callback) {
+        if (parentEmail != null && parentPassword != null) {
+            firebaseAuth.signInWithEmailAndPassword(parentEmail, parentPassword)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onFailure("Failed to re-authenticate parent.");
+                        }
+                    });
+        } else {
+            callback.onFailure("Parent credentials not available for re-authentication.");
+        }
     }
 
     private void updateLastLogin(String uid) {
@@ -188,6 +278,11 @@ public class AuthRepository {
 
     public interface AuthCallback {
         void onSuccess();
+        void onFailure(String errorMessage);
+    }
+
+    public interface ChildrenCallback {
+        void onSuccess(List<ChildUser> children);
         void onFailure(String errorMessage);
     }
 }

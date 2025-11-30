@@ -4,4 +4,5 @@ public interface LoginView {
     void setLoginError(String message);
     void navigateToHome();
     void navigateToSignup();
+    void navigateToOnboarding();
 }

@@ -1,26 +1,29 @@
 package com.SmartAir.onboarding.model;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.ServerTimestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
     private String role;
     private String email;
     private String displayName;
-    private Timestamp createdAt;
-    private Timestamp lastLoginAt;
+    private String parentId; // For child users
+    private List<String> childrenIds; // For parent users
 
-    // Required empty constructor for Firestore deserialization
+    // Required empty public constructor for Firestore
     public User() {}
 
     public User(String role, String email, String displayName) {
         this.role = role;
         this.email = email;
         this.displayName = displayName;
-        this.createdAt = Timestamp.now(); // Set creation timestamp on new user object
+        if ("parent".equalsIgnoreCase(role)) {
+            this.childrenIds = new ArrayList<>();
+        }
     }
 
+    // Getters and Setters
     public String getRole() {
         return role;
     }
@@ -45,21 +48,19 @@ public class User {
         this.displayName = displayName;
     }
 
-    @ServerTimestamp
-    public Timestamp getCreatedAt() {
-        return createdAt;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
-    @ServerTimestamp
-    public Timestamp getLastLoginAt() {
-        return lastLoginAt;
+    public List<String> getChildrenIds() {
+        return childrenIds;
     }
 
-    public void setLastLoginAt(Timestamp lastLoginAt) {
-        this.lastLoginAt = lastLoginAt;
+    public void setChildrenIds(List<String> childrenIds) {
+        this.childrenIds = childrenIds;
     }
 }
