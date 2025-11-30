@@ -64,6 +64,9 @@
             android:name=".ChildDashboard.view.ChildDashboardActivity"
             android:exported="false"/>
         <activity
+            android:name=".glossary.view.GlossaryActivity"
+            android:exported="false"/>
+        <activity
             android:name=".Inventory.view.InventoryActivity"
             android:exported="false"/>
         <activity
