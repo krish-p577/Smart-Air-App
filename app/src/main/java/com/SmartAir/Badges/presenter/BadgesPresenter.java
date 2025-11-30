@@ -1,17 +1,7 @@
 package com.SmartAir.Badges.presenter;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.content.Intent;
-
 import com.SmartAir.Badges.model.BadgesRepository;
-import com.SmartAir.Badges.view.BadgesActivity;
 import com.SmartAir.Badges.view.BadgesView;
-import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
-import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
-
-import java.util.Date;
-import java.util.List;
 
 public class BadgesPresenter {
 

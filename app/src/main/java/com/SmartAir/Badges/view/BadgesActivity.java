@@ -1,7 +1,5 @@
 package com.SmartAir.Badges.view;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.Badges.model.BadgesRepository;
 import com.SmartAir.Badges.presenter.BadgesPresenter;
-import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
 import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.R;
 

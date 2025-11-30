@@ -16,7 +16,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.SmartAir.Badges.view.BadgesActivity;
-import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
+import com.SmartAir.ChildDashboard.model.ChildDashboardRepository;
 import com.SmartAir.ChildDashboard.presenter.ChildDashboardPresenter;
 import com.SmartAir.Inventory.view.InventoryActivity;
 import com.SmartAir.R;
