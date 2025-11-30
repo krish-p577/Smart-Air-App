@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/r6_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="24dp"
+        android:text="Smart Air"
+        style="@style/DashboardText"
+        android:textSize="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/r6_test3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="88dp"
+        android:text="Parental Dashboard"
+        style="@style/DashboardText"
+        android:textSize="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/myText"
+        style="@style/DashboardText"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/text_box"
+        android:text="Today's Zone: \n newline"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/r6_test" />
+
+    <!-- Firestore TextView -->
+
+        <!-- Dropdown menu -->
+
+    <TextView
+        android:id="@+id/myText4"
+        style="@style/DashboardText"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/text_box"
+        android:text="Weekly Rescue Count"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myText3" />
+
+    <TextView
+        android:id="@+id/myText3"
+        style="@style/DashboardText"
+        android:layout_width="350dp"
+        android:layout_height="71dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/text_box"
+        android:text="Last Rescue Time:"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myText" />
+
+    <TextView
+        android:id="@+id/myText5"
+        style="@style/DashboardText"
+        android:layout_width="350dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="112dp"
+        android:background="@drawable/notifbox"
+        android:text="Notification Alerts (FCM) On:  \nRed-ZoneDay,\nRapid Rescue Repeats \nWorse After Dose, \nTriage Escalation, \nLow/Expired Inventory"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myText3" />
+
+    <TextView
+        android:id="@+id/r6_test"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="97dp"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/text_box"
+        android:padding="12dp"
+        android:text="Select Child:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/r6_test3" />
+
+    <Spinner
+        android:id="@+id/mySpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="31dp"
+        app:layout_constraintStart_toEndOf="@+id/r6_test"
+        app:layout_constraintTop_toBottomOf="@+id/r6_test3" />
+
+    <Button
+        android:id="@+id/pdfbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="12dp"
+        android:text="Generate PDF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/radio_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="124dp"
+        android:layout_marginBottom="12dp"
+        android:text="Schedule"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

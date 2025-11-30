@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.view.AddChildActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
@@ -45,6 +46,12 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
         addChildButton.setOnClickListener(v -> {
             startActivity(new Intent(this, AddChildActivity.class));
         });
+
+        Button dashboard_button = findViewById(R.id.dashboard_button);
+        dashboard_button.setOnClickListener(v -> {
+            startActivity(new Intent(this, ParentDashboardActivity.class));
+        });
+
     }
 
     @Override
