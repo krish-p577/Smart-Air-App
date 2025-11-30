@@ -1,12 +1,7 @@
 package com.SmartAir.ChildDashboard.presenter;
 
-import android.content.Intent;
-
-import com.SmartAir.Badges.view.BadgesActivity;
-import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.ChildDashboard.view.ChildDashboardView;
-import com.SmartAir.ChildDashboard.data.ChildDashboardRepository;
-import com.google.android.gms.tasks.Tasks;
+import com.SmartAir.ChildDashboard.model.ChildDashboardRepository;
 
 public class ChildDashboardPresenter {
 
