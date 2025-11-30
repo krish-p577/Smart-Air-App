@@ -83,6 +83,12 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        listenForChildrenUpdates();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         ListenerRegistration childrenListener = (ListenerRegistration) parentDashboardRecyclerView.getTag();
@@ -123,7 +129,9 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
             startActivity(intent);
             finish();
         } else if (itemId == R.id.nav_child_login) {
-            startActivity(new Intent(this, SelectChildLoginActivity.class));
+            Intent intent = new Intent(this, SelectChildLoginActivity.class);
+            intent.putExtra("isParent", true);
+            startActivity(intent);
         } else if (itemId == R.id.nav_manage_children) {
             startActivity(new Intent(this, ManageChildrenActivity.class));
         }

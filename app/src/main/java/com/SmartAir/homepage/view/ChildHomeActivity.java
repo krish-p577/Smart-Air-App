@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,11 +21,14 @@ import com.google.android.material.navigation.NavigationView;
 public class ChildHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
+    private boolean isParent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_child_home);
+
+        isParent = getIntent().getBooleanExtra("isParent", false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,11 +63,25 @@ public class ChildHomeActivity extends AppCompatActivity implements NavigationVi
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_logout) {
-            AuthRepository.getInstance().logout();
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            if (isParent) {
+                AuthRepository.getInstance().reauthenticateParent(new AuthRepository.AuthCallback() {
+                    @Override
+                    public void onSuccess() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Toast.makeText(ChildHomeActivity.this, "Failed to return to parent view: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                AuthRepository.getInstance().logout();
+                Intent intent = new Intent(this, WelcomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

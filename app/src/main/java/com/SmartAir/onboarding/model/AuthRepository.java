@@ -407,6 +407,38 @@ public class AuthRepository {
                 });
     }
 
+    public void loginAsChildForParent(ChildUser child, String password, @NonNull final AuthCallback callback) {
+        if (child.getEmail() == null || child.getEmail().isEmpty()) {
+            callback.onFailure("Child account is not configured for login.");
+            return;
+        }
+
+        firebaseAuth.signInWithEmailAndPassword(child.getEmail(), password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        FirebaseUser signedInUser = task.getResult().getUser();
+                        if (signedInUser != null) {
+                            fetchUserProfile(signedInUser, new AuthCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    // Do NOT overwrite parent credentials
+                                    callback.onSuccess();
+                                }
+
+                                @Override
+                                public void onFailure(String errorMessage) {
+                                    callback.onFailure(errorMessage);
+                                }
+                            });
+                        } else {
+                            callback.onFailure("Login failed.");
+                        }
+                    } else {
+                        callback.onFailure("Invalid password for child.");
+                    }
+                });
+    }
+
     public void sendPasswordResetEmail(String email, @NonNull final AuthCallback callback) {
         firebaseAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {

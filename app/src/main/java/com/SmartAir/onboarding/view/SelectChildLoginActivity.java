@@ -27,6 +27,7 @@ public class SelectChildLoginActivity extends AppCompatActivity implements Selec
     private SelectChildLoginPresenter presenter;
     private ProgressBar loadingIndicator;
     private RecyclerView recyclerView;
+    private boolean isParent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class SelectChildLoginActivity extends AppCompatActivity implements Selec
         loadingIndicator = findViewById(R.id.loading_indicator);
         recyclerView = findViewById(R.id.child_list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        isParent = getIntent().getBooleanExtra("isParent", false);
 
         presenter = new SelectChildLoginPresenter(this, AuthRepository.getInstance());
         presenter.fetchChildren();
@@ -49,7 +52,7 @@ public class SelectChildLoginActivity extends AppCompatActivity implements Selec
     @Override
     public void navigateToChildHome() {
         Intent intent = new Intent(this, ChildHomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("isParent", isParent);
         startActivity(intent);
         finish();
     }
