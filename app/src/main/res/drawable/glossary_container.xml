@@ -1,11 +1,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="#E6F0FF" />
+    <solid android:color="@color/primary_super_light" />
 
     <corners android:radius="16dp" />
 
     <stroke
         android:width="2dp"
-        android:color="#1A2E47" />
+        android:color="@color/primary_darker" />
 </shape> <!-- Container design used in GlossaryActivity -->

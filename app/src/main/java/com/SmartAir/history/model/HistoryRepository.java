@@ -39,7 +39,6 @@ public class HistoryRepository implements HistoryContract.Repository {
     }
 
     private Query filterQuery(Query query, FilterDataModel filter){
-        // Filter by Night Waking, Limited Ability, And Sickness
 
         if (filter.getNightWaking() != null){
             query = query.whereEqualTo("Night Waking", filter.getNightWaking());
@@ -53,8 +52,6 @@ public class HistoryRepository implements HistoryContract.Repository {
             query = query.whereEqualTo(FieldPath.of("Cough/Wheeze"), filter.getSick());
         }
 
-        // Filter by Start date and end date
-
         if (filter.getStartDate() != null) {
             query = query.whereGreaterThanOrEqualTo("Date", filter.getStartDate());
         }
@@ -62,8 +59,6 @@ public class HistoryRepository implements HistoryContract.Repository {
         if (filter.getEndDate() != null) {
             query = query.whereLessThanOrEqualTo("Date", filter.getEndDate());
         }
-
-        // Filter by Triggers
 
         if (filter.getTriggers() != null && !filter.getTriggers().isEmpty()) {
             if (filter.getTriggers().size() == 1) {
@@ -74,7 +69,6 @@ public class HistoryRepository implements HistoryContract.Repository {
         }
 
         return query;
-
     }
 
     private void returnData(Query filteredQuery, LoadCallback callback){

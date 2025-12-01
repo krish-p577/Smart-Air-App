@@ -61,7 +61,6 @@ public class DataToPdfExporter implements HistoryContract.Export{
         // design pdf
         for (HistoryItem item : items) {
 
-            // if out of room make new page
             if (y > pageHeight - margin * 2) {
                 pdfDocument.finishPage(page);
                 pageNumber++;
@@ -110,7 +109,6 @@ public class DataToPdfExporter implements HistoryContract.Export{
         String fileName = "history_export_" + timestamp + ".pdf";
         File pdfFile = new File(pdfDir, fileName);
 
-        // Toast that explains where saved
         try (FileOutputStream temp = new FileOutputStream(pdfFile)) {
             pdfDocument.writeTo(temp);
 
