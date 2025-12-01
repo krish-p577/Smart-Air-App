@@ -198,7 +198,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="Highest healthy PEF used to define zones: Green ≥80% PB; Yellow 50–79% PB; Red <50% PB."
+                    android:text="Highest healthy PEF used to define zones: Green ≥80% PB; Yellow
+                    50–79% PB; Red &lt;50% PB."
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -355,3 +356,4 @@
 
         </LinearLayout>
     </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

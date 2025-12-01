@@ -73,6 +73,9 @@
             android:name=".dailycheckin.view.DailyCheckInActivity"
             android:exported="false" />
         <activity
+            android:name=".glossary.view.GlossaryActivity"
+            android:exported="false" />
+        <activity
             android:name=".history.view.HistoryActivity"
             android:exported="false" />
         <activity
