@@ -14,25 +14,44 @@
         android:layout_marginEnd="50dp"
         android:gravity="center"
         android:text="Glossary"
-        android:textSize="60sp"
+        android:textSize="50sp"
         android:textStyle="bold"
+        android:background="@drawable/title_design"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/glossaryExitBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Close"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="398dp"
-        android:layout_height="600dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/glossaryTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/glossaryTitle">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
+            android:id="@+id/glossaryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@drawable/glossary_container"
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,21 +65,21 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Asthma"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="#f59d45" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="A condition that causes long-term inflammation in your airways."
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -76,21 +95,21 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Rescue inhaler"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="@color/primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="Quick-relief medicine for sudden symptoms."
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -106,21 +125,21 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Controller medicine"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="#f59d45" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="Daily prevention medicine that reduces airway swelling."
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -136,22 +155,21 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Peak-flow (PEF)"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="@color/primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="A number the user manually enters to reflect how fast they can
-blow out."
-                    android:textSize="14sp" />
+                    android:text="A number the user manually enters to reflect how fast they can blow out."
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -167,22 +185,22 @@ blow out."
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Personal best (PB)"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="#f59d45" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="Highest healthy PEF used to define zones: Green ≥80% PB; Yellow
-50–79% PB; Red &lt;50% PB."
-                    android:textSize="14sp" />
+                    50–79% PB; Red &lt;50% PB."
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -198,21 +216,21 @@ blow out."
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Triggers"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="@color/primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="Things that can set off symptoms (e.g., dust mites, pets, etc)"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -228,21 +246,21 @@ blow out."
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Dose count"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="#f59d45" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="Number of puffs/measures taken."
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -258,21 +276,21 @@ blow out."
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Low canister"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="@color/primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="≤20% remaining."
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -288,21 +306,21 @@ blow out."
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Low rescue month"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="#f59d45" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="≤4 rescue days in 30 days."
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -318,39 +336,24 @@ blow out."
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="High-quality technique session"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
-                    android:background="#000000" />
+                    android:background="@color/primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="All technique steps completed with positive feedback"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/glossaryExitBtn"
-        android:layout_width="389dp"
-        android:layout_height="73dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="10dp"
-        android:text="Return"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

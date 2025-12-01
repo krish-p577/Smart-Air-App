@@ -4,8 +4,18 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Primary Brand Colors -->
-    <color name="primary">#3F51B5</color> <!-- A nice Indigo -->
-    <color name="secondary">#009688</color> <!-- A calming Teal -->
+    <color name="primary_super_light">#e6fcff</color> <!-- Near white Blue-->
+    <color name="primary_lighter">#c9edf5</color> <!-- lighter Blue -->
+    <color name="primary">#0cc0df</color> <!-- Blue that matches app logo -->
+    <color name="primary_darker">#08849A</color> <!-- Darker Blue -->
+    <color name="primary_super_dark">#013540</color> <!-- Super Dark Blue -->
+    <color name="secondary_lighter">#FFD9BF</color> <!-- Lighter orange -->
+    <color name="secondary">#ff751f</color> <!-- Orange -->
+    <color name="secondary_darker">#E56719</color> <!-- Darker orange -->
+
+    <!-- History Button Colors -->
+    <color name="filter_btn_color">#da85ff</color>
+    <color name="export_btn_color">#ed4c69</color>
 
     <!-- Dark Theme Colors -->
     <color name="primary_dark">#7986CB</color>
