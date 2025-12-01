@@ -22,5 +22,4 @@ public class RoleSelectionPresenter {
         view.navigateToChildSignIn();
     }
 
-    public void onTestClicked(){ view.navigateToTestDashboard();}
 }

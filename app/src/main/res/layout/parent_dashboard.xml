@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Smart Air"
+        app:titleTextColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/r6_header"
@@ -16,7 +25,7 @@
         style="@style/DashboardText"
         android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
         android:id="@+id/r6_test3"
@@ -28,7 +37,7 @@
         style="@style/DashboardText"
         android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
         android:id="@+id/myText"
@@ -77,7 +86,7 @@
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myText" />
+        app:layout_constraintTop_toBottomOf="@id/myText" />
 
     <TextView
         android:id="@+id/myText5"
@@ -91,7 +100,7 @@
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myText3" />
+        app:layout_constraintTop_toBottomOf="@id/myText3" />
 
     <TextView
         android:id="@+id/r6_test"

@@ -14,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.ParentLink.view.ManageChildrenActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
@@ -33,11 +34,14 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
     private ParentDashboardAdapter adapter;
     private AuthRepository authRepository;
     private final List<ChildUser> childrenList = new ArrayList<>();
+    private boolean isTestMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_home);
+
+        isTestMode = getIntent().getBooleanExtra("testMode", false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -92,7 +96,8 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
     }
 
     private void listenForChildrenUpdates() {
-        ListenerRegistration childrenListener = authRepository.listenForChildrenForParent(authRepository.getCurrentFirebaseUser().getUid(), new AuthRepository.ChildrenCallback() {
+        String uid = isTestMode ? "voS60SSmSSZL9j3XGKyhHNSs4LR2" : authRepository.getCurrentFirebaseUser().getUid();
+        ListenerRegistration childrenListener = authRepository.listenForChildrenForParent(uid, new AuthRepository.ChildrenCallback() {
             @Override
             public void onSuccess(List<ChildUser> children) {
                 int oldSize = childrenList.size();
@@ -126,6 +131,10 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
             startActivity(new Intent(this, SelectChildLoginActivity.class));
         } else if (itemId == R.id.nav_manage_children) {
             startActivity(new Intent(this, ManageChildrenActivity.class));
+        } else if (itemId == R.id.nav_dashboard) {
+            Intent intent = new Intent(this, ParentDashboardActivity.class);
+            intent.putExtra("testMode", isTestMode);
+            startActivity(intent);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
