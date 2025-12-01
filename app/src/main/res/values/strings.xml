@@ -8,6 +8,12 @@
     <string name="provider">Provider</string>
     <string name="child">Child</string>
 
+    <string-array name="options_array">
+        <item>Option 1</item>
+        <item>Option 2</item>
+        <item>Option 3</item>
+    </string-array>
+
     <!-- Login/Signup Strings -->
     <string name="login">Login</string>
     <string name="signup">Sign Up</string>
@@ -19,7 +25,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
-    
+
     <!-- Navigation Drawer Strings -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

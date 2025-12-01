@@ -21,4 +21,6 @@ public class RoleSelectionPresenter {
     public void onChildClicked() {
         view.navigateToChildSignIn();
     }
+
+    public void onTestClicked(){ view.navigateToTestDashboard();}
 }

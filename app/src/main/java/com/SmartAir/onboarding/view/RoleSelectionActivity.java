@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.presenter.RoleSelectionPresenter;
 
@@ -27,6 +28,17 @@ public class RoleSelectionActivity extends AppCompatActivity implements RoleSele
 
         Button childButton = findViewById(R.id.child_button);
         childButton.setOnClickListener(v -> presenter.onChildClicked());
+
+        Button testButton = findViewById(R.id.r6_test_button);
+        testButton.setOnClickListener(v ->presenter.onTestClicked());
+
+    }
+
+    @Override
+    public void navigateToTestDashboard() {
+        Intent intent = new Intent(this, ParentDashboardActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
