@@ -19,6 +19,7 @@ import com.SmartAir.Badges.view.BadgesActivity;
 import com.SmartAir.ChildDashboard.model.ChildDashboardRepository;
 import com.SmartAir.ChildDashboard.presenter.ChildDashboardPresenter;
 import com.SmartAir.Inventory.view.InventoryActivity;
+import com.SmartAir.LogController.view.LogControllerActivity;
 import com.SmartAir.R;
 import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
@@ -188,7 +189,8 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
 
     @Override
     public void showLogController() {
-        // TODO: wire to controller logging page
+        Intent intent = new Intent(ChildDashboardActivity.this, LogControllerActivity.class);
+        startActivity(intent);
     }
 
     @Override
