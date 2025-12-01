@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="Parent Home"
+            app:title="@string/app_name"
             app:titleTextColor="@android:color/white" />
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="16dp"
-            android:text="Welcome, Parent!"
+            android:text="@string/welcome_parent"
             android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView

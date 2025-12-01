@@ -13,6 +13,19 @@
     <string name="save_changes_button">Save Changes</string>
     <string name="add_child_account_button">Add Child Account</string>
     <string name="edit_child">Edit Child</string>
+    <string name="welcome_parent">Welcome, Parent!</string>
+    <string name="go_to_dashboard">Go to Dashboard</string>
+    <string name="manage_children">Manage Children</string>
+    <string name="login_as_child">Login as Child</string>
+    <string name="logout">Logout</string>
+    <string name="parent_dashboard">Parent Dashboard</string>
+    <string name="todays_zone">Today\'s Zone: \n newline</string>
+    <string name="weekly_rescue_count">Weekly Rescue Count</string>
+    <string name="last_rescue_time">Last Rescue Time:</string>
+    <string name="notification_alerts">Notification Alerts (FCM) On:  \nRed-ZoneDay,\nRapid Rescue Repeats \nWorse After Dose, \nTriage Escalation, \nLow/Expired Inventory</string>
+    <string name="select_child">Select Child:</string>
+    <string name="generate_pdf">Generate PDF</string>
+    <string name="schedule">Schedule</string>
 
     <!-- Onboarding & Authentication -->
     <string name="welcome_message">Welcome to Smart Air!</string>
