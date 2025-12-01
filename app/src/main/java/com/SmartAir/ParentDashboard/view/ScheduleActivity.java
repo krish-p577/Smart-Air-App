@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
+import com.SmartAir.onboarding.model.BaseUser;
+import com.SmartAir.onboarding.model.CurrentUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -25,21 +28,30 @@ public class ScheduleActivity extends AppCompatActivity {
     // Variable to store the ID of the currently selected RadioButton
     private int selectedRadioButtonId = -1;
 
+    BaseUser user =  CurrentUser.getInstance().getUserProfile();
+
+    private int currentLookBack = 7;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_page);
+        RadioGroup timeToggle = findViewById(R.id.toggle_time_window);
 
         TextView schedule_text = findViewById(R.id.current_selection);
-        scheduleText(schedule_text);
+        scheduleText(schedule_text, currentLookBack);
 
         RadioGroup radioGroupOptions = findViewById(R.id.radio_buttons);
         Button savebut = findViewById(R.id.schedule_save);
 
 
 
+
+
+
+        // managing scheduling radio button changes
         radioGroupOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -63,9 +75,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
                     String cid = childId;
 
-                    scheduleText(schedule_text);
-
-
+                    scheduleText(schedule_text, currentLookBack);
 
                     Map<String, Object> userUpdates = new HashMap<>();
                     userUpdates.put("schedule", selectedOptionText);
@@ -90,43 +100,71 @@ public class ScheduleActivity extends AppCompatActivity {
                 Toast.makeText(ScheduleActivity.this, "Please select an option first.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
-    private void scheduleText(TextView text_box){
+        timeToggle.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.btn_7_days) {
+                currentLookBack = 7;
+
+            } else if (checkedId == R.id.btn_30_days) {
+                currentLookBack = 30;
+            }
+            scheduleText(schedule_text, currentLookBack);
+        });
+
+    }
+    private void scheduleText(TextView scheduleDisplayView, int daysLookBack) {
+
         db.collection("Users")
                 .document(childId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                   if (documentSnapshot.exists()){
-                       text_box.setText("Current Schedule: " + documentSnapshot.get("schedule"));
-                   }
+                    if (documentSnapshot.exists()) {
+                        String scheduleType = documentSnapshot.getString("schedule");
+                        if (scheduleType == null) scheduleType = "Daily";
 
-                    AdherenceCalculator.calculate(childId, (String) documentSnapshot.get("schedule"), new AdherenceCalculator.AdherenceCallback() {
-                        @Override
-                        public void onResult(int adherencePercentage, boolean isCurrentlyCompliant) {
+                        scheduleDisplayView.setText("Current Schedule: " + scheduleType);
 
-                            // Update UI
-                            TextView scoreView = findViewById(R.id.adheranceView);
-                            TextView statusView = findViewById(R.id.adherence_progress);
+                        // Run Calculator
+                        AdherenceCalculator.calculate(childId, scheduleType, daysLookBack, (percentage, isCurrentlyCompliant) -> {
 
-                            scoreView.setText("Adherence Score: " + adherencePercentage + "%");
 
-                            if (isCurrentlyCompliant) {
-                                statusView.setText("Status: On Track");
-                                statusView.setTextColor(Color.GREEN);
-                            } else {
-                                statusView.setText("Status: Overdue");
-                                statusView.setTextColor(Color.RED);
+                            // FIND VIEWS - Wrap in try-catch to spot ID errors
+                            try {
+                                TextView scoreView = findViewById(R.id.adherance_view); // CHECK THIS ID
+                                TextView statusView = findViewById(R.id.adherence_progress);    // CHECK THIS ID
+                                ProgressBar progressBar = findViewById(R.id.adherence_bar); // CHECK THIS ID
+
+                                if (scoreView == null || progressBar == null) {
+                                    return;
+                                }
+
+                                // Update UI
+                                scoreView.setText("Adherence Record: " + percentage + "%");
+                                progressBar.setProgress(percentage);
+
+                                // Color Logic...
+                                int color = (percentage >= 80) ? Color.parseColor("#4CAF50") :
+                                        (percentage >= 50) ? Color.parseColor("#FFC107") :
+                                                Color.parseColor("#F44336");
+
+                                String statusMessage = (percentage >= 80) ? "Status: On Track" :
+                                        (percentage >= 50) ? "Status: Needs Improvement" :
+                                                "Status: Overdue";
+
+                                statusView.setText(statusMessage);
+                                statusView.setTextColor(color);
+                                progressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(color));
+
+
+                            } catch (Exception e) {
+                                Log.e("DEBUG_APP", "Error updating UI: " + e.getMessage());
+                                e.printStackTrace();
                             }
-                        }
-                    });
-
+                        });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DEBUG_APP", "Error fetching User Schedule: " + e.getMessage());
                 });
-    }
-
-    private String adherenceCalculation(String childID){
-
-
-        return "";
     }
 }
