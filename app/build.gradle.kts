@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.SmartAir"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.SmartAir"
@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
     implementation(libs.cardview)
+    implementation(libs.media3.ui)
+    implementation(libs.media3.exoplayer)
 
     // JUnit and Mockito - Upgraded for Java 21 compatibility
     testImplementation(libs.junit)

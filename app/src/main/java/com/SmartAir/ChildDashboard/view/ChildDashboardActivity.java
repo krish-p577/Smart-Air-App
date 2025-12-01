@@ -22,6 +22,7 @@ import com.SmartAir.Inventory.view.InventoryActivity;
 import com.SmartAir.LogController.view.LogControllerActivity;
 import com.SmartAir.LogRescue.view.LogRescueActivity;
 import com.SmartAir.R;
+import com.SmartAir.TechniqueHelper.view.TechniqueHelperActivity;
 import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
@@ -212,7 +213,8 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
 
     @Override
     public void showPracticeTechnique() {
-        // TODO: wire to practice technique page
+        Intent intent = new Intent(ChildDashboardActivity.this, TechniqueHelperActivity.class);
+        startActivity(intent);
     }
 
     @Override
