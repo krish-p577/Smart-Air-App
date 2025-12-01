@@ -23,7 +23,7 @@ public class LogControllerRepository {
         this.user = CurrentUser.getInstance();
     }
 
-    public Task<Void> logControllerInhalerUser(Map<String, Object> fieldsToLog) {
+    public Task<Void> logControllerInhalerUse(Map<String, Object> fieldsToLog) {
         String childId = user.getUid();
 
         return db.collection("inhalerLogs")
@@ -32,7 +32,7 @@ public class LogControllerRepository {
             .add(fieldsToLog)
             .continueWithTask(task -> {
                 if (!task.isSuccessful()) {
-                    throw task.getException();
+                    throw Objects.requireNonNull(task.getException());
                 }
 
                 return Tasks.forResult(null);

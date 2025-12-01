@@ -6,6 +6,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LogControllerPresenter {
 
@@ -38,14 +39,19 @@ public class LogControllerPresenter {
             return;
         }
 
+        if (puffsTaken < 0) {
+            view.showMessage("Number of puffs taken cannot be negative.");
+            return;
+        }
+
         Map<String, Object> fieldsToLog = new HashMap<>();
         fieldsToLog.put("puffsTaken", puffsTaken);
         fieldsToLog.put("timestamp", Timestamp.now());
 
-        repo.logControllerInhalerUser(fieldsToLog)
+        repo.logControllerInhalerUse(fieldsToLog)
             .continueWithTask(task -> {
             if (!task.isSuccessful()) {
-                throw task.getException();
+                throw Objects.requireNonNull(task.getException());
             }
 
             return repo.updateControllerStreak();

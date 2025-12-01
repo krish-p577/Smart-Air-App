@@ -20,6 +20,7 @@ import com.SmartAir.ChildDashboard.model.ChildDashboardRepository;
 import com.SmartAir.ChildDashboard.presenter.ChildDashboardPresenter;
 import com.SmartAir.Inventory.view.InventoryActivity;
 import com.SmartAir.LogController.view.LogControllerActivity;
+import com.SmartAir.LogRescue.view.LogRescueActivity;
 import com.SmartAir.R;
 import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
@@ -195,7 +196,8 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
 
     @Override
     public void showLogRescue() {
-        // TODO: wire to rescue logging page
+        Intent intent = new Intent(ChildDashboardActivity.this, LogRescueActivity.class);
+        startActivity(intent);
     }
 
     @Override
