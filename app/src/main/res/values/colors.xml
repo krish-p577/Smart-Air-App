@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Primary Brand Colors -->
-    <color name="primary">#3F51B5</color> <!-- A nice Indigo -->
+    <color name="primary">#0cc0df</color> <!-- Blue that matches app logo -->
     <color name="secondary">#009688</color> <!-- A calming Teal -->
 
     <!-- Dark Theme Colors -->
