@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class DataToPdfExporter implements HistoryContract.Export{
 
-    private Context context;
+    private final Context context;
     public DataToPdfExporter(Context context){
         this.context = context;
     }

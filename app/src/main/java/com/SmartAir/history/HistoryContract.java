@@ -12,35 +12,35 @@ import java.util.List;
 public interface HistoryContract {
 
     interface View {
-        public abstract void showHistory(List<HistoryItem> items);
-        public abstract void showLoadError(String message);
-        public abstract void showLoading();
-        public abstract void hideLoading();
+        void showHistory(List<HistoryItem> items);
+        void showLoadError(String message);
+        void showLoading();
+        void hideLoading();
     }
 
     interface FilterDialog{
-        public abstract void show();
+        void show();
     }
 
     interface Presenter{
-        public abstract void loadData(FilterDataModel filter);
-        public abstract List<HistoryItem> getLastQuery();
+        void loadData(FilterDataModel filter);
+        List<HistoryItem> getLastQuery();
     }
 
     interface Repository{
         interface LoadCallback {
-            public abstract void onSuccess(List<HistoryItem> items);
-            public abstract void onFailure(Exception e);
+            void onSuccess(List<HistoryItem> items);
+            void onFailure(Exception e);
         }
 
-        public abstract void getData(FilterDataModel filter, LoadCallback callback);
+        void getData(FilterDataModel filter, LoadCallback callback);
     }
 
     interface Export{
-        public abstract void exportHistoryToPdf(List<HistoryItem> items);
+        void exportHistoryToPdf(List<HistoryItem> items);
     }
 
     interface Adapter {
-        public abstract void setItems(List<HistoryItem> newItems);
+        void setItems(List<HistoryItem> newItems);
     }
 }

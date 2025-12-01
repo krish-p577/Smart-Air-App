@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Filter Dialog used in HistoryActivity that lets users filter their history.
  * This communicates the chosen filter back to HistoryActivity by forwarding filter to
- * HistoryPresenter then recieving the updated results through a callback.
+ * HistoryPresenter then receiving the updated results through a callback.
  */
 public class FilterDialog implements HistoryContract.FilterDialog{
 

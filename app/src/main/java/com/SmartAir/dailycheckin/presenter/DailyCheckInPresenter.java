@@ -1,7 +1,6 @@
 package com.SmartAir.dailycheckin.presenter;
 import com.SmartAir.dailycheckin.DailyCheckInContract;
 import com.SmartAir.dailycheckin.model.DailyCheckInRepository;
-import com.SmartAir.dailycheckin.presenter.Date;
 
 import java.util.List;
 

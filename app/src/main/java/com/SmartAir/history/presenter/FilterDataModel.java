@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class FilterDataModel {
 
-    private Boolean nightWaking;
-    private Boolean limitedAbility;
-    private Boolean sick;
-    private String startDate;
-    private String endDate;
+    private final Boolean nightWaking;
+    private final Boolean limitedAbility;
+    private final Boolean sick;
+    private final String startDate;
+    private final String endDate;
     final List<String> triggers;
     private boolean invalidInput;
     public FilterDataModel(Boolean nightWaking, Boolean limitedAbility, Boolean sick,

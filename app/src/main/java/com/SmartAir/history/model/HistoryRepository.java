@@ -21,11 +21,10 @@ import java.util.List;
  */
 public class HistoryRepository implements HistoryContract.Repository {
 
-    private final FirebaseFirestore db;
     private final CollectionReference ref;
 
     public HistoryRepository(){
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         ref = db.collection("daily_check_ins");
     }
     @Override
@@ -33,7 +32,7 @@ public class HistoryRepository implements HistoryContract.Repository {
         CurrentUser user = CurrentUser.getInstance();
         String parentId = user.getUid();
 
-        Query query = ref.whereEqualTo("parentId", parentId);;
+        Query query = ref.whereEqualTo("parentId", parentId);
         Query filteredQuery = filterQuery(query, filter);
         returnData(filteredQuery, callback);
         System.out.println("HistoryRepository parentId = " + parentId);
