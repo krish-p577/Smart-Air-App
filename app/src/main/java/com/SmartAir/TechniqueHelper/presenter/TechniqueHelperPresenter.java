@@ -16,4 +16,13 @@ public class TechniqueHelperPresenter {
     public void onBackClicked() {
         view.showChildDashboard();
     }
+
+    public void onPerfectSessionCompleted() {
+        repo.updatePerfectTechniqueSessions()
+            .addOnSuccessListener(v -> {
+                view.showMessage("Great job, You had perfect technique!");
+            }).addOnFailureListener(e -> {
+                view.showMessage("Error updating technique sessions: " + e.getMessage());
+            });
+    }
 }

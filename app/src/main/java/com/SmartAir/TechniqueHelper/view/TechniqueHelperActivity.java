@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +24,6 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
     private TechniqueHelperPresenter presenter;
 
     private ExoPlayer player;
-    private PlayerView playerView;
 
     private final long[] PAUSE_TIMESTAMPS_MS = {
             13000, // Check dose count
@@ -40,6 +40,7 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
     };
     private int pauseIndex = 0;
     private boolean isChecking = false;
+    private boolean isPerfectSession = true;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -54,12 +55,12 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
         Button backButton = findViewById(R.id.btn_back);
         backButton.setOnClickListener(v -> presenter.onBackClicked());
 
-        playerView = findViewById(R.id.player_view);
+        PlayerView playerView = findViewById(R.id.player_view);
 
         player = new ExoPlayer.Builder(this).build();
         playerView.setPlayer(player);
 
-        MediaItem mediaItem = MediaItem.fromUri("video uri"); //TODO: replace with real video URI
+        MediaItem mediaItem = MediaItem.fromUri("android.resource://" + getPackageName() + "/" + R.raw.technique_helper_video);
         player.setMediaItem(mediaItem);
         player.prepare();
 
@@ -153,6 +154,7 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
                 playAndContinueChecking();
             }).setNegativeButton("No", (dialog, which) -> {
                 pauseIndex++;
+                isPerfectSession = false;
                 playAndContinueChecking();
             }).setCancelable(false)
             .show();
@@ -168,6 +170,10 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
             checkPauseNeeded();
         } else {
             isChecking = false;
+
+            if (isPerfectSession) {
+                presenter.onPerfectSessionCompleted();
+            }
         }
 
         player.play();
@@ -192,5 +198,10 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
     public void showChildDashboard() {
         Intent intent = new Intent(TechniqueHelperActivity.this, ChildDashboardActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
