@@ -1,6 +1,7 @@
 package com.SmartAir.history.presenter;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class FilterDataModel {
     private final String endDate;
     final List<String> triggers;
     private boolean invalidInput;
+
     public FilterDataModel(Boolean nightWaking, Boolean limitedAbility, Boolean sick,
                            String startDate, String endDate, List<String> triggers){
         this.triggers = triggers;
@@ -25,18 +27,18 @@ public class FilterDataModel {
         this.sick = sick;
 
         LocalDate today = LocalDate.now();
-        LocalDate maxRangeStart = today.minusMonths(6);
+        LocalDate defaultStart = today.minusMonths(6);
 
-        LocalDate start = (startDate != null) ? LocalDate.parse(startDate) : maxRangeStart;
-        LocalDate end   = (endDate != null)   ? LocalDate.parse(endDate)   : today;
+        LocalDate start = (startDate != null) ? LocalDate.parse(startDate) : defaultStart;
+        LocalDate end = (endDate != null)   ? LocalDate.parse(endDate)   : today;
 
-        if (start.isBefore(maxRangeStart)) {
-            start = maxRangeStart;
-            invalidInput = true;
-        }
+        long monthsBetween = ChronoUnit.MONTHS.between(start, end);
 
-        if (end.isBefore(start)) {
-            end = start;
+        // if not between 3 and 6 months diff go to default selection which is today to 6 months
+        // back.
+        if ((monthsBetween < 3|| monthsBetween > 6) || end.isBefore(start)) {
+            start = defaultStart;
+            end = today;
             invalidInput = true;
         }
 

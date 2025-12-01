@@ -100,14 +100,12 @@ public class FilterDialog implements HistoryContract.FilterDialog{
                     presenter.loadData(filter);
 
                     if (filter.isInvalidInput()){
-                        Toast.makeText(context, "Invalid date Input, Your input was " +
-                                        "changed to meet requirements",
+                        Toast.makeText(context, "Invalid date Input, Date's " +
+                                        "changed to (6 months ago - Today)",
                                 Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("Cancel", (d, which) -> {
-                    d.dismiss();
-                })
+                .setNegativeButton("Cancel", (d, which) -> d.dismiss())
                 .create();
         dialog.show();
     }
