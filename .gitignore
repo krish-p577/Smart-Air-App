@@ -12,3 +12,12 @@
 /captures
 .externalNativeBuild
 .cxx
+/google-services.json/
+/build/
+# Google Services file
+google-services.json
+
+#Keys
+release-temp.jks
+app/google-services.json
+.cxx

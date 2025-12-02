@@ -16,7 +16,7 @@
             android:background="@drawable/title_design"
             android:gravity="center"
             android:text="Filter"
-            android:textColor="#DCE1E6"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
