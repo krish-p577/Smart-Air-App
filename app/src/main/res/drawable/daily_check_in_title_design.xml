@@ -9,4 +9,4 @@
         android:top="8dp"
         android:right="12dp"
         android:bottom="8dp" />
-</shape> <!-- Title design used in HistoryActivity, DailyCheckInActivity, and GlossaryActivity -->
+</shape>

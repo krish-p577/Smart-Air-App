@@ -28,6 +28,8 @@
     <string name="schedule">Schedule</string>
     <string name="history">History</string>
     <string name="check_ins">Check Ins</string>
+    <string name="daily_check_in">Daily Check-In</string>
+    <string name="glossary">Glossary</string>
 
     <!-- Schedule Page -->
     <string name="controller_adherence">Controller Adherence</string>

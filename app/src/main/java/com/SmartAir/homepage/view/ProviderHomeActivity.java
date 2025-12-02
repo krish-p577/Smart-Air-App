@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.SmartAir.R;
+import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
 import com.SmartAir.onboarding.view.WelcomeActivity;
@@ -51,8 +52,10 @@ public class ProviderHomeActivity extends AppCompatActivity implements Navigatio
 
         // Ensure the correct menu items are visible for providers
         Menu navMenu = navigationView.getMenu();
+        navMenu.findItem(R.id.nav_dashboard).setVisible(false);
         navMenu.findItem(R.id.nav_manage_children).setVisible(false);
         navMenu.findItem(R.id.nav_child_login).setVisible(false);
+        navMenu.findItem(R.id.nav_glossary).setVisible(true);
         navMenu.findItem(R.id.nav_logout).setVisible(true);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -130,12 +133,15 @@ public class ProviderHomeActivity extends AppCompatActivity implements Navigatio
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.nav_logout) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_logout) {
             AuthRepository.getInstance().logout();
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        } else if (itemId == R.id.nav_glossary) {
+            startActivity(new Intent(this, GlossaryActivity.class));
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

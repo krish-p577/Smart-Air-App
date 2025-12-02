@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.ParentLink.view.ManageChildrenActivity;
 import com.SmartAir.R;
+import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
 import com.SmartAir.onboarding.view.SelectChildLoginActivity;
@@ -135,6 +136,8 @@ public class ParentHomeActivity extends AppCompatActivity implements NavigationV
             Intent intent = new Intent(this, ParentDashboardActivity.class);
             intent.putExtra("testMode", isTestMode);
             startActivity(intent);
+        } else if (itemId == R.id.nav_glossary) {
+            startActivity(new Intent(this, GlossaryActivity.class));
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

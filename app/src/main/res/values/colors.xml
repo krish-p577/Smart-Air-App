@@ -14,8 +14,8 @@
     <color name="secondary_darker">#E56719</color> <!-- Darker orange -->
 
     <!-- History Button Colors -->
-    <color name="filter_btn_color">#da85ff</color>
-    <color name="export_btn_color">#ed4c69</color>
+    <color name="filter_btn_color">@color/white</color>
+    <color name="export_btn_color">@color/white</color>
 
     <!-- Dark Theme Colors -->
     <color name="primary_dark">#7986CB</color>

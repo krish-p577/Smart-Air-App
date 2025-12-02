@@ -55,7 +55,7 @@ public class SelectChildLoginPresenter {
 
         view.setLoading(true);
 
-        authRepository.signInChild(child.getDisplayName(), childPassword, new AuthRepository.AuthCallback() {
+        authRepository.signInChild(child.getEmail(), childPassword, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
                 view.setLoading(false);
