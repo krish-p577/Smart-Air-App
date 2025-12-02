@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="gcm_defaultSenderId" translatable="false">163932509170</string>
-    <string name="google_api_key" translatable="false">AIzaSyAH0nU4qZEijUCwt8T5GiOLOh53-4aPH2E</string>
-    <string name="google_app_id" translatable="false">1:163932509170:android:54675983b7235faaded16b</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAH0nU4qZEijUCwt8T5GiOLOh53-4aPH2E</string>
-    <string name="google_storage_bucket" translatable="false">smart-air-app-4e4d9.firebasestorage.app</string>
-    <string name="project_id" translatable="false">smart-air-app-4e4d9</string>
-</resources>
