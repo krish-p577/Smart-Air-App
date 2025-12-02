@@ -1,4 +1,4 @@
-package com.SmartAir.onboarding.view;
+package com.SmartAir.ParentLink.view;
 
 import java.util.List;
 

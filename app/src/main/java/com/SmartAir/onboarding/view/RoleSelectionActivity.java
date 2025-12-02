@@ -32,16 +32,6 @@ public class RoleSelectionActivity extends AppCompatActivity implements RoleSele
         Button childButton = findViewById(R.id.child_button);
         childButton.setOnClickListener(v -> presenter.onChildClicked());
 
-        Button testButton = findViewById(R.id.r6_test_button);
-        testButton.setOnClickListener(v ->presenter.onTestClicked());
-
-    }
-
-    @Override
-    public void navigateToTestDashboard() {
-        Intent intent = new Intent(this, ParentDashboardActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     @Override
