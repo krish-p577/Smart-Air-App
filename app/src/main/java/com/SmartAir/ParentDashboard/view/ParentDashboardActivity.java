@@ -22,7 +22,6 @@ import com.SmartAir.ParentDashboard.model.ParentModel;
 import com.SmartAir.ParentDashboard.model.PefLogsModel;
 import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.SmartAir.ParentDashboard.presenter.ParentDashboardPresenter;
-import com.SmartAir.R;
 import com.SmartAir.dailycheckin.view.DailyCheckInActivity;
 import com.SmartAir.history.view.HistoryActivity;
 import com.SmartAir.onboarding.model.BaseUser;
@@ -30,27 +29,16 @@ import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.model.ParentUser;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.Timestamp;
-import com.SmartAir.ParentDashboard.model.PefLogsModel;
-import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -87,6 +75,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
             if (!childId.isEmpty()) {
                 Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
+                finish();
             }
             else {
                 Toast.makeText(ParentDashboardActivity.this, "No child selected", Toast.LENGTH_LONG).show();
@@ -95,7 +84,6 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.parent_dashboard);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView test_text = findViewById(R.id.r6_test);
@@ -181,8 +169,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
                         List<String> triggers = (List<String>) doc.get("Triggers");
                         if (triggers == null) {
                             triggers = new ArrayList<>();
+                        } else if (!triggers.isEmpty()) {
+                            Log.i("LOGS", "FOUND LOG HERE" + triggers.get(0));
                         }
-                        Log.i("LOGS", "FOUND LOG HERE" + triggers.get(0));
 
                         // Add to list
                         reportLogs.add(new ReportGenerationActivity.DailyLog(date, triggers, ""));
