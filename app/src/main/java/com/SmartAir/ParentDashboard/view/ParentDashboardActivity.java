@@ -23,6 +23,8 @@ import com.SmartAir.ParentDashboard.model.PefLogsModel;
 import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.SmartAir.ParentDashboard.presenter.ParentDashboardPresenter;
 import com.SmartAir.R;
+import com.SmartAir.dailycheckin.view.DailyCheckInActivity;
+import com.SmartAir.history.view.HistoryActivity;
 import com.SmartAir.onboarding.model.BaseUser;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.model.ParentUser;
@@ -104,6 +106,18 @@ public class ParentDashboardActivity extends AppCompatActivity {
         Button reportBut = findViewById(R.id.btn_generate_report);
 
         reportBut.setOnClickListener(v -> generateComprehensiveReport(30));
+
+        Button historyBtn = findViewById(R.id.history_btn);
+        historyBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HistoryActivity.class);
+            startActivity(intent);
+        });
+
+        Button checkin_btn = findViewById(R.id.checkin);
+        checkin_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, DailyCheckInActivity.class);
+            startActivity(intent);
+        });
 
         Spinner spinner = findViewById(R.id.mySpinner);
         List<String> childList = new ArrayList<>();
