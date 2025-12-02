@@ -10,7 +10,8 @@
         android:id="@+id/form_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".onboarding.view.SignupActivity">
+        tools:context=".onboarding.view.SignupActivity"
+        android:background="@android:color/white">
 
         <!-- Other fields remain the same -->
 
@@ -137,6 +138,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="369dp"
+            android:layout_height="162dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/smart_air_name_and_logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

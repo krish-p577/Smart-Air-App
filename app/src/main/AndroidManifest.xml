@@ -43,6 +43,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".onboarding.view.OneTapActivity"
+            android:exported="false" />
         <!-- Onboarding & Home Activities -->
         <activity
             android:name=".onboarding.view.WelcomeActivity"
@@ -80,6 +83,8 @@
             android:exported="false" />
         <activity
             android:name=".glossary.view.GlossaryActivity"
+            android:exported="false" />
+        <activity android:name=".onboarding.view.PEFEntryActivity"
             android:exported="false" />
         <activity
             android:name=".history.view.HistoryActivity"

@@ -51,6 +51,7 @@ public class ProviderHomeActivity extends AppCompatActivity implements Navigatio
 
         // Ensure the correct menu items are visible for providers
         Menu navMenu = navigationView.getMenu();
+        navMenu.findItem(R.id.nav_dashboard).setVisible(false);
         navMenu.findItem(R.id.nav_manage_children).setVisible(false);
         navMenu.findItem(R.id.nav_child_login).setVisible(false);
         navMenu.findItem(R.id.nav_logout).setVisible(true);
