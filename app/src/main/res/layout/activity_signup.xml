@@ -149,7 +149,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/smart_air_name_and_logo" />
+            app:srcCompat="@drawable/smart_air_name_and_logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
