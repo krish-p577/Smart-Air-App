@@ -101,7 +101,7 @@ losing interest and could complete it very quickly.
 - History export as pdf feature was chosen to export to the downloads folder in files because it 
 would give the user the most freedom on what they do with it.
 #### Assumptions
-- If child has more then parents share one account.
+- If child has more then one parent then parents share one account.
 - We assume users have reliable internet for firebase-sync.
 - Children are ages 6-16
 - Providers are read-only and will never need to edit data.
