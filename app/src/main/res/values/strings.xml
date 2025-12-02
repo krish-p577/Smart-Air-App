@@ -23,7 +23,7 @@
     <string name="login_as_child">Login as Child</string>
     <string name="logout">Logout</string>
     <string name="parent_dashboard">Parent Dashboard</string>
-    <string name="todays_zone">Today\'s Zone: \n newline</string>
+    <string name="todays_zone">Today\'s Zone: </string>
     <string name="weekly_rescue_count">Weekly Rescue Count</string>
     <string name="last_rescue_time">Last Rescue Time:</string>
     <string name="notification_alerts">Notification Alerts (FCM) On:  \nRed-ZoneDay,\nRapid Rescue Repeats \nWorse After Dose, \nTriage Escalation, \nLow/Expired Inventory</string>
