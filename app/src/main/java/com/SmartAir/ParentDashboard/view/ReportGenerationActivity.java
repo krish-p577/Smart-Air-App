@@ -4,17 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
-import android.os.Environment;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
-
-import com.SmartAir.ParentDashboard.model.RescueLogModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,202 +25,209 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Utility class to generate a PDF report from a View or programmatically created content.
- * This class uses the native Android PdfDocument API and handles file sharing.
- */
 public class ReportGenerationActivity {
 
-    // A4 dimensions in points (72 points per inch)
-    private static final int PAGE_WIDTH_POINTS = 595;
-    private static final int PAGE_HEIGHT_POINTS = 842;
-    private static final int MARGIN_HORIZONTAL = 40;
-    private static final int MARGIN_VERTICAL = 40;
-
-    // Hardcoded authority string - MUST MATCH THE 'android:authorities' in your manifest's FileProvider definition.
-    // Example: <provider android:authorities="com.smartair.fileprovider" ... />
+    private static final int PAGE_WIDTH = 595;
+    private static final int PAGE_HEIGHT = 842;
     public static final String FILE_PROVIDER_AUTHORITY = "com.smartair.fileprovider";
 
-    /**
-     * Generates and saves a PDF file from a given Android View.
-     *
-     * @param context The application context.
-     * @param reportView The View containing the report content to be rendered.
-     * @param fileName The base name for the output file.
-     * @return The File object of the generated PDF, or null on failure.
-     */
-    public static File generatePdfFromView(Context context, View reportView, String fileName) {
-        // 1. Prepare the View for drawing
+    // --- Data Models ---
+    public static class AsthmaReportData {
+        public String childName;
+        public String currentZone;
+        public int adherenceScore;
+        public String period;
+        public List<DailyLog> logs;
+
+        public AsthmaReportData(String childName, String currentZone, int adherenceScore, String period, List<DailyLog> logs) {
+            this.childName = childName;
+            this.currentZone = currentZone;
+            this.adherenceScore = adherenceScore;
+            this.period = period;
+            this.logs = logs;
+        }
+    }
+
+    public static class DailyLog {
+        public String date;
+        public List<String> triggers; // Corresponds to 'Triggers' field
+        public String note;
+
+        public DailyLog(String date, List<String> triggers, String note) {
+            this.date = date;
+            this.triggers = triggers;
+            this.note = note;
+        }
+    }
+
+    // --- PDF Generation Logic ---
+
+    public static File generatePdfFromData(Context context, AsthmaReportData data) {
+        // 1. Create the View based on Data
+        View reportView = createRealReportView(context, data);
+
+        // 2. Measure and Layout (Crucial for PDF generation without displaying on screen)
         reportView.measure(
-                View.MeasureSpec.makeMeasureSpec(PAGE_WIDTH_POINTS, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                View.MeasureSpec.makeMeasureSpec(PAGE_WIDTH, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(PAGE_HEIGHT, View.MeasureSpec.UNSPECIFIED) // Allow height to grow
         );
         reportView.layout(0, 0, reportView.getMeasuredWidth(), reportView.getMeasuredHeight());
 
-        // 2. Initialize PdfDocument
+        // 3. Create Document
         PdfDocument document = new PdfDocument();
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(
-                PAGE_WIDTH_POINTS, PAGE_HEIGHT_POINTS, 1
-        ).create();
+        // We use the measured height of the view, or standard A4 height, whichever is larger
+        int height = Math.max(PAGE_HEIGHT, reportView.getMeasuredHeight());
 
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(PAGE_WIDTH, height, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
-        Canvas canvas = page.getCanvas();
 
-        // 3. Draw the View onto the PDF Canvas
-        reportView.draw(canvas);
-
-        // 4. Finish the page
+        // 4. Draw
+        reportView.draw(page.getCanvas());
         document.finishPage(page);
 
-        // 5. Define output file path (using app-specific external storage)
+        // 5. Save
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String fullFileName = fileName + "_" + timestamp + ".pdf";
-
-        // Use the app's internal cache directory:
+        String fileName = "AsthmaReport_" + data.childName + "_" + timestamp + ".pdf";
         File cacheDir = new File(context.getCacheDir(), "Reports");
         if (!cacheDir.exists()) cacheDir.mkdirs();
-
-        File outputFile = new File(cacheDir, fullFileName);
+        File outputFile = new File(cacheDir, fileName);
 
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
             document.writeTo(fos);
-            Toast.makeText(context, "PDF saved successfully at: " + outputFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
             return outputFile;
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Error saving PDF: " + e.getMessage(), Toast.LENGTH_LONG).show();
             return null;
         } finally {
             document.close();
         }
     }
 
-    /**
-     * Opens the Android share sheet to allow the user to share the generated PDF file.
-     * NOTE: Requires defining a FileProvider in AndroidManifest.xml and an associated XML path file.
-     *
-     * @param context The application context.
-     * @param file The PDF file to be shared.
-     */
     public static void sharePdfFile(Context context, File file) {
-        if (file == null || !file.exists()) {
-            Toast.makeText(context, "File not found for sharing.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            // Get the content URI using FileProvider
-            Uri contentUri = FileProvider.getUriForFile(
-                    context,
-                    FILE_PROVIDER_AUTHORITY,
-                    file
-            );
-
-            if (contentUri != null) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("application/pdf");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // Grant temp read permission to other apps
-
-                // Start the share chooser
-                context.startActivity(Intent.createChooser(shareIntent, "Share Asthma Report via..."));
-            } else {
-                Toast.makeText(context, "Could not generate share link.", Toast.LENGTH_SHORT).show();
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            Toast.makeText(context, "Configuration error: FileProvider authority mismatch. See Logcat.", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(context, "An unexpected error occurred during sharing.", Toast.LENGTH_LONG).show();
-        }
+        if (file == null || !file.exists()) return;
+        Uri contentUri = FileProvider.getUriForFile(context, FILE_PROVIDER_AUTHORITY, file);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("application/pdf");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(Intent.createChooser(shareIntent, "Share Report"));
     }
 
-    // --- Mock Data Structures and Report View Generator (Unchanged) ---
+    // --- View Construction ---
 
-    public static class CheckIn {
-        public String date;
-        public String zone;
-        public int rescueCount;
-        public String symptoms;
-        public String note;
+    private static View createRealReportView(Context context, AsthmaReportData data) {
+        LinearLayout mainLayout = new LinearLayout(context);
+        mainLayout.setOrientation(LinearLayout.VERTICAL);
+        mainLayout.setBackgroundColor(Color.WHITE);
+        mainLayout.setPadding(40, 40, 40, 40);
 
-        public CheckIn(String date, String zone, int rescueCount, String symptoms, String note) {
-            this.date = date;
-            this.zone = zone;
-            this.rescueCount = rescueCount;
-            this.symptoms = symptoms;
-            this.note = note;
-        }
-    }
-
-    public static View createMockReportView(Context context, List<CheckIn> checkIns) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setBackgroundColor(Color.WHITE);
-        layout.setPadding(MARGIN_HORIZONTAL, MARGIN_VERTICAL, MARGIN_HORIZONTAL, MARGIN_VERTICAL);
-
-        // --- Header ---
+        // 1. Header
         TextView title = new TextView(context);
-        title.setText("SMART AIR Provider Report");
+        title.setText("SmartAir Health Report");
         title.setTextSize(24);
         title.setTextColor(Color.BLACK);
-        layout.addView(title);
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
+        mainLayout.addView(title);
 
-        TextView period = new TextView(context);
-        period.setText("Period: Nov 11, 2024 - Nov 15, 2024");
-        period.setTextSize(14);
-        layout.addView(period);
+        TextView subTitle = new TextView(context);
+        subTitle.setText("Patient: " + data.childName + "  |  " + data.period);
+        subTitle.setTextSize(14);
+        subTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+        subTitle.setPadding(0, 0, 0, 20);
+        mainLayout.addView(subTitle);
 
-        // --- Summary Section ---
-        TextView summaryTitle = new TextView(context);
-        summaryTitle.setText("Summary Metrics");
-        summaryTitle.setTextSize(18);
-        summaryTitle.setTextColor(Color.DKGRAY);
-        summaryTitle.setPadding(0, 30, 0, 10);
-        layout.addView(summaryTitle);
+        // 2. Status Section (Zone + Adherence)
+        LinearLayout statusRow = new LinearLayout(context);
+        statusRow.setOrientation(LinearLayout.HORIZONTAL);
+        statusRow.setWeightSum(2);
+        statusRow.setPadding(0, 20, 0, 20);
 
-        // Calculate summary (e.g., Green/Red days, Total Rescues)
-        int redDays = 0;
-        int totalRescues = 0;
-        for (CheckIn c : checkIns) {
-            if ("Red".equals(c.zone)) redDays++;
-            totalRescues += c.rescueCount;
-        }
+        // Left: Zone
+        LinearLayout zoneContainer = new LinearLayout(context);
+        zoneContainer.setOrientation(LinearLayout.VERTICAL);
+        zoneContainer.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView summaryText = new TextView(context);
-        summaryText.setText(String.format(Locale.US,
-                "Total Days: %d\nRed Zone Days: %d\nTotal Rescue Inhaler Uses: %d",
-                checkIns.size(), redDays, totalRescues));
-        summaryText.setTextSize(16);
-        layout.addView(summaryText);
+        TextView zoneLabel = new TextView(context);
+        zoneLabel.setText("Current Zone");
+        zoneLabel.setTextSize(16);
+        zoneContainer.addView(zoneLabel);
 
-        // --- Daily Log Section ---
-        TextView logTitle = new TextView(context);
-        logTitle.setText("Daily Log Entries");
-        logTitle.setTextSize(18);
-        logTitle.setTextColor(Color.DKGRAY);
-        logTitle.setPadding(0, 30, 0, 10);
-        layout.addView(logTitle);
+        TextView zoneValue = new TextView(context);
+        zoneValue.setText(data.currentZone);
+        zoneValue.setTextSize(22);
+        zoneValue.setPadding(0, 10, 0, 0);
 
-        for (CheckIn entry : checkIns) {
-            TextView entryView = new TextView(context);
-            String entryText = String.format(Locale.US,
-                    "• %s | Zone: %s | Rescues: %d\n  Symptoms: %s\n  Note: %s",
-                    entry.date, entry.zone, entry.rescueCount, entry.symptoms, entry.note);
-            entryView.setText(entryText);
-            entryView.setTextSize(12);
-            entryView.setPadding(0, 5, 0, 5);
+        // Colorize Zone
+        if ("Green".equalsIgnoreCase(data.currentZone)) zoneValue.setTextColor(Color.parseColor("#4CAF50"));
+        else if ("Yellow".equalsIgnoreCase(data.currentZone)) zoneValue.setTextColor(Color.parseColor("#FFC107"));
+        else zoneValue.setTextColor(Color.parseColor("#F44336"));
 
-            // Highlight based on zone (simple color indicator)
-            if ("Red".equals(entry.zone)) {
-                entryView.setBackgroundColor(0xFFFFEEEE); // Very Light Red
-            } else if ("Yellow".equals(entry.zone)) {
-                entryView.setBackgroundColor(0xFFFFFFEE); // Very Light Yellow
+        zoneContainer.addView(zoneValue);
+        statusRow.addView(zoneContainer);
+
+        // Right: Adherence Score
+        LinearLayout scoreContainer = new LinearLayout(context);
+        scoreContainer.setOrientation(LinearLayout.VERTICAL);
+        scoreContainer.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+
+        TextView scoreLabel = new TextView(context);
+        scoreLabel.setText("Controller Adherence");
+        scoreLabel.setTextSize(16);
+        scoreContainer.addView(scoreLabel);
+
+        TextView scoreValue = new TextView(context);
+        scoreValue.setText(data.adherenceScore + "%");
+        scoreValue.setTextSize(22);
+        scoreValue.setPadding(0, 10, 0, 0);
+        scoreValue.setTextColor(Color.DKGRAY);
+        scoreContainer.addView(scoreValue);
+
+        statusRow.addView(scoreContainer);
+        mainLayout.addView(statusRow);
+
+        // Divider
+        View div = new View(context);
+        div.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2));
+        div.setBackgroundColor(Color.LTGRAY);
+        mainLayout.addView(div);
+
+        // 3. Daily Logs List
+        TextView historyTitle = new TextView(context);
+        historyTitle.setText("Symptom & Trigger Log");
+        historyTitle.setTextSize(18);
+        historyTitle.setPadding(0, 30, 0, 10);
+        mainLayout.addView(historyTitle);
+
+        if (data.logs.isEmpty()) {
+            TextView noLogs = new TextView(context);
+            noLogs.setText("No entries found for this period.");
+            mainLayout.addView(noLogs);
+        } else {
+            for (DailyLog log : data.logs) {
+                LinearLayout logItem = new LinearLayout(context);
+                logItem.setOrientation(LinearLayout.VERTICAL);
+                logItem.setPadding(0, 10, 0, 15);
+
+                TextView dateView = new TextView(context);
+                dateView.setText("Date: " + log.date);
+//                dateView.setTextStyle(android.graphics.Typeface.BOLD);
+                logItem.addView(dateView);
+
+                if (log.triggers != null && !log.triggers.isEmpty()) {
+                    TextView triggersView = new TextView(context);
+                    triggersView.setText("Triggers: " + String.join(", ", log.triggers));
+                    logItem.addView(triggersView);
+                } else {
+                    TextView triggersView = new TextView(context);
+                    triggersView.setText("Triggers: None reported");
+                    triggersView.setTextColor(Color.GRAY);
+                    logItem.addView(triggersView);
+                }
+
+                mainLayout.addView(logItem);
             }
-            layout.addView(entryView);
         }
 
-        return layout;
+        return mainLayout;
     }
 }

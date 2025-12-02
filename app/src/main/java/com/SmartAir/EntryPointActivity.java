@@ -7,11 +7,9 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-// Corrected imports for Home Activities
-import com.SmartAir.onboarding.view.ChildHomeActivity;
-import com.SmartAir.onboarding.view.ParentHomeActivity;
-import com.SmartAir.onboarding.view.ProviderHomeActivity;
-
+import com.SmartAir.homepage.view.ChildHomeActivity;
+import com.SmartAir.homepage.view.ParentHomeActivity;
+import com.SmartAir.homepage.view.ProviderHomeActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.view.WelcomeActivity;
@@ -36,12 +34,36 @@ public class EntryPointActivity extends AppCompatActivity {
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
                 progressBar.setVisibility(View.VISIBLE);
+
+                // Reload user to ensure valid session
                 firebaseUser.reload().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         authRepository.fetchUserProfile(firebaseUser, new AuthRepository.AuthCallback() {
                             @Override
                             public void onSuccess() {
-                                navigateToHome();
+                                String role = CurrentUser.getInstance().getUserProfile().getRole();
+
+                                if ("parent".equalsIgnoreCase(role)) {
+                                    // Load persisted credentials
+                                    authRepository.ensureParentCredentialsLoaded(EntryPointActivity.this);
+
+                                    // Re-authenticate parent to ensure session is valid
+                                    authRepository.reauthenticateParent(new AuthRepository.AuthCallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            navigateToHome();
+                                        }
+
+                                        @Override
+                                        public void onFailure(String errorMessage) {
+                                            // If re-auth fails, fallback to Welcome
+                                            navigateToWelcome();
+                                        }
+                                    });
+                                } else {
+                                    // For child or provider, just navigate
+                                    navigateToHome();
+                                }
                             }
 
                             @Override
@@ -80,6 +102,7 @@ public class EntryPointActivity extends AppCompatActivity {
             navigateToWelcome();
             return;
         }
+
         String role = CurrentUser.getInstance().getUserProfile().getRole();
         Intent intent;
 

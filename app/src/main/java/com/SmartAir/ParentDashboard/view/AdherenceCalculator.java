@@ -17,69 +17,60 @@ public class AdherenceCalculator {
         void onResult(int adherencePercentage, boolean isCurrentlyCompliant);
     }
 
-    public static void calculate(String childId, String scheduleType, AdherenceCallback callback) {
+    public static void calculate(String childId, String scheduleType, int daysLookback, AdherenceCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // 1. Define the "Lookback Period" (e.g., analyze the last 30 days)
+        // 1. Calculate the dynamic start date based on the toggle (7 or 30)
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -30);
-        Date thirtyDaysAgo = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, -daysLookback);
+        Date lookbackDate = cal.getTime();
 
-        // 2. Fetch ALL logs for this user from the last 30 days
-        db.collection("controllerLogs")
-                .whereEqualTo("childId", childId)
-                .whereGreaterThan("timestamp", new Timestamp(thirtyDaysAgo))
+        db.collection("inhalerLogs").document(childId)
+                .collection("controllerEntries")
+                .whereGreaterThan("timestamp", new Timestamp(lookbackDate))
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Date> logDates = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Timestamp ts = doc.getTimestamp("timestamp");
-                        if (ts != null) {
-                            logDates.add(ts.toDate());
-                            Log.i("CALCULATOR", "Adherance info " + ts.toDate());
-                        }
+                        if (ts != null) logDates.add(ts.toDate());
                     }
-                    Log.i("CALCULATOR", "did query");
 
-                    // 3. Process the math locally
-                    processAdherenceMath(scheduleType, logDates, callback);
+                    processAdherenceMath(scheduleType, daysLookback, logDates, callback);
+
+
+                    Log.i("Controller Logs", "Found Controller Logs here: ");
+
                 });
     }
 
-    private static void processAdherenceMath(String scheduleType, List<Date> logs, AdherenceCallback callback) {
-        // Definitions of intervals in Days
+    private static void processAdherenceMath(String scheduleType, int daysLookback, List<Date> logs, AdherenceCallback callback) {
         int intervalDays = 1; // Default Daily
-        int bucketsToCheck = 30; // Check last 30 days
 
         switch (scheduleType) {
-            case "Weekly":
-                intervalDays = 7;
-                bucketsToCheck = 4; // Check last 4 weeks (28 days)
-                break;
-            case "Biweekly":
-                intervalDays = 14;
-                bucketsToCheck = 2; // Check last 2 fortnights (28 days)
-                break;
-            case "Monthly":
-                intervalDays = 30;
-                bucketsToCheck = 1; // Check last month
-                break;
+            case "Weekly": intervalDays = 7; break;
+            case "Biweekly": intervalDays = 14; break; // Fortnightly
+            case "Monthly": intervalDays = 30; break;
         }
+
+        // 2. Determine how many buckets fit in the requested window
+        // Example: Daily (1) in 30 days = 30 buckets.
+        // Example: Weekly (7) in 30 days = 4 buckets.
+        int bucketsToCheck = daysLookback / intervalDays;
+
+        // Safety: If the window is shorter than the interval (e.g., 7 day view for 14 day schedule),
+        // check at least 1 bucket so we don't divide by zero.
+        if (bucketsToCheck < 1) bucketsToCheck = 1;
 
         int successfulBuckets = 0;
         boolean isCurrentBucketSuccess = false;
+        Calendar cursor = Calendar.getInstance();
 
-        Calendar cursor = Calendar.getInstance(); // Start at "Now"
-
-        // 4. Iterate backward through the buckets
         for (int i = 0; i < bucketsToCheck; i++) {
-
-            // Define the specific window for this bucket
             Date windowEnd = cursor.getTime();
-            cursor.add(Calendar.DAY_OF_YEAR, -intervalDays); // Move back 1 interval
+            cursor.add(Calendar.DAY_OF_YEAR, -intervalDays);
             Date windowStart = cursor.getTime();
 
-            // Check if ANY log falls in this window
             boolean hit = false;
             for (Date logDate : logs) {
                 if (logDate.after(windowStart) && logDate.before(windowEnd)) {
@@ -90,14 +81,13 @@ public class AdherenceCalculator {
 
             if (hit) {
                 successfulBuckets++;
-                if (i == 0) isCurrentBucketSuccess = true; // The most recent bucket (Now)
+                if (i == 0) isCurrentBucketSuccess = true;
             }
         }
 
-        // 5. Final Calculation
-        int percentage = (int) (((float) successfulBuckets / bucketsToCheck) * 100);
+        // Avoid division by zero
+        int percentage = (bucketsToCheck == 0) ? 0 : (int) (((float) successfulBuckets / bucketsToCheck) * 100);
 
-        // Return results to the Activity
         callback.onResult(percentage, isCurrentBucketSuccess);
     }
 }

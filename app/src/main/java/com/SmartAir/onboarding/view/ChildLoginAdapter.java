@@ -3,12 +3,12 @@ package com.SmartAir.onboarding.view;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.ChildUser;
-import com.SmartAir.onboarding.presenter.SelectChildLoginPresenter;
+
 import java.util.List;
 
 public class ChildLoginAdapter extends RecyclerView.Adapter<ChildLoginAdapter.ViewHolder> {
@@ -31,8 +31,8 @@ public class ChildLoginAdapter extends RecyclerView.Adapter<ChildLoginAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChildUser child = children.get(position);
-        holder.childNameButton.setText(child.getDisplayName());
-        holder.childNameButton.setOnClickListener(v -> view.promptForChildPassword(child));
+        holder.childNameTextView.setText(child.getDisplayName());
+        holder.itemView.setOnClickListener(v -> view.promptForChildPassword(child));
     }
 
     @Override
@@ -41,11 +41,11 @@ public class ChildLoginAdapter extends RecyclerView.Adapter<ChildLoginAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public Button childNameButton;
+        public TextView childNameTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            childNameButton = itemView.findViewById(R.id.child_name_button);
+            childNameTextView = itemView.findViewById(R.id.child_name_text_view);
         }
     }
 }

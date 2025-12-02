@@ -1,30 +1,46 @@
 <resources>
+    <!-- App-wide -->
     <string name="app_name">SmartAir</string>
-    <string name="back">Back</string>
-    <string name="welcome_message">Welcome to Smart Air!</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+
+    <!-- Common Actions & Labels -->
     <string name="continue_button_text">Continue</string>
-    <string name="role_selection_prompt">I am a…</string>
-    <string name="parent">Parent</string>
-    <string name="provider">Provider</string>
-    <string name="child">Child</string>
-
-    <string-array name="options_array">
-        <item>Option 1</item>
-        <item>Option 2</item>
-        <item>Option 3</item>
-    </string-array>
-
-    <!-- Login/Signup Strings -->
     <string name="login">Login</string>
     <string name="signup">Sign Up</string>
+    <string name="back">Back</string>
+    <string name="save_changes_button">Save Changes</string>
+    <string name="add_child_account_button">Add Child Account</string>
+    <string name="edit_child">Edit Child</string>
+    <string name="welcome_parent">Welcome, Parent!</string>
+    <string name="go_to_dashboard">Go to Dashboard</string>
+    <string name="manage_children">Manage Children</string>
+    <string name="login_as_child">Login as Child</string>
+    <string name="logout">Logout</string>
+    <string name="parent_dashboard">Parent Dashboard</string>
+    <string name="todays_zone">Today\'s Zone: \n newline</string>
+    <string name="weekly_rescue_count">Weekly Rescue Count</string>
+    <string name="last_rescue_time">Last Rescue Time:</string>
+    <string name="notification_alerts">Notification Alerts (FCM) On:  \nRed-ZoneDay,\nRapid Rescue Repeats \nWorse After Dose, \nTriage Escalation, \nLow/Expired Inventory</string>
+    <string name="select_child">Select Child:</string>
+    <string name="generate_pdf">Generate PDF</string>
+    <string name="schedule">Schedule</string>
+
+    <!-- Onboarding & Authentication -->
+    <string name="welcome_message">Welcome to Smart Air!</string>
+    <string name="role_selection_prompt">I am a…</string>
+    <string name="parent">Parent</string>
+    <string name="child">Child</string>
+    <string name="provider">Provider</string>
     <string name="email">Email</string>
-    <string name="username">Username</string>
-    <string name="displayName">Name</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
+    <string name="displayName">Name</string>
+    <string name="username">Username</string>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
+    <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
+    <string name="forgot_password">Forgot password?</string>
 
     <!-- Navigation Drawer Strings -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -34,4 +50,27 @@
     <string name="enter_a_number">Enter a number</string>
     <string name="enter_your_pef_number">Enter your PEF Number</string>
     <string name="Submit">Submit</string>
+    <!-- Child Details -->
+    <string name="child_name_hint">Child\'s Name</string>
+    <string name="child_age_hint">Child\'s Age</string>
+    <string name="child_dob_hint">Date of Birth</string>
+    <string name="child_notes_hint">Notes</string>
+    <string name="child_username_hint">Child\'s Username</string>
+    <string name="optional_notes_hint">Optional Notes</string>
+    <string name="child_dashboard_title">%1$s\'s Dashboard</string>
+    <string name="provider_child_detail_title">%1$s\'s Shared Data</string>
+
+
+    <!-- Hints & Descriptions -->
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="back_button_desc">Back</string>
+    <string name="shared_with_provider">Shared with Provider</string>
+
+    <!-- Parent Child Detail -->
+    <string name="manage_sharing">Manage Sharing</string>
+    <string name="edit_details">Edit Details</string>
+    <string name="generate_invite_code">Generate Invite Code</string>
+    <string name="copy">Copy</string>
+    <string name="revoke_invite_code">Revoke Invite Code</string>
 </resources>
