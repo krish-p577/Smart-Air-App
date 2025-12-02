@@ -68,7 +68,7 @@
         <activity
             android:name=".onboarding.view.PasswordResetActivity"
             android:exported="false" />
-      <activity android:name=".onboarding.view.SelectChildLoginActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.SelectChildLoginActivity" android:exported="false" />
         <activity
             android:name=".homepage.view.ParentHomeActivity"
             android:exported="false" />
@@ -116,6 +116,8 @@
         <!-- Parent dashboard screens -->
         <activity android:name=".ParentDashboard.view.ParentDashboardActivity" android:exported="false" />
         <activity android:name=".ParentDashboard.view.ScheduleActivity" android:exported="false" />
+
+        <activity android:name=".ParentDashboard.view.PbActivity" android:exported="false" />
 
     </application>
 
