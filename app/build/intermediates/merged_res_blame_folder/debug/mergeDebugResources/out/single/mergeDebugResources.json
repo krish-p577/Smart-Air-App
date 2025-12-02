@@ -4,6 +4,10 @@
         "source": "com.SmartAir.app-main-46:/xml/backup_rules.xml"
     },
     {
+        "merged": "com.SmartAir.app-debug-44:/layout_activity_action_plan.xml.flat",
+        "source": "com.SmartAir.app-main-46:/layout/activity_action_plan.xml"
+    },
+    {
         "merged": "com.SmartAir.app-debug-44:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "com.SmartAir.app-main-46:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
@@ -46,6 +50,10 @@
     {
         "merged": "com.SmartAir.app-debug-44:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
         "source": "com.SmartAir.app-main-46:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.SmartAir.app-debug-44:/layout_button_for_action.xml.flat",
+        "source": "com.SmartAir.app-main-46:/layout/button_for_action.xml"
     },
     {
         "merged": "com.SmartAir.app-debug-44:/mipmap-xhdpi_ic_launcher.webp.flat",

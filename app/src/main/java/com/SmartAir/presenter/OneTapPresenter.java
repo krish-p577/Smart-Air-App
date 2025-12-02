@@ -22,6 +22,7 @@ public class OneTapPresenter {
         view.callEmergency();
     }
     public void submitClicked(){
+        view.homeSteps();
         view.logForm();
     }
 

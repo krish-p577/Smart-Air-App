@@ -7,5 +7,7 @@ public interface OneTapView {
     public void speakingTrue();
     public void logForm();
     public void incCount();
+    public void homeSteps();
 
-    }
+
+}

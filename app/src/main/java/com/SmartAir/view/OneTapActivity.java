@@ -130,9 +130,14 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView{
         redNumber += 1;
     }
 
+    @Override
+    public void homeSteps() {
+
+    }
+
     public String getOutCome(){
         Toast.makeText(getApplicationContext(), "get outcome", Toast.LENGTH_LONG).show();
-        if(emerg == true){
+        if(emerg){
             Toast.makeText(getApplicationContext(), "return call_emergency", Toast.LENGTH_LONG).show();
             return "call_emergency";
         }
@@ -141,17 +146,17 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView{
     public HashMap<String, Boolean> getRed(){
         Toast.makeText(getApplicationContext(), "getRed", Toast.LENGTH_LONG).show();
         HashMap<String, Boolean> flags = new HashMap<>();
-        if(speaking == true){
+        if(speaking){
             flags.put("difficultySpeaking", true);
         }else{
             flags.put("difficultySpeaking", false);
         }
-        if(cyanosis == true){
+        if(cyanosis){
             flags.put("cyanosis", true);
         }else{
             flags.put("cyanosis", false);
         }
-        if(chest == true){
+        if(chest){
             flags.put("chest", true);
         }else{
             flags.put("chest", false);

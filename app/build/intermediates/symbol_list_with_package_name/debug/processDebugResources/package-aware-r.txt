@@ -3096,7 +3096,9 @@ id ALT
 id BOTTOM_END
 id BOTTOM_START
 id CTRL
+id Emerg
 id FUNCTION
+id Green
 id META
 id NO_DEBUG
 id NoChest
@@ -3300,6 +3302,7 @@ id edge
 id edit_query
 id elastic
 id embed
+id emergText
 id end
 id endToStart
 id enterAlways
@@ -3329,6 +3332,7 @@ id ghost_view_holder
 id gone
 id graph
 id graph_wrap
+id greenText
 id greyLips
 id greyNails
 id group_divider
@@ -3494,6 +3498,8 @@ id provider_button
 id radio
 id ratio
 id rectangles
+id red
+id redText
 id report_drawn
 id reverseSawtooth
 id right
@@ -3554,6 +3560,7 @@ id src_in
 id src_over
 id standard
 id start
+id startActionPlan
 id startHorizontal
 id startToEnd
 id startVertical
@@ -3563,6 +3570,7 @@ id stop
 id stretch
 id submenuarrow
 id submitButton
+id submitPlan
 id submit_area
 id supportScrollUp
 id tabMode
@@ -3636,6 +3644,8 @@ id wrap_content
 id wrap_content_constrained
 id x_left
 id x_right
+id yellow
+id yellowText
 id yesChest
 id yesSpeak
 integer abc_config_activityDefaultDur
@@ -3753,11 +3763,13 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_action_plan
 layout activity_one_tap_triage
 layout activity_role_selection
 layout activity_welcome
 layout browser_actions_context_menu_page
 layout browser_actions_context_menu_row
+layout button_for_action
 layout button_for_triage
 layout custom_dialog
 layout design_bottom_navigation_item
