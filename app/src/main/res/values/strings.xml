@@ -19,7 +19,11 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
-    <string name="pb" />
-    <string name="submit_button" />
+    <string name="pb">enter PB: </string>
+    <string name="submit_button">submit </string>
+
     <string name="enter_the_personal_best_pb" />
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="success">Success</string>
 </resources>

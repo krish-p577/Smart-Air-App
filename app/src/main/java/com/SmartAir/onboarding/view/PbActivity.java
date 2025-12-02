@@ -38,49 +38,41 @@ public class PbActivity extends AppCompatActivity implements PbView{
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.popout_pb);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.ic_launcher_background);
-        Button submit = dialog.findViewById(R.id.Submit);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Button Clicked", Toast.LENGTH_LONG).show();
+        Button submit = dialog.findViewById(R.id.submitPBButton);
+        submit.setOnClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "Button Clicked", Toast.LENGTH_LONG).show();
 
-                EditText pefVal = dialog.findViewById(R.id.PBNumber);
-                String value= pefVal.getText().toString();
-                PbNumber = Integer.parseInt(value);
-                Toast.makeText(getApplicationContext(), "got value", Toast.LENGTH_LONG).show();
+            EditText pefVal = dialog.findViewById(R.id.PBNumber);
+            String value= pefVal.getText().toString();
+            PbNumber = Integer.parseInt(value);
+            Toast.makeText(getApplicationContext(), "got value", Toast.LENGTH_LONG).show();
 
-                firestore = FirebaseFirestore.getInstance();
-                HashMap<Object, Object> ved_test = new HashMap<>();
-                ved_test.put("name", "parent1");
-                ved_test.put("dateOfBirth", "child1");
-                ved_test.put("notes", "2025-02-21T07:45:00Z");
-                ved_test.put("createdAt", "timestamp");
-                ved_test.put("archived", false);
-                ved_test.put("personalBestPEF", PbNumber);
-                ved_test.put("Zones", getZoneMap());
-                ved_test.put("controllerSchedule", false);
-                Toast.makeText(getApplicationContext(), "About to log", Toast.LENGTH_LONG).show();
+            firestore = FirebaseFirestore.getInstance();
+            HashMap<Object, Object> ved_test = new HashMap<>();
+            ved_test.put("name", "parent1");
+            ved_test.put("dateOfBirth", "child1");
+            ved_test.put("notes", "2025-02-21T07:45:00Z");
+            ved_test.put("createdAt", "timestamp");
+            ved_test.put("archived", false);
+            ved_test.put("personalBestPEF", PbNumber);
+            ved_test.put("Zones", getZoneMap());
+            ved_test.put("controllerSchedule", false);
+            Toast.makeText(getApplicationContext(), "About to log", Toast.LENGTH_LONG).show();
 
-                firestore.collection("pefLogs").add(ved_test).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getApplicationContext(), "Succcess", Toast.LENGTH_LONG).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show();
-                    }
-                });
+            firestore.collection("pefLogs").add(ved_test).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_LONG).show();
+                }
+            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show());
 
-            }
         });
 
         dialog.show();
     }
     public HashMap<String, Double> getZoneMap(){
-        HashMap<String, Double> map = new HashMap<String, Double>();
-        map.put("Green", ( 0.2 * PbNumber));
+        HashMap<String, Double> map = new HashMap<>();
+        map.put("Green", ( 0.8 * PbNumber));
         map.put("Yellow", ( 0.51 * PbNumber));
         map.put("Red", ( 0.5 * PbNumber));
         return map;

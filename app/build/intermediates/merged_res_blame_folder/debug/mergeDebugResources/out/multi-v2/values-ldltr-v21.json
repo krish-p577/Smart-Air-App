@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.SmartAir.app-mergeDebugResources-42:/values-ldltr-v21/values-ldltr-v21.xml",
+            "outputFile": "com.SmartAir.app-mergeDebugResources-43:/values-ldltr-v21/values-ldltr-v21.xml",
             "map": [
                 {
-                    "source": "/Users/vedthakar/.gradle/caches/transforms-4/d068bfdbe9992a50c27523ea0feb0959/transformed/appcompat-1.6.1/res/values-ldltr-v21/values-ldltr-v21.xml",
+                    "source": "/Users/vedthakar/.gradle/caches/8.13/transforms/d85c95cec039028afb8602f5f403a9b1/transformed/appcompat-1.6.1/res/values-ldltr-v21/values-ldltr-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

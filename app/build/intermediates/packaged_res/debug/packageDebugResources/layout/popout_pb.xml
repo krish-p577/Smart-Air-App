@@ -26,11 +26,10 @@
             android:layout_height="68dp"
             android:ems="10"
             android:inputType="number"
-            android:autofillHints = "@string/pb"
             android:hint="@string/pb" />
 
         <Button
-            android:id="@+id/Submit"
+            android:id="@+id/submitPBButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/submit_button" />

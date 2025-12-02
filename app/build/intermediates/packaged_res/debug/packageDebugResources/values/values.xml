@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="primary">#3F51B5</color>
+    <color name="export_btn_color">#ed4c69</color>
+    <color name="filter_btn_color">#da85ff</color>
+    <color name="primary">#0cc0df</color>
     <color name="primary_dark">#7986CB</color>
-    <color name="secondary">#009688</color>
+    <color name="primary_darker">#08849A</color>
+    <color name="primary_lighter">#c9edf5</color>
+    <color name="primary_super_dark">#013540</color>
+    <color name="primary_super_light">#e6fcff</color>
+    <color name="secondary">#ff751f</color>
     <color name="secondary_dark">#4DB6AC</color>
+    <color name="secondary_darker">#E56719</color>
+    <color name="secondary_lighter">#FFD9BF</color>
     <color name="white">#FFFFFFFF</color>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
     <string name="app_name">SmartAir</string>
@@ -15,7 +23,7 @@
     <string name="displayName">Name</string>
     <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
     <string name="email">Email</string>
-    <string name="enter_the_personal_best_pb">Enter the Personal Best PB</string>
+    <string name="enter_the_personal_best_pb"/>
     <string name="forgot_password">Forgot password?</string>
     <string name="gcm_defaultSenderId" translatable="false">163932509170</string>
     <string name="google_api_key" translatable="false">AIzaSyAH0nU4qZEijUCwt8T5GiOLOh53-4aPH2E</string>
@@ -23,20 +31,27 @@
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAH0nU4qZEijUCwt8T5GiOLOh53-4aPH2E</string>
     <string name="google_storage_bucket" translatable="false">smart-air-app-4e4d9.firebasestorage.app</string>
     <string name="login">Login</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="parent">Parent</string>
     <string name="password">Password</string>
-    <string name="pb">PB:</string>
+    <string name="pb">enter PB: </string>
     <string name="project_id" translatable="false">smart-air-app-4e4d9</string>
     <string name="provider">Provider</string>
     <string name="role_selection_prompt">I am a…</string>
     <string name="signup">Sign Up</string>
-    <string name="submit_button">Submit Button</string>
+    <string name="submit_button">submit </string>
     <string name="username">Username</string>
     <string name="welcome_message">Welcome to Smart Air!</string>
     <style name="Base.Theme.SmartAir" parent="Theme.Material3.DayNight.NoActionBar">
         
         <item name="colorPrimary">@color/primary</item>
         <item name="colorSecondary">@color/secondary</item>
+    </style>
+    <style name="DashboardText">
+        <item name="android:textColor">#222222</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
     <style name="Theme.SmartAir" parent="Base.Theme.SmartAir"/>
 </resources>
