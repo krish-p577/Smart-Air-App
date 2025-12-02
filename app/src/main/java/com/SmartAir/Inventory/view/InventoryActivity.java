@@ -53,16 +53,13 @@ public class InventoryActivity extends AppCompatActivity implements InventoryVie
 
         String selectedOptionText = selectedOption.toString();
 
-        if (selectedOptionText.equals("Select inhaler type")) {
-            return "";
-        }
-
-        if (selectedOptionText.equals("Controller inhaler")) {
-            return "controllerInhaler";
-        }
-
-        if (selectedOptionText.equals("Rescue inhaler")) {
-            return "rescueInhaler";
+        switch (selectedOptionText) {
+            case "Select inhaler type":
+                return "";
+            case "Controller inhaler":
+                return "controllerInhaler";
+            case "Rescue inhaler":
+                return "rescueInhaler";
         }
 
         return "";
