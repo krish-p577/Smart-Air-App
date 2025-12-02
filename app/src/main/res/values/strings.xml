@@ -1,8 +1,6 @@
 <resources>
     <!-- App-wide -->
     <string name="app_name">SmartAir</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 
     <!-- Common Actions & Labels -->
@@ -92,7 +90,7 @@
     <string name="enter_the_personal_best_pb" />
     <string name="pb" />
     <string name="submit_button" />
-</resources>
+
     <string name="enter_your_pef_number">enter_your_pef_number</string>
     <string name="enter_pre_med_info_optional">Enter pre Med Info (Optional)</string>
 

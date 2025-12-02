@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 // Corrected imports for Home Activities
 import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
-import com.SmartAir.onboarding.view.ParentHomeActivity;
-import com.SmartAir.onboarding.view.ProviderHomeActivity;
+import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
+import com.SmartAir.homepage.view.ProviderHomeActivity;
 
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
@@ -115,7 +115,7 @@ public class EntryPointActivity extends AppCompatActivity {
 
         switch (role.toLowerCase()) {
             case "parent":
-                intent = new Intent(this, ParentHomeActivity.class);
+                intent = new Intent(this, ParentDashboardActivity.class);
                 break;
             case "provider":
                 intent = new Intent(this, ProviderHomeActivity.class);

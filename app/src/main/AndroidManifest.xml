@@ -17,27 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartAir"
         tools:targetApi="31">
-        <activity
-            android:name=".ItemAdapater"
-            android:exported="false" />
-        <activity
-            android:name=".Item"
-            android:exported="false" />
-        <activity
-            android:name=".Item2"
-            android:exported="false" />
-        <activity
-            android:name=".SpinnerFragment"
-            android:exported="false" />
-        <activity
-            android:name=".RecyclerViewFragment"
-            android:exported="false" />
-        <activity
-            android:name=".HomeFragment"
-            android:exported="false" />
-        <activity
-            android:name=".Activity2"
-            android:exported="false" />
         android:theme="@style/Theme.SmartAir"
         tools:targetApi="33">
 
@@ -59,7 +38,6 @@
 
         <!-- Entry Point / Launcher -->
         <activity
-            android:name=".MainActivity"
             android:name=".EntryPointActivity"
             android:exported="true">
             <intent-filter>
@@ -100,10 +78,6 @@
             android:name=".homepage.view.ProviderHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".onboarding.view.AddChildActivity"
-            android:name=".homepage.view.ChildHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".dailycheckin.view.DailyCheckInActivity"
             android:exported="false" />
         <activity
@@ -128,7 +102,6 @@
         <!-- Homepage (parent/provider/child) -->
         <activity android:name=".homepage.view.ParentHomeActivity" android:exported="false" />
         <activity android:name=".homepage.view.ProviderHomeActivity" android:exported="false" />
-        <activity android:name=".homepage.view.ChildHomeActivity" android:exported="false" />
         <activity android:name=".homepage.view.ParentChildDetailActivity" android:exported="false" />
         <activity android:name=".homepage.view.ProviderChildDetailActivity" android:exported="false" />
 

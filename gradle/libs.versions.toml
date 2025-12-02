@@ -9,7 +9,6 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 googleGmsGoogleServices = "4.4.2"
 recyclerview = "1.3.2"
-googleGmsGoogleServices = "4.4.1"
 firebaseDatabase = "21.0.0"
 firebaseBom = "34.6.0"
 firebaseFirestore = "26.0.2"
@@ -30,9 +29,6 @@ cardview = { group = "androidx.cardview", name = "cardview", version.ref = "card
 media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3Ui" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3Exoplayer" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]

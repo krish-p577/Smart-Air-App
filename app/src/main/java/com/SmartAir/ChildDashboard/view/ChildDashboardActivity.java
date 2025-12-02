@@ -23,10 +23,13 @@ import com.SmartAir.LogController.view.LogControllerActivity;
 import com.SmartAir.LogRescue.view.LogRescueActivity;
 import com.SmartAir.R;
 import com.SmartAir.TechniqueHelper.view.TechniqueHelperActivity;
+import com.SmartAir.dailycheckin.view.DailyCheckInActivity;
 import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
+import com.SmartAir.onboarding.view.PEFEntryActivity;
 import com.SmartAir.onboarding.view.WelcomeActivity;
+import com.SmartAir.onboarding.view.startTriageActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class ChildDashboardActivity extends AppCompatActivity implements ChildDashboardView, NavigationView.OnNavigationItemSelectedListener {
@@ -186,7 +189,8 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
 
     @Override
     public void showDailyCheckIn() {
-        // TODO: wire to daily check in page
+        Intent intent = new Intent(ChildDashboardActivity.this, DailyCheckInActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -203,12 +207,14 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
 
     @Override
     public void showPEFEntry() {
-        // TODO: wire to PEF entry page
+        Intent intent = new Intent(ChildDashboardActivity.this, PEFEntryActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void showTriage() {
-        // TODO: wire to triage page
+        Intent intent = new Intent(ChildDashboardActivity.this, startTriageActivity.class);
+        startActivity(intent);
     }
 
     @Override

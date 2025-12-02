@@ -19,7 +19,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.R;
-import com.SmartAir.homepage.view.ChildHomeActivity;
 import com.SmartAir.homepage.view.ParentHomeActivity;
 import com.SmartAir.homepage.view.ProviderHomeActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
