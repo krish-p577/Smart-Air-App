@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.RoleSelectionActivity">
+    tools:context="com.SmartAir.onboarding.view.RoleSelectionActivity">
 
     <TextView
         android:id="@+id/role_selection_prompt"
@@ -37,7 +37,6 @@
         android:text="@string/provider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.499" />

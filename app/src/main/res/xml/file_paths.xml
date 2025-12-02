@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- This path shares files located in the app's internal cache directory -->
+    <!-- The 'path' attribute maps to the "Reports" subfolder you created in PdfGenerator.java -->
+    <cache-path name="reports" path="Reports/" />
+</paths>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="16dp"
+    android:backgroundTint="#FFFFFF">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/indicatorBar"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:background="@color/primary_super_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/headerBg"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@color/primary_super_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/indicatorBar"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025-11-26"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="@id/headerBg"
+            app:layout_constraintTop_toTopOf="@id/headerBg"
+            app:layout_constraintBottom_toBottomOf="@id/headerBg" />
+
+        <TextView
+            android:id="@+id/textAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entry Author: Parent"
+            android:textColor="#1E2933"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerBg" />
+
+        <TextView
+            android:id="@+id/textChild"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Child: Child Name"
+            android:textColor="#1E2933"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textAuthor" />
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="#E5E7EB"
+            app:layout_constraintTop_toBottomOf="@id/textChild"
+            app:layout_constraintStart_toStartOf="@id/headerBg"
+            app:layout_constraintEnd_toEndOf="@id/headerBg" />
+
+        <TextView
+            android:id="@+id/textNightWaking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingStart="16dp"
+            android:text="Night waking: True"
+            android:textColor="#1E2933"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+        <TextView
+            android:id="@+id/textLimitedAbility"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Limited ability: False"
+            android:textColor="#1E2933"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNightWaking"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textSick"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cough/Wheeze: True"
+            android:textColor="#1E2933"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textLimitedAbility"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textTriggers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Triggers: None"
+            android:textColor="#1E2933"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:paddingStart="16dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textSick"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

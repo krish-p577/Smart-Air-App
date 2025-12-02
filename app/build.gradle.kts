@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-android {namespace = "com.SmartAir"
+android {
+    namespace = "com.SmartAir"
     compileSdk = 34
 
     defaultConfig {
@@ -17,7 +18,7 @@ android {namespace = "com.SmartAir"
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -29,22 +30,36 @@ android {namespace = "com.SmartAir"
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
-} // <-- This closing brace was missing
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+}
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-appcheck-debug")
+    implementation(libs.firebase.firestore)
 
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.cardview)
     implementation(libs.firebase.firestore)
+    implementation(libs.recyclerview)
 
+    // JUnit and Mockito - Upgraded for Java 21 compatibility
     testImplementation(libs.junit)
+    testImplementation("org.mockito:mockito-core:5.11.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.google.android.material:material:1.10.0")
 }
