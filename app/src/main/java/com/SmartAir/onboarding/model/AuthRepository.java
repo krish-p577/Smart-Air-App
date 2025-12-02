@@ -305,11 +305,12 @@ public class AuthRepository {
                         FirebaseUser newChildUser = task.getResult().getUser();
                         String childUid = newChildUser.getUid();
 
-                        ChildUser childProfile = new ChildUser(fakeEmail, name, parentUid);
+                        ChildUser childProfile = new ChildUser(fakeEmail, name, parentUid, username);
                         childProfile.setAge(age);
                         childProfile.setDateOfBirth(dob);
                         childProfile.setNotes(notes);
                         childProfile.setDisplayName(name);
+                        childProfile.setUsername(username);
 
                         WriteBatch batch = firestore.batch();
 
@@ -387,7 +388,7 @@ public class AuthRepository {
 
     public void signInChild(String username, String password, @NonNull final AuthCallback callback) {
         firestore.collection("Users")
-                .whereEqualTo("displayName", username)
+                .whereEqualTo("username", username)
                 .whereEqualTo("role", "child")
                 .limit(1)
                 .get()

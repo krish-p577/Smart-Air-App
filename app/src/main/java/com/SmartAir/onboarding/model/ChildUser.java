@@ -8,6 +8,7 @@ import java.util.Map;
 public class ChildUser extends BaseUser {
 
     private String parentId;
+    private String username;
     private String age;
     private String dateOfBirth;
     private String notes;
@@ -23,9 +24,10 @@ public class ChildUser extends BaseUser {
         this.sharingSettings = new HashMap<>();
     }
 
-    public ChildUser(String email, String displayName, String parentId) {
+    public ChildUser(String email, String displayName, String parentId, String username) {
         super("child", email, displayName);
         this.parentId = parentId;
+        this.username = username;
         this.sharingSettings = new HashMap<>();
     }
 
@@ -36,6 +38,14 @@ public class ChildUser extends BaseUser {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAge() {
