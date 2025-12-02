@@ -26,6 +26,8 @@
     <string name="select_child">Select Child:</string>
     <string name="generate_pdf">Generate PDF</string>
     <string name="schedule">Schedule</string>
+    <string name="history">History</string>
+    <string name="check_ins">Check Ins</string>
 
     <!-- Onboarding & Authentication -->
     <string name="welcome_message">Welcome to Smart Air!</string>

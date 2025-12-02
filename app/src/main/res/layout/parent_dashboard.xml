@@ -152,7 +152,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="12dp"
-        android:text="History"
+        android:text="@string/history"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -166,7 +166,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="43dp"
         android:layout_marginBottom="18dp"
-        android:text="Check Ins"
+        android:text="@string/check_ins"
         app:layout_constraintBottom_toTopOf="@+id/btn_generate_report"
         app:layout_constraintStart_toStartOf="parent" />
 
