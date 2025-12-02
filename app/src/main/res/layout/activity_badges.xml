@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Awarded at 10 perfect technique sessions."
+                    android:text="Awarded for your first 10 perfect technique sessions."
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textStyle="italic" />
 

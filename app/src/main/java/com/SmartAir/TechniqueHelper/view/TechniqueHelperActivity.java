@@ -22,6 +22,7 @@ import com.SmartAir.TechniqueHelper.presenter.TechniqueHelperPresenter;
 public class TechniqueHelperActivity extends AppCompatActivity implements TechniqueHelperView, Player.Listener {
 
     private TechniqueHelperPresenter presenter;
+    private TechniqueHelperRepository repo;
 
     private ExoPlayer player;
 
@@ -49,7 +50,7 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technique_helper);
 
-        TechniqueHelperRepository repo = new TechniqueHelperRepository();
+        repo = new TechniqueHelperRepository();
         presenter = new TechniqueHelperPresenter(this, repo);
 
         Button backButton = findViewById(R.id.btn_back);
@@ -170,6 +171,8 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
             checkPauseNeeded();
         } else {
             isChecking = false;
+
+            repo.updateTechniqueStreak();
 
             if (isPerfectSession) {
                 presenter.onPerfectSessionCompleted();
