@@ -9,7 +9,7 @@ import com.SmartAir.R;
 import com.SmartAir.onboarding.presenter.WelcomePresenter;
 import com.google.firebase.FirebaseApp;
 
-public class  WelcomeActivity extends AppCompatActivity implements WelcomeView {
+public class WelcomeActivity extends AppCompatActivity implements WelcomeView {
 
     private WelcomePresenter presenter;
 
@@ -30,6 +30,6 @@ public class  WelcomeActivity extends AppCompatActivity implements WelcomeView {
 
     @Override
     public void navigateNext() {
-        startActivity(new Intent(this, com.SmartAir.view.RoleSelectionActivity.class));
+        startActivity(new Intent(this, RoleSelectionActivity.class));
     }
 }

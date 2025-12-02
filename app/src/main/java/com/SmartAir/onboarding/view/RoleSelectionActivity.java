@@ -1,16 +1,12 @@
-package com.SmartAir.view;
+package com.SmartAir.onboarding.view;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.presenter.RoleSelectionPresenter;
-import com.SmartAir.onboarding.view.ChildLoginActivity;
-import com.SmartAir.onboarding.view.LoginActivity;
-import com.SmartAir.onboarding.view.RoleSelectionView;
 
 public class RoleSelectionActivity extends AppCompatActivity implements RoleSelectionView {
 
