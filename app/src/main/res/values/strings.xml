@@ -29,6 +29,20 @@
     <string name="history">History</string>
     <string name="check_ins">Check Ins</string>
 
+    <!-- Schedule Page -->
+    <string name="controller_adherence">Controller Adherence</string>
+    <string name="controller_adherence_prompt">How often should the Controller\n medicine be taken? </string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="bi_weekly">Bi-Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="save">Save</string>
+    <string name="current_schedule">Current schedule: </string>
+    <string name="status">Status</string>
+    <string name="adherence_record">Adherence Record: </string>
+    <string name="last_7_days">Last 7 Days</string>
+    <string name="last_30_days">Last 30 Days</string>
+
     <!-- Onboarding & Authentication -->
     <string name="welcome_message">Welcome to Smart Air!</string>
     <string name="role_selection_prompt">I am a…</string>
