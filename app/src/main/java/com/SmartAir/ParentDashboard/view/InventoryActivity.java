@@ -3,6 +3,8 @@ package com.SmartAir.ParentDashboard.view;
 import static com.SmartAir.ParentDashboard.view.ParentDashboardActivity.childId;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,6 +13,8 @@ import com.SmartAir.R;
 import com.SmartAir.onboarding.model.BaseUser;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class InventoryActivity extends AppCompatActivity {
 
@@ -26,12 +30,11 @@ public class InventoryActivity extends AppCompatActivity {
         setContentView(R.layout.inventory_parent);
         Toolbar toolbar = findViewById(R.id.toolbar_inv);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.parent_dashboard);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.parent_dashboard);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 
-
-
     }
+
 }

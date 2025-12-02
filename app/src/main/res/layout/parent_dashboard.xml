@@ -102,12 +102,13 @@
         app:layout_constraintStart_toEndOf="@+id/r6_test"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+
     <Button
         android:id="@+id/btn_generate_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/generate_pdf"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -116,46 +117,62 @@
         android:id="@+id/radio_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="312dp"
+        android:layout_marginEnd="316dp"
         android:layout_marginBottom="72dp"
         android:text="@string/schedule"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+
     <Button
         android:id="@+id/history_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="14dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="200dp"
         android:layout_marginBottom="72dp"
         android:text="History"
         app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/radio_buttons"
-
-        />
+        app:layout_constraintStart_toEndOf="@+id/radio_buttons" />
 
     <Button
         android:id="@+id/checkin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginStart="268dp"
+        android:layout_marginBottom="8dp"
+
         android:text="Check Ins"
-        app:layout_constraintBottom_toTopOf="@+id/btn_generate_report"
+        app:layout_constraintBottom_toTopOf="@+id/pdf2"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/inventory_btn"
-        android:layout_width="wrap_content"
+
+    <RadioButton
+        android:id="@+id/pdf2"
+        style="@style/DashboardText"
+        android:layout_width="128dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="12dp"
-        android:text="Inventory"
-        app:layout_constraintBottom_toTopOf="@+id/radio_buttons"
-        app:layout_constraintStart_toEndOf="@+id/checkin" />
+        android:layout_marginStart="12dp"
+
+        android:layout_marginBottom="16dp"
+        android:text="6 Months"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pdf1" />
+
+    <RadioButton
+        android:id="@+id/pdf1"
+        style="@style/DashboardText"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="16dp"
+        android:text="3 Months"
+        android:textSize="19dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_generate_report" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

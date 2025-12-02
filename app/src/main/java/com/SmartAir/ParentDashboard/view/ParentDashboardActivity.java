@@ -108,16 +108,6 @@ public class ParentDashboardActivity extends AppCompatActivity {
             }
         });
 
-        Button inventory_btn = findViewById(R.id.inventory_btn);
-        inventory_btn.setOnClickListener(v -> {
-            if (!childId.isEmpty()) {
-                Intent intent = new Intent(this, InventoryActivity.class);
-                startActivity(intent);
-            }
-            else {
-                Toast.makeText(ParentDashboardActivity.this, "No child selected", Toast.LENGTH_LONG).show();
-            }
-        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -439,20 +429,31 @@ public class ParentDashboardActivity extends AppCompatActivity {
             String name = childNameRef.get();
             String zone = zoneRef.get();
             int score = scoreRef.get();
+            getZoneCounts(childId, months)
+                    .addOnSuccessListener(countsList -> {
+
+                        int red = countsList.get(0);
+                        int yellow = countsList.get(1);
+                        int green = countsList.get(2);
+
+                        // Log the result to check the counts
+                        Log.d("ReportGenerator", "Red: " + red + ", Yellow: " + yellow + ", Green: " + green);
 
             ReportGenerationActivity.AsthmaReportData data = new ReportGenerationActivity.AsthmaReportData(
                     name,
                     zone,
                     score,
                     "Last " + "30" + " Days",
-                    logs
+                    logs,
+                    countsList
             );
+
 
             // Generate and Share
             File pdf = ReportGenerationActivity.generatePdfFromData(this, data);
             ReportGenerationActivity.sharePdfFile(this, pdf);
-        }
-    }
+        });
+    }}
 
 
     @SuppressLint("SetTextI18n")

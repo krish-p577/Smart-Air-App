@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.Task;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,12 +41,15 @@ public class ReportGenerationActivity {
         public String period;
         public List<DailyLog> logs;
 
-        public AsthmaReportData(String childName, String currentZone, int adherenceScore, String period, List<DailyLog> logs) {
+        public List<Integer> zoneData;
+
+        public AsthmaReportData(String childName, String currentZone, int adherenceScore, String period, List<DailyLog> logs, List<Integer> zoneData ){
             this.childName = childName;
             this.currentZone = currentZone;
             this.adherenceScore = adherenceScore;
             this.period = period;
             this.logs = logs;
+            this.zoneData = zoneData;
         }
     }
 
@@ -191,6 +196,34 @@ public class ReportGenerationActivity {
         div.setBackgroundColor(Color.LTGRAY);
         mainLayout.addView(div);
 
+        // 1. Chart Title
+        TextView chartTitle = new TextView(context);
+        chartTitle.setText("Zone Distribution (Last 3 Months)");
+        chartTitle.setTextSize(18);
+        chartTitle.setPadding(0, 30, 0, 10);
+        chartTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+        mainLayout.addView(chartTitle);
+
+        // 2. The Pie Chart View
+        // We must give it a fixed height so the layout knows how big to draw it
+        if (data.zoneData != null && data.zoneData.size() >= 3) {
+            ZonePieChartView pieChart = new ZonePieChartView(context, data.zoneData);
+            LinearLayout.LayoutParams chartParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    400 // Fixed height in pixels (adjust as needed)
+            );
+            chartParams.setMargins(0, 0, 0, 20); // Add bottom margin
+            mainLayout.addView(pieChart, chartParams);
+
+            // Optional: Simple Legend
+            TextView legend = new TextView(context);
+            legend.setText("Red: " + data.zoneData.get(0) + " | Yellow: " + data.zoneData.get(1) + " | Green: " + data.zoneData.get(2));
+            legend.setGravity(Gravity.CENTER_HORIZONTAL);
+            legend.setTextSize(12);
+            legend.setPadding(0, 0, 0, 30);
+            mainLayout.addView(legend);
+        }
+
         // 3. Daily Logs List
         TextView historyTitle = new TextView(context);
         historyTitle.setText("Symptom & Trigger Log");
@@ -229,5 +262,66 @@ public class ReportGenerationActivity {
         }
 
         return mainLayout;
+    }
+
+    private static class ZonePieChartView extends View {
+        private final List<Integer> zoneData;
+        private final Paint paint;
+        private final android.graphics.RectF oval;
+
+        public ZonePieChartView(Context context, List<Integer> zoneData) {
+            super(context);
+            this.zoneData = zoneData;
+            this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            this.oval = new android.graphics.RectF();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            if (zoneData == null || zoneData.size() < 3) return;
+
+            float r = zoneData.get(0); // Red
+            float y = zoneData.get(1); // Yellow
+            float g = zoneData.get(2); // Green
+            float total = r + y + g;
+
+            if (total == 0) return; // Avoid divide by zero
+
+            // Calculate dimensions
+            float width = getWidth();
+            float height = getHeight();
+            float diameter = Math.min(width, height) * 0.8f; // use 80% of space
+            float left = (width - diameter) / 2;
+            float top = (height - diameter) / 2;
+
+            oval.set(left, top, left + diameter, top + diameter);
+
+            float startAngle = -90; // Start at 12 o'clock
+
+            // Draw Red Slice
+            if (r > 0) {
+                float sweep = (r / total) * 360f;
+                paint.setColor(Color.parseColor("#F44336"));
+                canvas.drawArc(oval, startAngle, sweep, true, paint);
+                startAngle += sweep;
+            }
+
+            // Draw Yellow Slice
+            if (y > 0) {
+                float sweep = (y / total) * 360f;
+                paint.setColor(Color.parseColor("#FFC107"));
+                canvas.drawArc(oval, startAngle, sweep, true, paint);
+                startAngle += sweep;
+            }
+
+            // Draw Green Slice
+            if (g > 0) {
+                // Calculate remaining angle to ensure circle closes perfectly
+                float sweep = 360f - (startAngle + 90);
+                paint.setColor(Color.parseColor("#4CAF50"));
+                canvas.drawArc(oval, startAngle, sweep, true, paint);
+            }
+        }
     }
 }
