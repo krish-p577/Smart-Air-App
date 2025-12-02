@@ -24,16 +24,22 @@ public class ChildDashboardPresenter {
                 view.showWelcomeMessage(childName);
                 view.showSecondaryMessage("Welcome back!");
 
-                repo.getControllerStreak()
-                    .addOnSuccessListener(controllerStreak -> {
-                        view.showControllerStreak(controllerStreak);
+                repo.updateControllerStreak()
+                    .addOnSuccessListener(controllerStreakUpdate -> {
+                        repo.getControllerStreak()
+                            .addOnSuccessListener(controllerStreak -> {
+                                view.showControllerStreak(controllerStreak);
 
-                        repo.getTechniqueStreak()
-                            .addOnSuccessListener(techniqueStreak -> {
-                                view.showTechniqueStreak(techniqueStreak);
+                                repo.updateTechniqueStreak()
+                                    .addOnSuccessListener(techniqueStreakUpdate -> {
+                                        repo.getTechniqueStreak()
+                                            .addOnSuccessListener(techniqueStreak -> {
+                                                view.showTechniqueStreak(techniqueStreak);
 
-                            }).addOnFailureListener(e -> view.showMessage("Error while getting technique streak: " + e.getMessage()));
-                    }).addOnFailureListener(e -> view.showMessage("Error while getting controller streak: " + e.getMessage()));
+                                            }).addOnFailureListener(e -> view.showMessage("Error while getting technique streak: " + e.getMessage()));
+                                    }).addOnFailureListener(e -> view.showMessage("Error while updating technique streak: " + e.getMessage()));
+                            }).addOnFailureListener(e -> view.showMessage("Error while getting controller streak: " + e.getMessage()));
+                    }).addOnFailureListener(e -> view.showMessage("Error while updating controller streak: " + e.getMessage()));
             }).addOnFailureListener(e -> view.showMessage("Error while getting child name: " + e.getMessage()));
     }
 

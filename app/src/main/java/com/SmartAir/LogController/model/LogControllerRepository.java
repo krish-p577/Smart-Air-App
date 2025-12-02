@@ -7,6 +7,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class LogControllerRepository {
 
                     return db.collection("streaks")
                         .document(childId)
-                        .set(data);
+                        .set(data, SetOptions.merge());
                 }
 
                 Timestamp lastUpdated = doc.getTimestamp("controllerStreakLastUpdated");
