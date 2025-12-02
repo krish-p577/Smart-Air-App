@@ -17,7 +17,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:title="@string/app_name"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@android:color/white"
+            android:theme="@style/ToolbarTheme"/>
 
         <TextView
             android:layout_width="match_parent"
