@@ -87,7 +87,6 @@ public class ParentDashboardActivity extends AppCompatActivity {
             if (!childId.isEmpty()) {
                 Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
-                finish();
             }
             else {
                 Toast.makeText(ParentDashboardActivity.this, "No child selected", Toast.LENGTH_LONG).show();
