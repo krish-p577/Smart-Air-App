@@ -40,6 +40,7 @@ import com.SmartAir.ParentDashboard.model.PefLogsModel;
 import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -81,7 +82,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
             childids_fromuser = ((ParentUser) user).getChildrenIds();
 
         }
-
+        checkRescuAlert(childId);
         Button schedule_button = findViewById(R.id.radio_buttons);
         schedule_button.setOnClickListener(v -> {
             if (!childId.isEmpty()) {
@@ -479,6 +480,36 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
     }
 
+    private void checkRescuAlert(String childId){
+        long currentTime = System.currentTimeMillis();
+
+        db.collection("inhalerLogs")
+                .document(childId)
+                .collection("rescueEntries")
+                .orderBy("timestamp")   // newest last; we’ll break early if needed
+                .get()
+                .addOnSuccessListener(querySnap -> {
+                    int count = 0;
+
+                    for (DocumentSnapshot doc : querySnap.getDocuments()) {
+                        Timestamp ts = doc.getTimestamp("timestamp");
+
+                        int diffMs = Math.toIntExact(currentTime - ts.toDate().getTime());
+
+                        // within last 3 hours?
+                        if (diffMs <= (3 * 60 * 60 * 1000)) {
+                            count++;
+                        }
+                    }
+
+                    if (count >= 3) {
+                        Toast.makeText(ParentDashboardActivity.this, "Child Tried to resuce " + count + " in last 3 hours.", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("RESCUE_CHECK", "Error checking rescue attempts", e);
+                });
+    }
 
 
 }
