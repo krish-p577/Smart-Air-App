@@ -1,6 +1,6 @@
-package com.SmartAir.onboarding.presenter;
+package com.SmartAir.ParentDashboard.presenter;
 
-import com.SmartAir.onboarding.view.PbView;
+import com.SmartAir.ParentDashboard.view.PbView;
 
 public class PbPresenter {
     private final PbView view;

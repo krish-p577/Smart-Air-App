@@ -15,15 +15,36 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartAir"
         tools:targetApi="31">
+
+        <!-- Entry Point -->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.smartair.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider><!-- This is the main entry point of the app. It's the first screen the user sees. -->
+
+
         <activity
-            android:name=".onboarding.view.WelcomeActivity"
+            android:name=".EntryPointActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Onboarding & Home Activities -->
+        <activity
+            android:name=".onboarding.view.WelcomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.view.OnboardingActivity"
+            android:exported="false" />
         <activity
             android:name=".onboarding.view.RoleSelectionActivity"
             android:exported="false" />
@@ -39,21 +60,41 @@
         <activity
             android:name=".onboarding.view.PasswordResetActivity"
             android:exported="false" />
+        <activity
+            android:name=".homepage.view.ParentHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".homepage.view.ProviderHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".homepage.view.ChildHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dailycheckin.view.DailyCheckInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".glossary.view.GlossaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".history.view.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.view.AddChildActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.view.SelectChildLoginActivity"
+            android:exported="false" />
+        <activity android:name=".ParentDashboard.view.ParentDashboardActivity"
+            android:exported="false"/>
+        <activity android:name=".ParentDashboard.view.ScheduleActivity"
+            android:exported="false"/>
+        <activity android:name=".ParentDashboard.view.PbActivity"
+            android:exported="false"/>
 
-        <!-- Home Activities -->
-        <activity
-            android:name=".onboarding.view.ParentHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.ProviderHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.ChildHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.view.PbActivity"
-            android:exported="true">
-        </activity>
+
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>
