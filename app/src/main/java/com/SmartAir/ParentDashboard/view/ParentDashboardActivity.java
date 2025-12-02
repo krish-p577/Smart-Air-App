@@ -18,11 +18,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.SmartAir.R;
+import com.SmartAir.ParentDashboard.model.ParentModel;
+import com.SmartAir.ParentDashboard.model.PefLogsModel;
+import com.SmartAir.ParentDashboard.model.RescueLogModel;
+import com.SmartAir.ParentDashboard.presenter.ParentDashboardPresenter;
+import com.SmartAir.R;
+import com.SmartAir.onboarding.model.BaseUser;
 import com.SmartAir.onboarding.model.CurrentUser;
+import com.SmartAir.onboarding.model.ParentUser;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.Timestamp;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
 import com.SmartAir.ParentDashboard.model.PefLogsModel;
 import com.SmartAir.ParentDashboard.model.RescueLogModel;
@@ -45,9 +55,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ParentDashboardActivity extends AppCompatActivity {
 
     public static String childId = "";
-    private static final String TESTUSERID = "voS60SSmSSZL9j3XGKyhHNSs4LR2";
-    private FirebaseFirestore db;
-    private boolean isTestMode;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     BaseUser user =  CurrentUser.getInstance().getUserProfile();
@@ -59,14 +66,10 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
     private ParentDashboardPresenter presenter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parent_dashboard);
-
-        db = FirebaseFirestore.getInstance();
-        isTestMode = getIntent().getBooleanExtra("testMode", false);
         FirebaseApp.initializeApp(this);
 
         List<String> childids_fromuser;
@@ -77,17 +80,11 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         }
 
-        // naving to schedule innit
         Button schedule_button = findViewById(R.id.radio_buttons);
         schedule_button.setOnClickListener(v -> {
             if (!childId.isEmpty()) {
                 Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.parent_dashboard);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 finish();
             }
             else {
@@ -95,13 +92,10 @@ public class ParentDashboardActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-        Log.i("TAG", "CREATED PAGE");
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.parent_dashboard);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView test_text = findViewById(R.id.r6_test);
         TextView box1 = findViewById(R.id.myText);
@@ -115,26 +109,32 @@ public class ParentDashboardActivity extends AppCompatActivity {
         List<String> childList = new ArrayList<>();
         List<String> childIdList = new ArrayList<>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, childList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                childList
+        );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-
         getUserChildren(adapter, childList, childIdList);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if (position > 0) { // To account for the 'Select Child' prompt
-                    childId = childIdList.get(position - 1);
-                    updateZone(childId, findViewById(R.id.myText), findViewById(R.id.myText3), findViewById(R.id.myText4));
-                }
+                String selectedChild = childList.get(position);
+                String selectedId = childIdList.get(position);
+//                dbTest(box1,selectedChild);
+                childId = selectedId;
+                updateZone(selectedId, box1, box2, box3);
+
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
 
-        // Other button initializations can go here
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -144,6 +144,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
     public void navToPdf () {
 //        View reportContent = ReportGenerationActivity.createMockReportView(this, data);
 
@@ -252,44 +253,20 @@ public class ParentDashboardActivity extends AppCompatActivity {
         }
     }
 
+
     @SuppressLint("SetTextI18n")
-    private void getUserChildren(ArrayAdapter<String> adapter, List<String> childList, List<String> childIdList) {
-        String uid = isTestMode ? TESTUSERID : (CurrentUser.getInstance().getUserProfile() != null ? CurrentUser.getInstance().getUid() : null);
+    protected void getUserChildren(ArrayAdapter<String> adapter, List<String> childList, List<String> childIdList){
+        Log.i("DEBUG", "Get Children");
 
-        if (uid == null) {
-            Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        Log.i("DEBUG", "Get Children started");
 
-        childList.add("Select Child:"); // Prompt
-        adapter.notifyDataSetChanged();
+        // Clear all except the default prompt
+        if (childList.size() > 1) childList.subList(1, childList.size()).clear();
+        if (childIdList.size() > 1) childIdList.subList(1, childIdList.size()).clear();
 
-        db.collection("Users").document(uid).get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                List<String> rawIdList = (List<String>) documentSnapshot.get("childrenIds");
-                if (rawIdList != null && !rawIdList.isEmpty()) {
-                    List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-                    for (String id : rawIdList) {
-                        tasks.add(db.collection("Users").document(id).get());
-                    }
-                    Tasks.whenAllSuccess(tasks).addOnSuccessListener(list -> {
-                        for (Object object : list) {
-                            DocumentSnapshot childSnapshot = (DocumentSnapshot) object;
-                            if (childSnapshot.exists()) {
-                                String displayName = childSnapshot.getString("displayName");
-                                if (displayName != null) {
-                                    childList.add(displayName);
-                                    childIdList.add(childSnapshot.getId());
-                                }
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
-                    });
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(ParentDashboardActivity.this, "Failed to load children.", Toast.LENGTH_SHORT).show();
-        });
+        db.collection("Users").document(CurrentUser.getInstance().getUid())
+                .get().addOnSuccessListener(documentSnapshot ->{
+
                     List<String> rawIdList = new ArrayList<>();
 
                     if(documentSnapshot.exists()){

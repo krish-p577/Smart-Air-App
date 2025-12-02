@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.BaseUser;
@@ -46,6 +47,10 @@ public class ScheduleActivity extends AppCompatActivity {
         RadioGroup radioGroupOptions = findViewById(R.id.radio_buttons);
         Button savebut = findViewById(R.id.schedule_save);
 
+        Toolbar toolbar = findViewById(R.id.toolbarsc);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.parent_dashboard);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // managing scheduling radio button changes
