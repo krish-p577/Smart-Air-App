@@ -108,6 +108,20 @@ public class ParentDashboardActivity extends AppCompatActivity {
             }
         });
 
+        Button pbButton = findViewById(R.id.SetPBButtons);
+        pbButton.setOnClickListener(v -> {
+            Toast.makeText(ParentDashboardActivity.this, "outside IF", Toast.LENGTH_LONG).show();
+            if (!childId.isEmpty()) {
+                Toast.makeText(ParentDashboardActivity.this, "in IF", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ParentDashboardActivity.this, PbActivity.class);
+                intent.putExtra("childId", childId);
+                startActivity(intent);
+                finish();
+            }
+            else {
+                Toast.makeText(ParentDashboardActivity.this, "No child selected", Toast.LENGTH_LONG).show();
+            }
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
