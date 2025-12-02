@@ -203,6 +203,7 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
     public void showChildDashboard() {
         Intent intent = new Intent(TechniqueHelperActivity.this, ChildDashboardActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

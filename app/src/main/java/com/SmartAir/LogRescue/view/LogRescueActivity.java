@@ -92,6 +92,7 @@ public class LogRescueActivity extends AppCompatActivity implements LogRescueVie
     public void showChildDashboard() {
         Intent intent = new Intent(LogRescueActivity.this, ChildDashboardActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

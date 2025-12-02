@@ -55,6 +55,7 @@ public class LogControllerActivity extends AppCompatActivity implements LogContr
     public void showChildDashboard() {
         Intent intent = new Intent(LogControllerActivity.this, ChildDashboardActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

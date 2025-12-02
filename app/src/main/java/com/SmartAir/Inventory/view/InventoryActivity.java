@@ -87,6 +87,7 @@ public class InventoryActivity extends AppCompatActivity implements InventoryVie
     public void showChildDashboard() {
         Intent intent = new Intent(InventoryActivity.this, ChildDashboardActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

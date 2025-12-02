@@ -47,6 +47,7 @@ public class BadgesActivity extends AppCompatActivity implements BadgesView {
     public void showChildDashboard() {
         Intent intent = new Intent(BadgesActivity.this, ChildDashboardActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
