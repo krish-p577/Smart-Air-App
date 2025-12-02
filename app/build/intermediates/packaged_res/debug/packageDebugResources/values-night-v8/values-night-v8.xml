@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Base.Theme.SmartAir" parent="Theme.Material3.DayNight.NoActionBar">
-        
-        <item name="colorPrimary">@color/primary_dark</item>
-        <item name="colorSecondary">@color/secondary_dark</item>
-    </style>
-    <style name="Theme.SmartAir" parent="Base.Theme.SmartAir"/>
-</resources>
