@@ -152,9 +152,11 @@ public class TechniqueHelperActivity extends AppCompatActivity implements Techni
             .setMessage(currentStepMessage)
             .setPositiveButton("Yes", (dialog, which) -> {
                 pauseIndex++;
+                showMessage("Great job! Keep it up!");
                 playAndContinueChecking();
             }).setNegativeButton("No", (dialog, which) -> {
                 pauseIndex++;
+                showMessage("Let's try to follow along better next time!");
                 isPerfectSession = false;
                 playAndContinueChecking();
             }).setCancelable(false)

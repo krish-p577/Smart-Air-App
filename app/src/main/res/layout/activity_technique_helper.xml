@@ -47,6 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_marginTop="8dp"
+                    app:use_controller="false"
                     app:show_shuffle_button="false"
                     app:show_timeout="3000" />
 
