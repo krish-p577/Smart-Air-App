@@ -49,13 +49,15 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_drawer);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Menu navMenu = navigationView.getMenu();
         MenuItem logoutItem = navMenu.findItem(R.id.nav_logout);
-        navMenu.findItem(R.id.nav_child_login).setVisible(false); // Always hide for child view
-
+        navMenu.findItem(R.id.nav_dashboard).setVisible(false);
+        navMenu.findItem(R.id.nav_manage_children).setVisible(false);
+        navMenu.findItem(R.id.nav_child_login).setVisible(false);
+        navMenu.findItem(R.id.nav_glossary).setVisible(true);
         if (getIntent().hasExtra("CHILD_USER_PROFILE")) {
             isDelegatedMode = true;
             ChildUser child = (ChildUser) getIntent().getSerializableExtra("CHILD_USER_PROFILE");

@@ -1,6 +1,6 @@
 package com.SmartAir.ParentDashboard.view;
 
 public interface PbView {
-    public void popOut();
+    void popOut();
+    void showToast(String message);
 }
-

@@ -386,9 +386,9 @@ public class AuthRepository {
                 });
     }
 
-    public void signInChild(String username, String password, @NonNull final AuthCallback callback) {
+    public void signInChildWithUsername(String username, String password, @NonNull final AuthCallback callback) {
         firestore.collection("Users")
-                .whereEqualTo("username", username)
+                .whereEqualTo("username", username.trim().toLowerCase())
                 .whereEqualTo("role", "child")
                 .limit(1)
                 .get()
@@ -397,15 +397,47 @@ public class AuthRepository {
                         DocumentSnapshot doc = task.getResult().getDocuments().get(0);
                         ChildUser childUser = doc.toObject(ChildUser.class);
                         if (childUser != null && childUser.getEmail() != null && !childUser.getEmail().isEmpty()) {
-                            childUser.setUid(doc.getId());
-                            signInUser(childUser.getEmail(), password, callback);
+                            firebaseAuth.signInWithEmailAndPassword(childUser.getEmail(), password)
+                                    .addOnCompleteListener(authTask -> {
+                                        if (authTask.isSuccessful()) {
+                                            fetchUserProfile(authTask.getResult().getUser(), callback);
+                                        } else {
+                                            callback.onFailure("Invalid username or password.");
+                                        }
+                                    });
                         } else {
-                            callback.onFailure("Child account is not configured correctly for login.");
+                            callback.onFailure("Child account is not configured correctly.");
                         }
                     } else {
                         callback.onFailure("Username not found.");
                     }
                 });
+    }
+
+    public void signInChildAsParent(String childUid, String password, @NonNull final AuthCallback callback) {
+        // Step 1: Fetch child's email from Firestore using their UID
+        firestore.collection("Users").document(childUid).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                ChildUser child = task.getResult().toObject(ChildUser.class);
+                if (child != null && child.getEmail() != null && !child.getEmail().isEmpty()) {
+                    String childEmail = child.getEmail();
+
+                    // Step 2: Sign in as the child (this signs out the parent)
+                    firebaseAuth.signInWithEmailAndPassword(childEmail, password).addOnCompleteListener(signInTask -> {
+                        if (signInTask.isSuccessful()) {
+                            // Step 3: Fetch the child's profile to update CurrentUser
+                            fetchUserProfile(signInTask.getResult().getUser(), callback);
+                        } else {
+                            callback.onFailure("Incorrect password.");
+                        }
+                    });
+                } else {
+                    callback.onFailure("Could not find child account details.");
+                }
+            } else {
+                callback.onFailure("Child user not found.");
+            }
+        });
     }
 
     public void sendPasswordResetEmail(String email, @NonNull final AuthCallback callback) {

@@ -4,8 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.Group;
 
 import com.SmartAir.R;
 import com.SmartAir.onboarding.model.AuthRepository;
@@ -16,22 +17,22 @@ public class PasswordResetActivity extends AppCompatActivity implements Password
 
     private EditText emailEditText;
     private PasswordResetPresenter presenter;
-    private Group formContent;
-    private View loadingLayout;
+    private ProgressBar loadingIndicator;
+    private Button sendResetEmailButton;
+    private View emailLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_reset);
 
-        // Provide the AuthRepository to the presenter
         presenter = new PasswordResetPresenter(this, AuthRepository.getInstance());
 
         emailEditText = findViewById(R.id.email);
-        Button sendResetEmailButton = findViewById(R.id.send_reset_email_button);
-        Button backButton = findViewById(R.id.back_button);
-        formContent = findViewById(R.id.form_content);
-        loadingLayout = findViewById(R.id.loading_layout);
+        sendResetEmailButton = findViewById(R.id.send_reset_email_button);
+        ImageButton backButton = findViewById(R.id.back_button);
+        loadingIndicator = findViewById(R.id.loading_indicator);
+        emailLayout = findViewById(R.id.email_layout);
 
         sendResetEmailButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
@@ -55,14 +56,14 @@ public class PasswordResetActivity extends AppCompatActivity implements Password
 
     @Override
     public void setLoading(boolean isLoading) {
-        for (int id : formContent.getReferencedIds()) {
-            View child = findViewById(id);
-            if (child != null) {
-                child.setVisibility(isLoading ? View.GONE : View.VISIBLE);
-            }
-        }
-        if (loadingLayout != null) {
-            loadingLayout.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (isLoading) {
+            loadingIndicator.setVisibility(View.VISIBLE);
+            sendResetEmailButton.setVisibility(View.GONE);
+            emailLayout.setVisibility(View.GONE);
+        } else {
+            loadingIndicator.setVisibility(View.GONE);
+            sendResetEmailButton.setVisibility(View.VISIBLE);
+            emailLayout.setVisibility(View.VISIBLE);
         }
     }
 

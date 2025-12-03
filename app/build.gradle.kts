@@ -39,37 +39,30 @@ android {
 }
 
 dependencies {
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
-
-    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-appcheck-debug")
-    implementation(libs.firebase.firestore)
 
+    // AndroidX & Material
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.firestore)
     implementation(libs.cardview)
+    implementation(libs.recyclerview)
     implementation(libs.media3.ui)
     implementation(libs.media3.exoplayer)
 
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.firestore)
-    implementation(libs.cardview)
-    implementation(libs.recyclerview)
+    // Desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
-    // JUnit and Mockito - Upgraded for Java 21 compatibility
+    // Testing
     testImplementation(libs.junit)
     testImplementation("org.mockito:mockito-core:5.11.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
-
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.google.android.material:material:1.10.0")
 }

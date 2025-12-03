@@ -59,6 +59,9 @@ public class SignupPresenter {
         authRepository.createUser(email, password, role, displayName, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
+                if ("parent".equalsIgnoreCase(role)){
+                    authRepository.storeParentCredentials(email, password);
+                }
                 view.navigateToHome();
             }
 

@@ -21,10 +21,7 @@ public class ChildLoginPresenter {
             return;
         }
 
-        username = username.trim();
-        password = password.trim();
-
-        authRepository.signInChild(username, password, new AuthRepository.AuthCallback() {
+        authRepository.signInChildWithUsername(username.trim(), password.trim(), new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
                 if (CurrentUser.getInstance().getUserProfile() != null &&

@@ -20,20 +20,20 @@ public class MyApplication extends Application {
         // Initialize Firebase
         FirebaseApp.initializeApp(this);
 
-        // Initialize Firebase App Check (debug)
+        // Initialize Firebase App Check with the debug provider.
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
                 DebugAppCheckProviderFactory.getInstance());
 
-        // Initialize singleton references
-        AuthRepository.getInstance();
+        // Initialize singleton instances
+        AuthRepository authRepository = AuthRepository.getInstance();
         CurrentUser.getInstance();
 
-        //  pre-fetch current user profile for faster startup
+        // Pre-fetch current user profile for faster startup
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             Log.d("MyApplication", "Found logged-in user: " + firebaseUser.getEmail());
-            AuthRepository.getInstance().fetchUserProfile(firebaseUser, new AuthRepository.AuthCallback() {
+            authRepository.fetchUserProfile(firebaseUser, new AuthRepository.AuthCallback() {
                 @Override
                 public void onSuccess() {
                     Log.d("MyApplication", "User profile cached successfully.");
@@ -41,7 +41,7 @@ public class MyApplication extends Application {
 
                 @Override
                 public void onFailure(String errorMessage) {
-                    Log.w("MyApplication", "Failed to fetch user profile: " + errorMessage);
+                    Log.w("MyApplication", "Failed to pre-fetch user profile: " + errorMessage);
                 }
             });
         }
