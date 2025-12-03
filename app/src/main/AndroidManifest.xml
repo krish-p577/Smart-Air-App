@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartAir"
+        tools:targetApi="31">
+        android:theme="@style/Theme.SmartAir"
         tools:targetApi="33">
 
         <!-- Required for Google Play Services (prevents SecurityException) -->
@@ -43,6 +45,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".onboarding.view.OneTapActivity"
+            android:exported="false" />
         <!-- Onboarding & Home Activities -->
         <activity
             android:name=".onboarding.view.WelcomeActivity"
@@ -65,7 +70,7 @@
         <activity
             android:name=".onboarding.view.PasswordResetActivity"
             android:exported="false" />
-      <activity android:name=".onboarding.view.SelectChildLoginActivity" android:exported="false" />
+        <activity android:name=".onboarding.view.SelectChildLoginActivity" android:exported="false" />
         <activity
             android:name=".homepage.view.ParentHomeActivity"
             android:exported="false" />
@@ -73,13 +78,12 @@
             android:name=".homepage.view.ProviderHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".homepage.view.ChildHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".dailycheckin.view.DailyCheckInActivity"
             android:exported="false" />
         <activity
             android:name=".glossary.view.GlossaryActivity"
+            android:exported="false" />
+        <activity android:name=".onboarding.view.PEFEntryActivity"
             android:exported="false" />
         <activity
             android:name=".history.view.HistoryActivity"
@@ -98,7 +102,6 @@
         <!-- Homepage (parent/provider/child) -->
         <activity android:name=".homepage.view.ParentHomeActivity" android:exported="false" />
         <activity android:name=".homepage.view.ProviderHomeActivity" android:exported="false" />
-        <activity android:name=".homepage.view.ChildHomeActivity" android:exported="false" />
         <activity android:name=".homepage.view.ParentChildDetailActivity" android:exported="false" />
         <activity android:name=".homepage.view.ProviderChildDetailActivity" android:exported="false" />
 
@@ -112,6 +115,30 @@
         <activity android:name=".ParentDashboard.view.ParentDashboardActivity" android:exported="false" />
         <activity android:name=".ParentDashboard.view.ScheduleActivity" android:exported="false" />
 
+        <activity android:name=".ParentDashboard.view.PbActivity" android:exported="false" />
+
+        <activity
+            android:name=".ChildDashboard.view.ChildDashboardActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".LogController.view.LogControllerActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".LogRescue.view.LogRescueActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".TechniqueHelper.view.TechniqueHelperActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".glossary.view.GlossaryActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".Inventory.view.InventoryActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".Badges.view.BadgesActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

@@ -1,3 +1,4 @@
+*.iml
 # Android Studio IDE specific files
 /.idea
 
@@ -5,10 +6,34 @@
 /build
 
 # Other
-*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
 .gradle
 /local.properties
 .DS_Store
+/build
 /captures
 .externalNativeBuild
+.cxx
+local.properties
+/captures
+.externalNativeBuild
+.cxx
+/captures
+.externalNativeBuild
+.cxx
+/google-services.json/
+/build/
+# Google Services file
+google-services.json
+
+#Keys
+release-temp.jks
+app/google-services.json
 .cxx

@@ -16,12 +16,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import com.SmartAir.R;
 import com.SmartAir.ParentDashboard.model.ParentModel;
 import com.SmartAir.ParentDashboard.model.PefLogsModel;
 import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.SmartAir.ParentDashboard.presenter.ParentDashboardPresenter;
+import com.SmartAir.R;
 import com.SmartAir.dailycheckin.view.DailyCheckInActivity;
 import com.SmartAir.history.view.HistoryActivity;
 import com.SmartAir.onboarding.model.BaseUser;
@@ -29,13 +31,20 @@ import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.model.ParentUser;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -46,10 +55,21 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
     public static String childId = "";
 
+    private ListenerRegistration pefListener;
+
+    private ListenerRegistration rescueListener;
+
+    private ListenerRegistration inhalerListener;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     BaseUser user =  CurrentUser.getInstance().getUserProfile();
 
     String childZone = "Pending";
+
+    private Date appStartTime = new Date();
+
+    private int months = 3;
+
+    Task<List<Integer>> zoneCounts;
 
     AtomicReference<String> childNameRef = new AtomicReference<>("");
     AtomicReference<String> zoneRef = new AtomicReference<>("");
@@ -75,6 +95,20 @@ public class ParentDashboardActivity extends AppCompatActivity {
             if (!childId.isEmpty()) {
                 Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
+            }
+            else {
+                Toast.makeText(ParentDashboardActivity.this, "No child selected", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        Button pbButton = findViewById(R.id.SetPBButtons);
+        pbButton.setOnClickListener(v -> {
+            Toast.makeText(ParentDashboardActivity.this, "outside IF", Toast.LENGTH_LONG).show();
+            if (!childId.isEmpty()) {
+                Toast.makeText(ParentDashboardActivity.this, "in IF", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ParentDashboardActivity.this, PbActivity.class);
+                intent.putExtra("childId", childId);
+                startActivity(intent);
                 finish();
             }
             else {
@@ -84,6 +118,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.parent_dashboard);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView test_text = findViewById(R.id.r6_test);
@@ -106,6 +141,8 @@ public class ParentDashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+
         Spinner spinner = findViewById(R.id.mySpinner);
         List<String> childList = new ArrayList<>();
         List<String> childIdList = new ArrayList<>();
@@ -127,6 +164,10 @@ public class ParentDashboardActivity extends AppCompatActivity {
 //                dbTest(box1,selectedChild);
                 childId = selectedId;
                 updateZone(selectedId, box1, box2, box3);
+                zoneCounts = getZoneCounts(childId, months);
+                startPefListener();
+                startRescueListener();
+                startInventoryListener();
 
             }
 
@@ -137,6 +178,151 @@ public class ParentDashboardActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (pefListener != null) pefListener.remove();
+        if (rescueListener != null) rescueListener.remove();
+        if (inhalerListener != null) inhalerListener.remove();
+    }
+
+    public Task<List<Integer>> getZoneCounts(String childId, int months) {
+        // 1. Calculate the start date (3 months ago by default)
+        Calendar calendar = Calendar.getInstance();
+
+        // Use the negative number of months to go backward in time
+        calendar.add(Calendar.MONTH, -months);
+        Date startDate = calendar.getTime();
+
+        // 2. Build the query
+        // NOTE: Your pefLogs documents must contain a 'timestamp' field of type Firestore Timestamp
+        Query query = db.collection("pefLogs")
+                .whereEqualTo("childId", childId)
+                .whereGreaterThanOrEqualTo("timestamp", startDate)
+                // Ordering by timestamp is required when using range queries (whereGreaterThan/LessThan)
+                .orderBy("timestamp", Query.Direction.ASCENDING);
+
+        // 3. Execute the query asynchronously and process results
+        return query.get().continueWith(task -> {
+            if (!task.isSuccessful()) {
+                // Handle the error (e.g., log it or re-throw)
+                throw task.getException();
+            }
+
+            // 4. Process the results and aggregate counts
+            QuerySnapshot snapshot = task.getResult();
+            int redCount = 0;
+            int yellowCount = 0;
+            int greenCount = 0;
+
+            for (DocumentSnapshot document : snapshot.getDocuments()) {
+                String zone = document.getString("zone");
+                if (zone != null) {
+                    switch (zone.toLowerCase()) {
+                        case "red":
+                            redCount++;
+                            break;
+                        case "yellow":
+                            yellowCount++;
+                            break;
+                        case "green":
+                            greenCount++;
+                            break;
+                    }
+                }
+            }
+
+            // 5. Format the output list in the required order
+            List<Integer> counts = new ArrayList<>();
+            counts.add(redCount);
+            counts.add(yellowCount);
+            counts.add(greenCount);
+
+            return counts; // This Task resolves with the List<Integer>
+        });
+    }
+
+    private void startPefListener() {
+        Log.i("LISTENER", "LISTENTER START " + childId);
+        pefListener = db.collection("pefLogs")
+                .whereEqualTo("childId", childId)
+                .whereEqualTo("zone", "red")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+
+
+                    assert snapshots != null;
+                    for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                        // We only care about NEWLY added documents
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            Log.i("PEF LOGS", "ALRT ON ADDED: ");
+                            Date logDate = dc.getDocument().getDate("timestamp");
+
+                            // Demo Logic: Only alert if it happened since the app started
+                            // (Requires a 'timestamp' field in your pefLogs documents)
+                            if (logDate != null) {
+                                showToast("ALERT: Child entered RED ZONE!");
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void startRescueListener() {
+        rescueListener = db.collection("rescueLogs")
+                .whereEqualTo("childId", childId)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(3) // Efficiency: We only ever need the last 3
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+
+                    // We need at least 3 logs to compare
+                    assert snapshots != null;
+                    if (snapshots.size() < 3) return;
+
+                    // Get the newest (index 0) and the 3rd oldest (index 2)
+                    Date newest = snapshots.getDocuments().get(0).getDate("timestamp");
+                    Date oldest = snapshots.getDocuments().get(2).getDate("timestamp");
+
+                    if (newest != null && oldest != null) {
+                        long diff = newest.getTime() - oldest.getTime();
+                        long threeHours = 3 * 60 * 60 * 1000;
+
+                        if (diff <= threeHours) {
+                            // Optional: Check if the newest one is recent so we don't alert on old data
+                            if (newest.after(appStartTime)) {
+                                showToast("ALERT: 3 Rescue inhalers used in 3 hours!");
+                            }
+                        }
+                    }
+                });
+    }
+    private void startInventoryListener() {
+        // Note the path: collection("inventory") -> document(childId) -> collection("inhalers")
+        String path = "inventory/" + childId + "/inhalers";
+
+        inhalerListener = db.collection(path)
+                .whereEqualTo("expiredFlag", true)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    if (snapshots != null && !snapshots.isEmpty()) {
+                        showToast("WARNING: An inhaler in inventory has EXPIRED!");
+                    }
+                });
+    }
+
+    // Helper for the toast
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -172,20 +358,44 @@ public class ParentDashboardActivity extends AppCompatActivity {
                         } else if (!triggers.isEmpty()) {
                             Log.i("LOGS", "FOUND LOG HERE" + triggers.get(0));
                         }
+        getZoneCounts(childId, months)
+                .addOnSuccessListener(countsList -> {
 
-                        // Add to list
-                        reportLogs.add(new ReportGenerationActivity.DailyLog(date, triggers, ""));
-                    }
-                    // Mark Task 3 as done
-                    tasksCompleted.incrementAndGet();
-                    checkIfDataReady(tasksCompleted, reportLogs, reportAdherence, childNameRef, zoneRef, 7);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("REPORT", "Error fetching logs", e);
-                    tasksCompleted.incrementAndGet(); // Proceed even if logs fail
-                    checkIfDataReady(tasksCompleted, reportLogs, reportAdherence, childNameRef, zoneRef, 7);
+                    int red = countsList.get(0);
+                    int yellow = countsList.get(1);
+                    int green = countsList.get(2);
+
+                    // Log the result to check the counts
+                    Log.d("ReportGenerator", "Red: " + red + ", Yellow: " + yellow + ", Green: " + green);
+
+                    db.collection("daily_check_ins")
+                            .whereEqualTo("Child", childName) // Querying by ID is safer than Name
+                            .orderBy("timestamp", Query.Direction.DESCENDING) // Get newest first
+                            .get()
+                            .addOnSuccessListener(querySnap -> {
+                                for (QueryDocumentSnapshot doc : querySnap) {
+                                    Log.i("LOGS", "FOUND LOG HERE");
+                                    String date = doc.getString("timestamp");
+                                    List<String> triggers = (List<String>) doc.get("Triggers");
+                                    if (triggers == null) {
+                                        triggers = new ArrayList<>();
+                                    }
+                                    Log.i("LOGS", "FOUND LOG HERE" + triggers.get(0));
+
+                                    // Add to list
+                                    reportLogs.add(new ReportGenerationActivity.DailyLog(date, triggers, ""));
+                                }
+                                // Mark Task 3 as done
+                                tasksCompleted.incrementAndGet();
+                                checkIfDataReady(tasksCompleted, reportLogs, reportAdherence, childNameRef, zoneRef, 7);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("REPORT", "Error fetching logs", e);
+                                tasksCompleted.incrementAndGet(); // Proceed even if logs fail
+                                checkIfDataReady(tasksCompleted, reportLogs, reportAdherence, childNameRef, zoneRef, 7);
+                            });
+
                 });
-
     }
 
     private void generateComprehensiveReport(int currentLookBack) {
@@ -240,20 +450,31 @@ public class ParentDashboardActivity extends AppCompatActivity {
             String name = childNameRef.get();
             String zone = zoneRef.get();
             int score = scoreRef.get();
+            getZoneCounts(childId, months)
+                    .addOnSuccessListener(countsList -> {
+
+                        int red = countsList.get(0);
+                        int yellow = countsList.get(1);
+                        int green = countsList.get(2);
+
+                        // Log the result to check the counts
+                        Log.d("ReportGenerator", "Red: " + red + ", Yellow: " + yellow + ", Green: " + green);
 
             ReportGenerationActivity.AsthmaReportData data = new ReportGenerationActivity.AsthmaReportData(
                     name,
                     zone,
                     score,
                     "Last " + "30" + " Days",
-                    logs
+                    logs,
+                    countsList
             );
+
 
             // Generate and Share
             File pdf = ReportGenerationActivity.generatePdfFromData(this, data);
             ReportGenerationActivity.sharePdfFile(this, pdf);
-        }
-    }
+        });
+    }}
 
 
     @SuppressLint("SetTextI18n")
@@ -359,26 +580,50 @@ public class ParentDashboardActivity extends AppCompatActivity {
     protected void updateZone(String childID, TextView box1, TextView box2, TextView box3){
         Log.i("DEBUG", "function initilize");
 
-        db.collection("pefLogs").
-                document(childID)
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(appStartTime); // Use your existing appStartTime variable
+
+        // Calculate Start of Day (00:00:00)
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date startOfDay = cal.getTime();
+
+        // Calculate End of Day (23:59:59)
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        Date endOfDay = cal.getTime();
+
+        Log.i("PEF LOG", "TIMES TODAY START" + startOfDay + "end" + endOfDay);
+
+        db.collection("pefLogs")
+                .whereEqualTo("childId", childID)
+                .whereGreaterThanOrEqualTo("timestamp", startOfDay)
+                .whereLessThanOrEqualTo("timestamp", endOfDay)
+                .limit(1) // We only expect one zone log per day
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        PefLogsModel info = documentSnapshot.toObject(PefLogsModel.class);
-                        assert info != null;
-                        box1.setText("Today's Zone:    " + info.getZone());
-                        Log.i("PEF LOGS", "Got info on zone: " + info.getZone());
-                        childZone = info.getZone();
-                    }else{
-                        Log.e("PEF LOGS", "NO ZONE FOUND?");
+                .addOnSuccessListener(querySnapshot -> {
+                    // Check if the list is empty
+                    if (!querySnapshot.isEmpty()) {
+                        // Get the first document found
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        PefLogsModel info = document.toObject(PefLogsModel.class);
+
+                        if (info != null) {
+                            box1.setText("Today's Zone:    " + info.getZone());
+                            Log.i("PEF LOGS", "Got info on zone: " + info.getZone());
+                            childZone = info.getZone();
+                        }
+                    } else {
+                        // No documents found for today
+                        Log.e("PEF LOGS", "NO ZONE FOUND FOR TODAY");
                         box1.setText("Today's Zone not added yet");
                     }
-
                 })
-
-                .addOnFailureListener(e ->{
-                    Log.e("PEF LOG", "cant get" + e.getMessage(), e);
-
+                .addOnFailureListener(e -> {
+                    Log.e("PEF LOG", "Error getting logs: " + e.getMessage(), e);
                 });
 
         db.collection("rescueLogs")

@@ -12,7 +12,7 @@ public class ChildUser extends BaseUser {
     private String age;
     private String dateOfBirth;
     private String notes;
-    private Integer personalBestPEF; // Personal Best Peak Expiratory Flow
+    private Map<String, Object> personalBestPEF; // Personal Best Peak Expiratory Flow
     private Map<String, Boolean> sharingSettings;
     private List<String> linkedProviders;
     private Date lastLogin;
@@ -72,11 +72,11 @@ public class ChildUser extends BaseUser {
         this.notes = notes;
     }
 
-    public Integer getPersonalBestPEF() {
+    public Map<String, Object> getPersonalBestPEF() {
         return personalBestPEF;
     }
 
-    public void setPersonalBestPEF(Integer personalBestPEF) {
+    public void setPersonalBestPEF(HashMap<String, Object> personalBestPEF) {
         this.personalBestPEF = personalBestPEF;
     }
 

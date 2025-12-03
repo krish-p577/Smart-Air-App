@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SmartAir"
+rootProject.name = "B07 Demo Summer 2024"
 include(":app")
