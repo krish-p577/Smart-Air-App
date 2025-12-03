@@ -1,6 +1,6 @@
-package com.SmartAir.presenter;
+package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.view.actionButtonView;
+import com.SmartAir.onboarding.view.actionButtonView;
 
 public class actionButtonPresenter {
     private final actionButtonView view;

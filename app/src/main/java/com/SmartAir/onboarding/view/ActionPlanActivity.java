@@ -1,4 +1,4 @@
-package com.SmartAir.view;
+package com.SmartAir.onboarding.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
-import com.SmartAir.presenter.ActionPlanPresenter;
+import com.SmartAir.onboarding.presenter.ActionPlanPresenter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;

@@ -43,20 +43,16 @@ public class PbActivity extends AppCompatActivity implements PbView{
         Button submit = dialog.findViewById(R.id.submitPBButton);
 
         submit.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "Button Clicked", Toast.LENGTH_LONG).show();
 
             EditText pefVal = dialog.findViewById(R.id.PBNumber);
             String value= pefVal.getText().toString();
             PbNumber = Integer.parseInt(value);
-            Toast.makeText(getApplicationContext(), "got value", Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), childId, Toast.LENGTH_LONG).show();
             firestore = FirebaseFirestore.getInstance();
 
             HashMap<Object, Object> ved_test = new HashMap<>();
             ved_test.put("createdAt", FieldValue.serverTimestamp());
             ved_test.put("personalBestPEF", PbNumber);
             ved_test.put("Zones", getZoneMap());
-            Toast.makeText(getApplicationContext(), "About to log", Toast.LENGTH_LONG).show();
 
             firestore.collection("Users").document(childId).update("personalBestPEF", ved_test).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override

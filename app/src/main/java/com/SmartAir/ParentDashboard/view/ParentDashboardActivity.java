@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.SmartAir.onboarding.view.ActionPlanActivity;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import com.SmartAir.R;
@@ -32,20 +34,12 @@ import com.SmartAir.onboarding.model.ParentUser;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.Timestamp;
-import com.SmartAir.ParentDashboard.model.PefLogsModel;
-import com.SmartAir.ParentDashboard.model.RescueLogModel;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,6 +90,11 @@ public class ParentDashboardActivity extends AppCompatActivity {
             childids_fromuser = ((ParentUser) user).getChildrenIds();
 
         }
+
+        Button continueButton = findViewById(R.id.startActionPlan2);
+        continueButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, ActionPlanActivity.class));
+        });
 
         Button schedule_button = findViewById(R.id.radio_buttons);
         schedule_button.setOnClickListener(v -> {
@@ -232,7 +231,9 @@ public class ParentDashboardActivity extends AppCompatActivity {
             for (DocumentSnapshot document : snapshot.getDocuments()) {
                 String zone = document.getString("zone");
                 if (zone != null) {
+                    Log.i("aj dfla jfdl", "ZONE: " + zone);
                     switch (zone.toLowerCase()) {
+
                         case "red":
                             redCount++;
                             break;
@@ -630,6 +631,7 @@ public class ParentDashboardActivity extends AppCompatActivity {
                     // Loop through documents and find the most recent log for this childID
                     for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
                         if (childID.equals(doc.getString("childid"))) {
+
                             count += 1;
                             Timestamp ts = doc.getTimestamp("timestamp"); // use getTimestamp()
                             if (ts != null && (latestTimestamp == null || ts.compareTo(latestTimestamp) > 0)) {

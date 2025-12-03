@@ -1,6 +1,6 @@
-package com.SmartAir.presenter;
+package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.view.ActionPlanView;
+import com.SmartAir.onboarding.view.ActionPlanView;
 
 public class ActionPlanPresenter {
     private final ActionPlanView view;
