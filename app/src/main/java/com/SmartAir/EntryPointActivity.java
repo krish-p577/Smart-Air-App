@@ -7,9 +7,11 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.SmartAir.homepage.view.ChildHomeActivity;
-import com.SmartAir.homepage.view.ParentHomeActivity;
+// Corrected imports for Home Activities
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
+import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.homepage.view.ProviderHomeActivity;
+
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.view.WelcomeActivity;
@@ -113,13 +115,13 @@ public class EntryPointActivity extends AppCompatActivity {
 
         switch (role.toLowerCase()) {
             case "parent":
-                intent = new Intent(this, ParentHomeActivity.class);
+                intent = new Intent(this, ParentDashboardActivity.class);
                 break;
             case "provider":
                 intent = new Intent(this, ProviderHomeActivity.class);
                 break;
             case "child":
-                intent = new Intent(this, ChildHomeActivity.class);
+                intent = new Intent(this, ChildDashboardActivity.class);
                 break;
             default:
                 intent = new Intent(this, WelcomeActivity.class);

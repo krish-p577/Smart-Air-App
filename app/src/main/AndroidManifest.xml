@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartAir"
+        tools:targetApi="31">
+        android:theme="@style/Theme.SmartAir"
         tools:targetApi="33">
 
         <!-- Required for Google Play Services (prevents SecurityException) -->
@@ -76,9 +78,6 @@
             android:name=".homepage.view.ProviderHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".homepage.view.ChildHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".dailycheckin.view.DailyCheckInActivity"
             android:exported="false" />
         <activity
@@ -103,7 +102,6 @@
         <!-- Homepage (parent/provider/child) -->
         <activity android:name=".homepage.view.ParentHomeActivity" android:exported="false" />
         <activity android:name=".homepage.view.ProviderHomeActivity" android:exported="false" />
-        <activity android:name=".homepage.view.ChildHomeActivity" android:exported="false" />
         <activity android:name=".homepage.view.ParentChildDetailActivity" android:exported="false" />
         <activity android:name=".homepage.view.ProviderChildDetailActivity" android:exported="false" />
 
@@ -119,6 +117,28 @@
 
         <activity android:name=".ParentDashboard.view.PbActivity" android:exported="false" />
 
+        <activity
+            android:name=".ChildDashboard.view.ChildDashboardActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".LogController.view.LogControllerActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".LogRescue.view.LogRescueActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".TechniqueHelper.view.TechniqueHelperActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".glossary.view.GlossaryActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".Inventory.view.InventoryActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".Badges.view.BadgesActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

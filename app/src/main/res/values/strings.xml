@@ -1,8 +1,6 @@
 <resources>
     <!-- App-wide -->
     <string name="app_name">SmartAir</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 
     <!-- Common Actions & Labels -->
@@ -55,6 +53,14 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="displayName">Name</string>
     <string name="already_have_account">Already have an account? <b>Login</b></string>
+
+    <string name="badge1_image_desc">Locked badge image</string>
+    <string name="badge2_image_desc">Locked badge image</string>
+    <string name="badge3_image_desc">Locked badge image</string>
+
+    <!-- Navigation Drawer Strings -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="dont_have_account">Don\'t have an account? <b>Sign up</b></string>
     <string name="forgot_password">Forgot password?</string>
 
@@ -87,4 +93,25 @@
 
     <string name="enter_your_pef_number">enter_your_pef_number</string>
     <string name="enter_pre_med_info_optional">Enter pre Med Info (Optional)</string>
+
+    <!-- Inventory Strings -->
+    <string-array name="inhaler_types">
+        <item>Select inhaler type</item>
+        <item>Controller inhaler</item>
+        <item>Rescue inhaler</item>
+    </string-array>
+
+    <!-- Log Rescue Inhaler Strings -->
+    <string-array name="pre_feeling_options">
+        <item>Select breathing rating</item>
+        <item>Good</item>
+        <item>Neutral</item>
+        <item>Bad</item>
+    </string-array>
+    <string-array name="post_feeling_options">
+        <item>Select breathing rating</item>
+        <item>Better</item>
+        <item>Same</item>
+        <item>Worse</item>
+    </string-array>
 </resources>

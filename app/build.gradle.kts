@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.SmartAir"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.SmartAir"
@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
@@ -52,6 +55,13 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
+    implementation(libs.cardview)
+    implementation(libs.media3.ui)
+    implementation(libs.media3.exoplayer)
+
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
+    implementation(libs.cardview)
     implementation(libs.recyclerview)
 
     // JUnit and Mockito - Upgraded for Java 21 compatibility

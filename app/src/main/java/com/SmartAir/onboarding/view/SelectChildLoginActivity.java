@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.SmartAir.ChildDashboard.view.ChildDashboardActivity;
 import com.SmartAir.R;
-import com.SmartAir.homepage.view.ChildHomeActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
 import com.SmartAir.onboarding.presenter.SelectChildLoginPresenter;
@@ -48,7 +48,7 @@ public class SelectChildLoginActivity extends AppCompatActivity implements Selec
 
     @Override
     public void navigateToChildHome() {
-        Intent intent = new Intent(this, ChildHomeActivity.class);
+        Intent intent = new Intent(this, ChildDashboardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
