@@ -27,6 +27,7 @@ import com.SmartAir.dailycheckin.view.DailyCheckInActivity;
 import com.SmartAir.glossary.view.GlossaryActivity;
 import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
+import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.view.PEFEntryActivity;
 import com.SmartAir.onboarding.view.WelcomeActivity;
 import com.SmartAir.onboarding.view.startTriageActivity;
@@ -39,6 +40,8 @@ public class ChildDashboardActivity extends AppCompatActivity implements ChildDa
     private boolean isDelegatedMode = false;
     private static final String FIRE_EMOJI = "\uD83D\uDD25";
     private static final String WAVE_EMOJI = "\uD83D\uDC4B";
+
+    CurrentUser user = CurrentUser.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

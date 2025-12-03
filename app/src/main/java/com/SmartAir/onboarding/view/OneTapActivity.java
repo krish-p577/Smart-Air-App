@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.SmartAir.R;
+import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.presenter.OneTapPresenter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,14 +40,23 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
     int redNumber = 0; //number of red flags
     String intialZone = ""; //starting zone
     Map<String, String> mapZones =  new HashMap<>(); //action plan map
-    String ChildID, toReturn;
+    String toReturn;
+    CurrentUser user;
+
+    String ChildID = CurrentUser.getInstance().getUid();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_one_tap_triage);
+        user = CurrentUser.getInstance();
 
-        ChildID = getIntent().getStringExtra("childId");
-
+        if (ChildID == null || ChildID.isEmpty()) {
+            Toast.makeText(this, "Missing child data, cannot start triage." + ChildID, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
         setMapZones();
         setInitialZone();
         presenter = new OneTapPresenter(this);
@@ -88,7 +98,7 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
     @Override
     public void callEmergency() {
         Toast.makeText(getApplicationContext(), "start calling", Toast.LENGTH_LONG).show();
-        Intent i = new Intent();
+        Intent i = new Intent(Intent.ACTION_DIAL);
         i.setData(Uri.parse("tel:7809648081"));
         startActivity(i);
         emerg = true;
@@ -145,13 +155,24 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
         if (value.isEmpty()) {
             PEFValue = -1; // or some default
         } else {
-            PEFValue = Integer.parseInt(value);
+            try {
+                PEFValue = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                PEFValue = -1;
+            }
         }
 
         //Get number of resuces
         ifYes = findViewById(R.id.currentPEF);
         String rescueAttempts = ifYes.getText().toString();
-        int rescueVal = Integer.parseInt(rescueAttempts);
+        int rescueVal = 0;
+        if (!rescueAttempts.isEmpty()) {
+            try {
+                rescueVal = Integer.parseInt(rescueAttempts);
+            } catch (NumberFormatException e) {
+                rescueVal = 0;
+            }
+        }
 
         HashMap<Object, Object> ved_test = new HashMap<>();
         ved_test.put("parentId", "parent1");
@@ -186,17 +207,22 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
 
     //set intial zone on create
     public String setInitialZone(){
-        firestore.collection("pefLogs")
-                .whereEqualTo("childId", ChildID)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get().addOnSuccessListener(querySnap -> {
-                    DocumentSnapshot doc = querySnap.getDocuments().get(0);
-                    intialZone = doc.getString("zone");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("REPORT", "Error fetching logs", e);
-                });;
-                return intialZone;
+//        firestore.collection("pefLogs")
+//                .whereEqualTo("childId", ChildID)
+//                .orderBy("timestamp", Query.Direction.DESCENDING)
+//                .get().addOnSuccessListener(querySnap -> {
+//                    if (!querySnap.isEmpty()) {
+//                        DocumentSnapshot doc = querySnap.getDocuments().get(0);
+//                        intialZone = doc.getString("zone");
+//                    } else {
+//                        intialZone = "Unknown";
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e("REPORT", "Error fetching logs", e);
+//                });;
+        intialZone = "Unknown";
+        return intialZone;
     }
 
     //if they added a new PEF we might be in a diff zone than when we started.
@@ -205,8 +231,19 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
                 .document(ChildID)
                 .get()
                 .addOnSuccessListener(querySnap -> {
-                    Map<String, Object> pbMap = (Map<String, Object>) querySnap.get("personalBestPEF");
-                    Map<String, Object> zonesMap = (Map<String, Object>) pbMap.get("Zones");
+                    Object pbObj = querySnap.get("personalBestPEF");
+                    if (!(pbObj instanceof Map)) {
+                        toReturn = "Unknown";
+                        return;
+                    }
+                    Map<String, Object> pbMap = (Map<String, Object>) pbObj;
+                    Object zonesObj = pbMap.get("Zones");
+                    if (!(zonesObj instanceof Map)) {
+                        toReturn = "Unknown";
+                        return;
+                    }
+
+                    Map<String, Object> zonesMap = (Map<String, Object>) zonesObj;
                     assert zonesMap != null;
                     int yellow = ((Number) Objects.requireNonNull(zonesMap.get("Yellow"))).intValue();
                     int red    = ((Number) Objects.requireNonNull(zonesMap.get("Red"))).intValue();
@@ -230,7 +267,7 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
         if(PEFValue == -1){
             Zone = intialZone;
         }else if(emerg){
-             return mapZones.get("emergency");
+            return mapZones.get("emergency");
         } else{
             Zone = calcCurrentZone();
         }
@@ -296,8 +333,8 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
                         return;
                     }
                     DocumentSnapshot doc = querySnap.getDocuments().get(0);
-                    int NumberReds = doc.getLong("NumberReds").intValue();
-                    if(redNumber > NumberReds){
+                    Long prevReds = doc.getLong("NumberReds");
+                    if (prevReds != null && redNumber > prevReds) {
                         didEscalte = true;
                     }
                 })

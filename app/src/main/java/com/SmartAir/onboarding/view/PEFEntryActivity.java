@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.SmartAir.R;
+import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.presenter.PEFPresenter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,17 +27,22 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PEFEntryActivity extends Activity implements PEFEntryView {
     private PEFPresenter presenter;
     FirebaseFirestore firestore;
-    String childID;
     String parentId;
     int green, red, yellow;
     String zone = "Null";
+    CurrentUser user;
 
+    String childID = CurrentUser.getInstance().getUid();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pef);
+        user = CurrentUser.getInstance();
+        if (childID == null || childID.isEmpty()) {
+            Toast.makeText(this, "Missing child data, cannot start triage.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
         presenter = new PEFPresenter(this);
-        childID = getIntent().getStringExtra("childId");
-
         Button pefButton = findViewById(R.id.pef_button);
         pefButton.setOnClickListener(v -> presenter.onPEFClicked());
     }
@@ -54,14 +60,14 @@ public class PEFEntryActivity extends Activity implements PEFEntryView {
                 String value= pefVal.getText().toString();
                 Toast.makeText(getApplicationContext(), "got value", Toast.LENGTH_LONG).show();
 
-                EditText pre = dialog.findViewById(R.id.PEFNumber);
+                EditText pre = dialog.findViewById(R.id.preMed);
                 String preMed =" ";
                 String postMed =" ";
 
                 if(pre != null){
                     preMed= pre.getText().toString();
                 }
-                EditText post = dialog.findViewById(R.id.PEFNumber);
+                EditText post = dialog.findViewById(R.id.postMed);
                 if(post != null){
                     postMed= post.getText().toString();
                 }
@@ -77,12 +83,11 @@ public class PEFEntryActivity extends Activity implements PEFEntryView {
                 ved_test.put("zone", getzone(Integer.parseInt(value)));
                 Toast.makeText(getApplicationContext(), "About to log", Toast.LENGTH_LONG).show();
 
-                firestore.collection("pefLogs").add(ved_test).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getApplicationContext(), "Succcess", Toast.LENGTH_LONG).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                firestore.collection("pefLogs")
+                        .document(childID)
+                        .collection("logs")
+                        .add(ved_test)
+                        .addOnSuccessListener(documentReference -> Toast.makeText(getApplicationContext(), "Succcess", Toast.LENGTH_LONG).show()).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show();

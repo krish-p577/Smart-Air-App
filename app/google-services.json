@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:163932509170:android:645b7e49c2ef8155ded16b",
+        "mobilesdk_app_id": "1:163932509170:android:54675983b7235faaded16b",
         "android_client_info": {
           "package_name": "com.SmartAir"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "API_KEY"
+          "current_key": "AIzaSyBjJcRl5kCKk43kYNMHqcOijxDr5n5r6VI"
         }
       ],
       "services": {
