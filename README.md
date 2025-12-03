@@ -95,8 +95,23 @@ Responsibilities:
 - Allows a user to select a child a view specific information about current zone, last rescue time and weekly rescue counts.
 - Provides rapid alerts under 10 seconds for red-zone days, "Worse after dose", triage escilation and low/expired inventory
 - Adherence calculation which provides an insight into a child's contoller useage against their schedule
-- Generate a provider report which contains all information which can be given to a medical professional 
+- Generate a provider report which contains all information which can be given to a medical professional
+- Allow parents to set Personal Best PEF score for each child with calcuations in the backend for the zones and storing info to firebase
+- Allow parents to create a home action plan depending on zone their PEF is in.
+- Send toast for parent if incident starts and thaen on esclation.
 
+5. Child Dashboard:
+Provide a centralized dashboard that allows a child to easily track and manage their daily asthma-related tasks. The dashboard presents clear, age-appropriate information, guides the child through required daily actions, and offers motivation through badges and streaks.
+
+Responsibilities:
+- Allow the child to log controller and rescue inhaler usage.
+- Provide access to daily check-in, PEF entry, and triage tools.
+- Allow the child to update inhaler inventory (remaining doses).
+- Provide easy access to the Technique Helper for correct inhaler usage guidance.
+- Include a motivation system including badges, streaks, and positive reinforcement.
+- Ensure navigation to all core Smart Air features is designed to be easily usable for children.
+- Every 10 minutes during a indicident asks user to redo triage form and log info to firebase
+- Allow user to upload PEF and logs infomation to firebase along side with calcuation of current zone
 
 ```
 --- 
