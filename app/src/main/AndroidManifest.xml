@@ -78,6 +78,7 @@
         <activity
             android:name=".homepage.view.ChildHomeActivity"
             android:exported="false" />
+        
         <activity
             android:name=".dailycheckin.view.DailyCheckInActivity"
             android:exported="false" />
