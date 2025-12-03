@@ -18,7 +18,7 @@
             android:id="@+id/enter_test"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:text="@string/enter_the_personal_best_pb" />
+            android:text="@string/pb" />
 
         <EditText
             android:id="@+id/PBNumber"
@@ -26,12 +26,12 @@
             android:layout_height="68dp"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/pb" />
+            android:hint="@string/enter_PB" />
 
         <Button
             android:id="@+id/submitPBButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/submit_button" />
+            android:text="@string/Submit" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

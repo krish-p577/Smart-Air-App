@@ -81,10 +81,10 @@
     <string name="generate_invite_code">Generate Invite Code</string>
     <string name="copy">Copy</string>
     <string name="revoke_invite_code">Revoke Invite Code</string>
-    <string name="enter_the_personal_best_pb" />
-    <string name="pb" />
+    <string name="enter_PB">Set Child Personal Best: </string>
+    <string name="pb">Please enter the personal best you want for your child </string>
     <string name="submit_button" />
-</resources>
+
     <string name="enter_your_pef_number">enter_your_pef_number</string>
     <string name="enter_pre_med_info_optional">Enter pre Med Info (Optional)</string>
 </resources>
