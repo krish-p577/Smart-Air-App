@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.SmartAir.ParentDashboard.view.ParentDashboardActivity;
 import com.SmartAir.R;
 import com.SmartAir.onboarding.presenter.OneTapPresenter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -298,6 +299,9 @@ public class OneTapActivity extends AppCompatActivity implements OneTapView {
                     DocumentSnapshot doc = querySnap.getDocuments().get(0);
                     int NumberReds = doc.getLong("NumberReds").intValue();
                     if(redNumber > NumberReds){
+                            Intent i = new Intent(this, ParentDashboardActivity.class);
+                            i.putExtra("SHOW_ESCALATION_ALERT", true);
+                            startActivity(i);
                         didEscalte = true;
                     }
                 })

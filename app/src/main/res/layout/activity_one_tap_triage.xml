@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".view.RoleSelectionActivity">
+    tools:context=".onboarding.view.RoleSelectionActivity">
 
     <LinearLayout
         android:id="@+id/Questions_layout"
@@ -264,13 +264,6 @@
                 android:layout_width="67dp"
                 android:layout_height="50dp"
                 android:layout_weight="1" />
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="132dp"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:text="No Symtoms" />
 
             <Space
                 android:layout_width="94dp"

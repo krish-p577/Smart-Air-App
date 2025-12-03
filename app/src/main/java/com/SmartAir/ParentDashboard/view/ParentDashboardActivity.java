@@ -88,7 +88,14 @@ public class ParentDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parent_dashboard);
         FirebaseApp.initializeApp(this);
-
+        boolean showAlert = getIntent().getBooleanExtra("SHOW_RESCUE_ALERT", false);
+        if (showAlert) {
+            Toast.makeText(this, "Your child is having an incident.", Toast.LENGTH_LONG).show();
+        }
+        boolean showEsclationAlert = getIntent().getBooleanExtra("SHOW_ESCALATION_ALERT", false);
+        if (showAlert) {
+            Toast.makeText(this, "The incident is getting worse.", Toast.LENGTH_LONG).show();
+        }
         List<String> childids_fromuser;
         //grabbing userid innit
 

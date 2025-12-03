@@ -39,7 +39,9 @@ public class startTriageActivity extends AppCompatActivity implements startTriag
         runnable.run();
     }
     public void parentAlert(){
-
+        Intent i = new Intent(this, ParentDashboardActivity.class);
+        i.putExtra("SHOW_RESCUE_ALERT", true);
+        startActivity(i);
     }
     Runnable runnable = new Runnable() {
         @Override
