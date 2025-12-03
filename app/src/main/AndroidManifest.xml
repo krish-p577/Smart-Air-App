@@ -46,7 +46,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".onboarding.view.OneTapActivity"
+            android:name=".ChildDashboard.view.OneTapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChildDashboard.view.startTriageActivity"
             android:exported="false" />
         <!-- Onboarding & Home Activities -->
         <activity

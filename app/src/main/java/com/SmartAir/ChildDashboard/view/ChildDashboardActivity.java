@@ -29,7 +29,7 @@ import com.SmartAir.onboarding.model.AuthRepository;
 import com.SmartAir.onboarding.model.ChildUser;
 import com.SmartAir.onboarding.view.PEFEntryActivity;
 import com.SmartAir.onboarding.view.WelcomeActivity;
-import com.SmartAir.onboarding.view.startTriageActivity;
+import com.SmartAir.ChildDashboard.view.startTriageActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class ChildDashboardActivity extends AppCompatActivity implements ChildDashboardView, NavigationView.OnNavigationItemSelectedListener {

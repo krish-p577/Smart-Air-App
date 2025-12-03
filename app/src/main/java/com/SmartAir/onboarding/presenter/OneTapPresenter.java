@@ -1,6 +1,6 @@
 package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.onboarding.view.OneTapView;
+import com.SmartAir.ChildDashboard.view.OneTapView;
 
 public class OneTapPresenter {
     private final OneTapView view;

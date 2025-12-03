@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.SmartAir.R;
+import com.SmartAir.onboarding.model.CurrentUser;
 import com.SmartAir.onboarding.presenter.PEFPresenter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,17 +27,18 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PEFEntryActivity extends Activity implements PEFEntryView {
     private PEFPresenter presenter;
     FirebaseFirestore firestore;
-    String childID;
     String parentId;
     int green, red, yellow;
     String zone = "Null";
+    CurrentUser user;
 
+    String childID;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pef);
+        user = CurrentUser.getInstance();
+        childID = user.getUid();
         presenter = new PEFPresenter(this);
-        childID = getIntent().getStringExtra("childId");
-
         Button pefButton = findViewById(R.id.pef_button);
         pefButton.setOnClickListener(v -> presenter.onPEFClicked());
     }

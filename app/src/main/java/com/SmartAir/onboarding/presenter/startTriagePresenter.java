@@ -1,6 +1,6 @@
 package com.SmartAir.onboarding.presenter;
 
-import com.SmartAir.onboarding.view.startTriageView;
+import com.SmartAir.ChildDashboard.view.startTriageView;
 
 public class startTriagePresenter {
     private final startTriageView view;

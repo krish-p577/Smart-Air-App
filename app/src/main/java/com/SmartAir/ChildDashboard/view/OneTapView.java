@@ -1,4 +1,4 @@
-package com.SmartAir.onboarding.view;
+package com.SmartAir.ChildDashboard.view;
 
 public interface OneTapView {
     public void callEmergency();

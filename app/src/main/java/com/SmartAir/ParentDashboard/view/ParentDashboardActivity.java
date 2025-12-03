@@ -94,7 +94,6 @@ public class ParentDashboardActivity extends AppCompatActivity {
 
         if (user instanceof ParentUser){
             childids_fromuser = ((ParentUser) user).getChildrenIds();
-
         }
 
         Button schedule_button = findViewById(R.id.radio_buttons);
